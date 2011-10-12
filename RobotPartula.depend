@@ -1,0 +1,40 @@
+# depslib dependency file v1.0
+1318439743 source:d:\mine\project\cpp\robotpartula\main.cpp
+	<iostream>
+	"Robot.h"
+
+1318436488 d:\mine\project\cpp\robotpartula\motorcontroller.h
+	"conf.h"
+	"Motor.h"
+
+1318442112 d:\mine\project\cpp\robotpartula\motor.h
+	"conf.h"
+
+1318445636 d:\mine\project\cpp\robotpartula\conf.h
+	<stdio.h>
+	"./include/phidget21.h"
+	<phidget21.h>
+	"debug_tools.h"
+
+1318360112 d:\mine\project\cpp\robotpartula\include\phidget21.h
+
+1318442868 d:\mine\project\cpp\robotpartula\robot.h
+	"MotorController.h"
+	"SensorController.h"
+
+1318445482 d:\mine\project\cpp\robotpartula\sensorcontroller.h
+	"Sensor.h"
+	"Switch.h"
+
+1318444433 d:\mine\project\cpp\robotpartula\sensor.h
+	"conf.h"
+
+1318365958 d:\mine\project\cpp\robotpartula\debug_tools.h
+	<windows.h>
+	"./include/phidget21.h"
+	<sys/time.h>
+	<phidget21.h>
+
+1318444444 d:\mine\project\cpp\robotpartula\switch.h
+	"conf.h"
+
