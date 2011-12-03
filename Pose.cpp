@@ -1,5 +1,6 @@
 Pose::Pose()
 {
+    tritt
     //ctor
 }
 
