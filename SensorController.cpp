@@ -1,5 +1,5 @@
 #include "SensorController.h"
-#include "Event.h"
+//#include "Event.h"
 
 SensorController g_sensorCtrl;
 
@@ -139,7 +139,7 @@ ifKitInputChangeHandler(CPhidgetInterfaceKitHandle IFK, void *usrptr, int index,
 {
     g_sensorCtrl.setSwitchState(index, state);
 
-    HandleEvent(GenEvent(TYPE_INPUT_SWITCH, index, state));
+    //HandleEvent(GenEvent(TYPE_INPUT_SWITCH, index, state));
 
     return 0;
 }
@@ -181,7 +181,7 @@ ifKitSensorChangeHandler(CPhidgetInterfaceKitHandle IFK, void *usrptr, int index
     g_sensorCtrl.setSensorValue(index, state);
 
     //Once the sensor value has been set, we need to see if it has generated an event
-    HandleEvent(GenEvent(TYPE_INPUT_SENSOR, index, state));
+    //HandleEvent(GenEvent(TYPE_INPUT_SENSOR, index, state));
 
     return 0;
 }

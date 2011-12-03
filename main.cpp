@@ -1,7 +1,6 @@
 #include <iostream>
 
 #include "Robot.h"
-
 using namespace std;
 
 pthread_t thread1,scanthread;

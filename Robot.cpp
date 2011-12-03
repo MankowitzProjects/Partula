@@ -1,91 +1,94 @@
 #include "Robot.h"
-#include "Action.h"
+#include "Handle.h"
+//#include "Action.h"
 
 extern SensorController g_sensorCtrl;
-extern MotorController  g_motorCtrl;
+extern MotorController g_motorCtrl;
+extern STATUS_ROBOT robotStatus;
+extern EVENT currentEvent;
 
-Robot::Robot(void)
-{
+Robot::Robot(void) {
     prt_debug("Creating robot\n");
     isInit = false;
 }
 
-Robot::~Robot(void)
-{
+Robot::~Robot(void) {
     ;
 }
 
-void Robot::run(void)
-{
+void Robot::run(void) {
 
     g_motorCtrl.setAcc(100.00);
     g_motorCtrl.setVel(100.00);
-  
+    Handle handle;
+    //currentEvent = EVENT_NULL;
+
     printf("Robot::run\n");
-	while(1){
-	
-	EVENT = handlevent();
-	genActandleCollision();
-	act
-	
-	if(EVENT == COLLISION)
-	{
-	HandleCollision();
-	}else if(EVENT==BLACKTAPE)
-	handleBlackTape();
-	}
-	else if (EVENT== TRIGGERACTIVATED)
-	{
-	handleLocalisation();
-	}
-	
-	updatePose();
-	
-	}
- /*   EVENT e = EVENT_NULL;
+    while (1) {
 
-    e = GenEvent(TYPE_INPUT_SWITCH, INDEX_SWITCH_BUMPER_LEFT, STATE_ON);
-    HandleEvent(e);
+    /*    if (currentEvent == EVENT_COLLISION) {
+            
+            handle.collision();
 
-    e = GenEvent(TYPE_INPUT_SWITCH, INDEX_SWITCH_BUMPER_RIGHT, STATE_ON);
-    HandleEvent(e);
 
-    e = GenEvent(TYPE_INPUT_SWITCH, INDEX_SWITCH_BUMPER_FRONT, STATE_ON);
-    HandleEvent(e);
+        } else if (currentEvent == EVENT_DETECT_BLACK){
+            
+            handle.docking();
 
-    g_sensorCtrl.setSensorValue(INDEX_SENSOR_LIGHT_UNDER, 120);
-    e = GenEvent(TYPE_INPUT_SENSOR, INDEX_SENSOR_LIGHT_UNDER, 20);
-    HandleEvent(e);
+    } else if (currentEvent == EVENT_TRIGGER_ACTIVATED) {
+        
+        handle.localization();
 
-    g_sensorCtrl.setSensorValue(INDEX_SENSOR_LIGHT_UNDER, 130);
-    e = GenEvent(TYPE_INPUT_SENSOR, INDEX_SENSOR_LIGHT_UNDER, 130);
-    HandleEvent(e);
+    }*/
+    handle.collision();
+    handle.docking();
+    handle.localization();
 
-    g_sensorCtrl.setSensorValue(INDEX_SENSOR_LIGHT_UNDER, 150);
-    e = GenEvent(TYPE_INPUT_SENSOR, INDEX_SENSOR_LIGHT_UNDER, 150);
-    HandleEvent(e);
+    //Pose.updatePose();
 
-    g_sensorCtrl.setSensorValue(INDEX_SENSOR_LIGHT_UNDER, 121);
-    e = GenEvent(TYPE_INPUT_SENSOR, INDEX_SENSOR_LIGHT_UNDER, 121);
-    HandleEvent(e);
+}
+/*   EVENT e = EVENT_NULL;
 
-    g_sensorCtrl.setSensorValue(INDEX_SENSOR_LIGHT_UNDER, 140);
-    e = GenEvent(TYPE_INPUT_SENSOR, INDEX_SENSOR_LIGHT_UNDER, 140);
-    HandleEvent(e);
+   e = GenEvent(TYPE_INPUT_SWITCH, INDEX_SWITCH_BUMPER_LEFT, STATE_ON);
+   HandleEvent(e);
 
-    e = GenEvent(TYPE_INPUT_SENSOR, INDEX_SENSOR_LIGHT_UNDER, 130);
-    HandleEvent(e);
+   e = GenEvent(TYPE_INPUT_SWITCH, INDEX_SWITCH_BUMPER_RIGHT, STATE_ON);
+   HandleEvent(e);
 
-    e = GenEvent(TYPE_INPUT_SENSOR, INDEX_SENSOR_LIGHT_UNDER, 250);
-    HandleEvent(e);
-*/
-    printf("Robot::run - DONE~!\n");
+   e = GenEvent(TYPE_INPUT_SWITCH, INDEX_SWITCH_BUMPER_FRONT, STATE_ON);
+   HandleEvent(e);
+
+   g_sensorCtrl.setSensorValue(INDEX_SENSOR_LIGHT_UNDER, 120);
+   e = GenEvent(TYPE_INPUT_SENSOR, INDEX_SENSOR_LIGHT_UNDER, 20);
+   HandleEvent(e);
+
+   g_sensorCtrl.setSensorValue(INDEX_SENSOR_LIGHT_UNDER, 130);
+   e = GenEvent(TYPE_INPUT_SENSOR, INDEX_SENSOR_LIGHT_UNDER, 130);
+   HandleEvent(e);
+
+   g_sensorCtrl.setSensorValue(INDEX_SENSOR_LIGHT_UNDER, 150);
+   e = GenEvent(TYPE_INPUT_SENSOR, INDEX_SENSOR_LIGHT_UNDER, 150);
+   HandleEvent(e);
+
+   g_sensorCtrl.setSensorValue(INDEX_SENSOR_LIGHT_UNDER, 121);
+   e = GenEvent(TYPE_INPUT_SENSOR, INDEX_SENSOR_LIGHT_UNDER, 121);
+   HandleEvent(e);
+
+   g_sensorCtrl.setSensorValue(INDEX_SENSOR_LIGHT_UNDER, 140);
+   e = GenEvent(TYPE_INPUT_SENSOR, INDEX_SENSOR_LIGHT_UNDER, 140);
+   HandleEvent(e);
+
+   e = GenEvent(TYPE_INPUT_SENSOR, INDEX_SENSOR_LIGHT_UNDER, 130);
+   HandleEvent(e);
+
+   e = GenEvent(TYPE_INPUT_SENSOR, INDEX_SENSOR_LIGHT_UNDER, 250);
+   HandleEvent(e);
+ */
+printf("Robot::run - DONE~!\n");
 }
 
-void Robot::init(void)
-{
-    if (isInit)
-    {
+void Robot::init(void) {
+    if (isInit) {
         return;
     }
 
@@ -95,8 +98,7 @@ void Robot::init(void)
     isInit = true;
 }
 
-void Robot::fin(void)
-{
+void Robot::fin(void) {
     printf("Robot::fin\n");
 
     g_motorCtrl.fin();

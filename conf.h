@@ -3,11 +3,11 @@
 
 #include <stdio.h>
 
-#if defined(_MSC_VER) && (_MSC_VER >= 1200 )
-    #include "./include/phidget21.h"
-#else
-   #include <phidget21.h>
-#endif
+//#if defined(_MSC_VER) && (_MSC_VER >= 1200 )
+   // #include "./include/phidget21.h"
+//#else
+   //#include <phidget21.h>
+//#endif
 
 #include "debug_tools.h"
 
@@ -160,6 +160,8 @@ typedef enum
     EVENT_DETECT,
     EVENT_DETECT_BLACK,
     EVENT_DETECT_GROUND,
+    EVENT_COLLISION,
+    EVENT_TRIGGER_ACTIVATED,
 
     EVENT_LIGHT,
 
