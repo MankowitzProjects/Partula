@@ -3,11 +3,16 @@
 
 #include "conf.h"
 
+using namespace std;
+
+#define SENSOR_SAMPLE_RATE  1
+
 class Sensor
 {
 public:
     Sensor(void)
     {
+        iValuePos = 0;
         init();
     };
 
@@ -23,7 +28,7 @@ public:
 
     inline void  setValue(int value);
     inline int   getValue(void);
-    inline int   getValuePre(void);
+    inline int   getValueAvrg(void);
 
 private:
 
@@ -34,54 +39,10 @@ private:
 
     int value;          /**< The current value reported from the sensor */
     int valuePre;       /**< The previous value */
+    int valueArray[SENSOR_SAMPLE_RATE]; /**< Store several recent values in the array */
+    int iValuePos;      /**< Current Position of the value array */
 };
 
-
-/** \brief Default init functoin, set the values to null
- *
- * \param void
- * \return void
- *
- */
-void Sensor::init(void)
-{
-    type     = TYPE_SENSOR_NULL;
-    pos      = POSITION_NULL;
-    value    = 0;
-    valuePre = 0;
-}
-
-/** \brief Initialize the sensor
- *
- * \param index int         The prot of the sensor
- * \param type TYPE_SENSOR  The type of the sensor
- * \param pos POSITION      The position of the sensor is installed
- * \return int              The result of the initialization
- *
- */
-int Sensor::init(int index, TYPE_SENSOR type, POSITION pos)
-{
-#if (DEBUG_MODE)
-    printf("Sensor::init, type: %s, position: %s\n", GetSensorTypeChar(type), GetPositionChar(pos));
-#endif
-
-    this->index = index;
-    this->type  = type;
-    this->pos   = pos;
-
-    return 0;
-}
-
-/** \brief Finalize the sensor
- *
- * \param void
- * \return void
- *
- */
-void Sensor::fin(void)
-{
-    init();
-}
 
 inline void Sensor::setType(TYPE_SENSOR type)
 {
@@ -105,8 +66,16 @@ inline POSITION Sensor::getPos(void)
 
 inline void Sensor::setValue(int value)
 {
-    valuePre    = this->value;
     this->value = value;
+
+    valueArray[iValuePos] = value;
+
+    iValuePos++;
+
+    if (iValuePos == SENSOR_SAMPLE_RATE)
+    {
+        iValuePos = 0;
+    }
 }
 
 inline int Sensor::getValue(void)
@@ -114,9 +83,21 @@ inline int Sensor::getValue(void)
     return value;
 }
 
-inline int Sensor::getValuePre(void)
+inline int Sensor::getValueAvrg(void)
 {
-    return valuePre;
+    int valueAvrg = valueArray[0];
+
+    for (int i = 1; i < SENSOR_SAMPLE_RATE; ++i)
+    {
+        valueAvrg += valueArray[i];
+    }
+
+    #if (DEBUG_SENSOR)
+    printf("Sensor::getValueAvrg - %d\n", valueAvrg/SENSOR_SAMPLE_RATE);
+    #endif
+
+    return valueAvrg/SENSOR_SAMPLE_RATE;
 }
+
 
 #endif // SENSOR_H_INCLUDED
