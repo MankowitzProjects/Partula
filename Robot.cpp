@@ -4,8 +4,8 @@
 
 extern SensorController g_sensorCtrl;
 extern MotorController g_motorCtrl;
-extern STATUS_ROBOT robotStatus;
-extern EVENT currentEvent;
+STATUS_ROBOT robotStatus;
+EVENT currentEvent;
 
 Robot::Robot(void) {
     prt_debug("Creating robot\n");
@@ -21,12 +21,14 @@ void Robot::run(void) {
     g_motorCtrl.setAcc(100.00);
     g_motorCtrl.setVel(100.00);
     Handle handle;
-    //currentEvent = EVENT_NULL;
+    currentEvent = EVENT_COLLISION;
 
     printf("Robot::run\n");
     while (1) {
 
-    /*    if (currentEvent == EVENT_COLLISION) {
+      //checkForEvents();
+      
+        if (currentEvent == EVENT_COLLISION) {
             
             handle.collision();
 
@@ -38,11 +40,7 @@ void Robot::run(void) {
     } else if (currentEvent == EVENT_TRIGGER_ACTIVATED) {
         
         handle.localization();
-
-    }*/
-    handle.collision();
-    handle.docking();
-    handle.localization();
+    }
 
     //Pose.updatePose();
 

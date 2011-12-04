@@ -13,6 +13,15 @@ public:
     Localization();
     Localization(const Localization& orig);
     virtual ~Localization();
+    
+    void initialisePosition();
+    
+    void EstimateResourceSiteLocations();
+    
+    void takeMeasurement();
+    
+    void updateParticles();
+   
 private:
 
 };

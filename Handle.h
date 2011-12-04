@@ -8,6 +8,10 @@
 #ifndef HANDLE_H
 #define	HANDLE_H
 
+
+#include <pthread.h>
+#include <sys/time.h>
+
 class Handle {
 public:
     Handle();
@@ -16,6 +20,8 @@ public:
     void collision();
     void docking();
     void localization();
+    void* frequency(void * param);
+
 private:
 
 };

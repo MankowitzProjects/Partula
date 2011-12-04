@@ -16,5 +16,30 @@ Localization::Localization(const Localization& orig) {
 Localization::~Localization() {
 }
 
+//Set the initial position of the robot
+void Localization::initializePosition(){
+ 
+  
+}
+
+//Determine the resource site locations based on the current position
+void EstimateResourceSiteLocations(){
+ 
+  
+}
+
+//Take a measurement of the nearby obstacles
+void Localization::takeMeasurement(){
+ 
+  
+}
+
+void Localization::UpdateParticles(){
+ 
+  
+  
+}
+
+
 
 

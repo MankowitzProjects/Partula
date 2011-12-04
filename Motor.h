@@ -23,6 +23,8 @@ public:
     inline void  stop(void);
 
     inline bool  isReversed(void) {return bIsReversed;}
+    
+    
 
 private:
 

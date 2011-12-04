@@ -30,8 +30,8 @@ using namespace std;
 #define NUM_SENSOR_SLOTS 8
 #define NUM_SWITCH_SLOTS 8
 
-#define VALUE_MOTOR_VEL_NORMAL  100
-#define VALUE_MOTOR_ACC_NORMAL  100
+#define VALUE_MOTOR_VEL_NORMAL  75
+#define VALUE_MOTOR_ACC_NORMAL  75
 
 //*********************************** INDEX **********************************
 // Sensors

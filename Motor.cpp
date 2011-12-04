@@ -54,3 +54,4 @@ void Motor::fin(void)
     // set the handle pointer value
     this->pMotorCtrlHandle = NULL;
 }
+
