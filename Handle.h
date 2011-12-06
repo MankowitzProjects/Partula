@@ -1,4 +1,4 @@
-/* 
+/*
  * File:   Handle.h
  * Author: daniel
  *
@@ -9,7 +9,7 @@
 #define	HANDLE_H
 
 
-#include <pthread.h>
+#include "conf.h"
 #include <sys/time.h>
 
 class Handle {
@@ -21,7 +21,7 @@ public:
     void docking();
     void localization();
     void* frequency(void * param);
-    void* scanArea(void* param);
+    static void* scanArea(void* param);
 private:
 
 };
