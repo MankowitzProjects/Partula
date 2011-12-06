@@ -3,23 +3,18 @@
 
 #include "MotorController.h"
 
+
+
 void ActMoveForward(unsigned long milisec);
 void ActMoveBackward(unsigned long milisec);
 void ActTurnLeft(unsigned long milisec);
 void ActTurnRight(unsigned long milisec);
 void ActStop(void);
 
-void hitBumperFront(long unsigned waitTime);
-void hitBumperRight(long unsigned waitTime);
-void hitBumperLeft(long unsigned waitTime);
+void hitBumper(long unsigned waitTime);
 
+void frequencyMovement(FREQUENCY frequency);
 
-void frequency8HzMovement();
-void frequency6HzMovement();
-void frequency4HzMovement();
-void frequency2HzMovement();
-void frequency1HzMovement();
-void frequencyHalfHzMovement();
 
 
 

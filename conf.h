@@ -2,12 +2,15 @@
 #define CONF_H_INCLUDED
 
 #include <stdio.h>
+#include <iostream>
 
-//#if defined(_MSC_VER) && (_MSC_VER >= 1200 )
-   // #include "./include/phidget21.h"
-//#else
-   //#include <phidget21.h>
-//#endif
+#if defined(_MSC_VER) && (_MSC_VER >= 1200 )
+    #include "./include/phidget21.h"
+    #include "./include/pthread.h"
+#else
+   #include <phidget21.h>
+   #include <pthread.h>
+#endif
 
 #include "debug_tools.h"
 
@@ -30,23 +33,33 @@ using namespace std;
 #define NUM_SENSOR_SLOTS 8
 #define NUM_SWITCH_SLOTS 8
 
-#define VALUE_MOTOR_VEL_NORMAL  75
-#define VALUE_MOTOR_ACC_NORMAL  75
+#define VALUE_MOTOR_VEL_NORMAL  100
+#define VALUE_MOTOR_ACC_NORMAL  100
+
+#define VALUE_MIN_LED_LIGHT     300
+
+#define VALUE_SERVO_POS_MIN     0.0
+#define VALUE_SERVO_POS_MAX   220.0
+#define VALUE_SERVO_POS_MID   110.0
 
 //*********************************** INDEX **********************************
 // Sensors
-#define INDEX_SENSOR_IR_LEFT        7
-#define INDEX_SENSOR_IR_RIGHT       6
+//#define INDEX_SENSOR_IR_LEFT        7
 
-#define INDEX_SENSOR_LIGHT_LEFT     4
-#define INDEX_SENSOR_LIGHT_MIDDLE   3
+#define INDEX_SENSOR_SONAR          1
+
 #define INDEX_SENSOR_LIGHT_RIGHT    2
+#define INDEX_SENSOR_LIGHT_MIDDLE   3
+#define INDEX_SENSOR_LIGHT_LEFT     4
 #define INDEX_SENSOR_LIGHT_UNDER    5
 
+#define INDEX_SENSOR_IR_BOTTOM       6
+#define INDEX_SENSOR_IR_TOP      7
+
 // Switches
-#define INDEX_SWITCH_BUMPER_LEFT    5
+#define INDEX_SWITCH_BUMPER_LEFT    6
 #define INDEX_SWITCH_BUMPER_FRONT   4
-#define INDEX_SWITCH_BUMPER_RIGHT   6
+#define INDEX_SWITCH_BUMPER_RIGHT   5
 
 typedef enum
 {
@@ -62,27 +75,17 @@ typedef enum
     TYPE_SENSOR_NULL = 0x00,
     TYPE_SENSOR_IR,
     TYPE_SENSOR_LIGHT,
+    TYPE_SENSOR_SONAR,
 
     TYPE_SENSOR_NUM
 } TYPE_SENSOR;
-
-//******************************DOCKING************************************
-
-typedef enum
-{
-    STATUS_DOCKING_NULL = 0x00,
-    STATUS_DOCKING_SCANNING_EDGE,
-    STATUS_DOCKING_FINDING_SWITCH,
-    STATUS_DOCKING_SCANNING_TRIGGER,
-
-    STATUS_DOCKING_END
-} STATUS_DOCKING;
 
 static const char *g_sensorTypeDis[TYPE_SENSOR_NUM] =
 {
 /* 0x00 */  "null",
 /* 0x01 */  "IR",
 /* 0x02 */  "light",
+/* 0x03 */  "sonar"
 };
 
 static inline const char *GetSensorTypeChar(TYPE_SENSOR type)
@@ -146,7 +149,21 @@ static inline const char *GetPositionChar(POSITION position)
      return g_position[position];
 }
 
+
+//****************************Frequency*****************************
+typedef enum
+{
+ FREQUENCY_NULL = 0x00000000,
+ FREQUENCY_HALF,
+ FREQUENCY_1,
+ FREQUENCY_2,
+ FREQUENCY_4,
+ FREQUENCY_6,
+ FREQUENCY_8
+}FREQUENCY;
 //*************************** Event ********************************
+
+
 typedef struct
 {
     TYPE_INPUT type;
@@ -158,7 +175,6 @@ typedef struct
     POSITION pos;
 } INPUT;
 
-//Determines all of the possible events
 typedef enum
 {
     EVENT_NULL = 0x00000000,
@@ -171,10 +187,9 @@ typedef enum
     EVENT_DETECT,
     EVENT_DETECT_BLACK,
     EVENT_DETECT_GROUND,
-    EVENT_COLLISION,
-    EVENT_TRIGGER_ACTIVATED,
 
     EVENT_LIGHT,
+    EVENT_TRIGGER_ACTIVATED,
 
     EVENT_NUM
 } EVENT;
@@ -221,7 +236,7 @@ static inline const char *GetStatusChar(STATUS_ROBOT status)
     return g_statusDis[status];
 }
 
-#define INDEX_MOTOR_LEFT    0
-#define INDEX_MOTOR_RIGHT   1
+#define INDEX_MOTOR_LEFT    1
+#define INDEX_MOTOR_RIGHT   0
 
 #endif // CONF_H_INCLUDED

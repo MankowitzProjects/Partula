@@ -1,8 +1,10 @@
 #include "Action.h"
 #include "debug_tools.h"
 #include <pthread.h>
+#include "conf.h"
 
 extern MotorController g_motorCtrl;
+extern EVENT currentEvent;
 
 pthread_t g_thrd_motor;
 bool      b_thrd_motor_created = false;
@@ -200,69 +202,72 @@ void* p_thrd_turnRight(void *para)
 }
 
 
-      void hitBumperFront(long unsigned waitTime){
-	      ActMoveBackward(waitTime);
-	      ActTurnLeft(waitTime);
-	      ActMoveForward(waitTime); 
-      }
+      void hitBumper(long unsigned waitTime){
 
-      void hitBumperRight(long unsigned waitTime){
-	      ActMoveBackward(waitTime);
+	      switch(currentEvent)
+	      {
+		case EVENT_HIT_FRONT:
+    	      ActMoveBackward(waitTime);
+	      ActTurnLeft(waitTime);
+	      ActMoveForward(waitTime);
+		break;
+		case EVENT_HIT_FRONT_LEFT:
+		ActMoveBackward(waitTime);
+		ActTurnRight(waitTime);
+		ActMoveForward(0);
+		break;
+		case EVENT_HIT_FRONT_RIGHT:
+		  ActMoveBackward(waitTime);
 	      ActTurnLeft(waitTime);
 	      ActMoveForward(0);
-	
+	      break;
+		default:
+
+		break;
+	      }
       }
 
-      void hitBumperLeft(long unsigned waitTime){
-	
-	  ActMoveBackward(waitTime);
-	  ActTurnRight(waitTime);
-	  ActMoveForward(0);
-	
-      }
+      void frequencyMovement(FREQUENCY frequency){
 
-      void frequency8HzMovement(){
-      
-	  ActMoveBackward( 2000);
-	  stop();
-	  ActMoveForward( 1000);
-	  stop();
-	
-      }
-      void frequency6HzMovement(){
-      
-	  ActMoveBackward( 2000);
-	  ActTurnRight( 2600);
-	  stop();
-	
-      }
-      void frequency4HzMovement(){
-      
-	  ActMoveBackward( 1000);
-	  ActTurnLeft( 2600);
-	  stop();
-	
-      }
-      void frequency2HzMovement(){
-      
-	  ActMoveBackward( 1000);
-	  stop();
-	  ActMoveBackward( 1000);
-	  stop();
-	
-      }
-      void frequency1HzMovement(){
-      
-	  ActMoveBackward( 1000);
-	  ActTurnRight( 5600);
-	  stop();
-	
-      }
-      void frequencyHalfHzMovement(){
-      
+	switch(frequency){
+
+	  case FREQUENCY_HALF:
 	  ActMoveBackward( 1000);
 	  ActTurnLeft( 5600);
 	  stop();
-	
+	  break;
+	  case FREQUENCY_1:
+	    ActMoveBackward( 1000);
+	  ActTurnRight( 5600);
+	  stop();
+	  break;
+	  case FREQUENCY_2:
+	     ActMoveBackward( 1000);
+	  stop();
+	  ActMoveBackward( 1000);
+	  stop();
+	  break;
+	  case FREQUENCY_4:
+	      ActMoveBackward( 1000);
+	  ActTurnLeft( 2600);
+	  stop();
+	  break;
+	  case FREQUENCY_6:
+	  ActMoveBackward( 2000);
+	  ActTurnRight( 2600);
+	  stop();
+	  break;
+	  case FREQUENCY_8:
+	      ActMoveBackward( 2000);
+	  stop();
+	  ActMoveForward( 1000);
+	  stop();
+	  break;
+	  default:
+
+	    break;
+
+	}
+
       }
-      
+

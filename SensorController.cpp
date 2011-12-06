@@ -63,10 +63,15 @@ void SensorController::setupSwitches(void)
  */
 void SensorController::setupSensors(void)
 {
+     // IR sensor MIDDLE
+
+    sensorTable[INDEX_SENSOR_IR_TOP   ].init(INDEX_SENSOR_IR_TOP,    TYPE_SENSOR_IR,    POSITION_MIDDLE);
+    
+    sensorTable[INDEX_SENSOR_IR_BOTTOM   ].init(INDEX_SENSOR_IR_BOTTOM,    TYPE_SENSOR_IR,    POSITION_UNDER);
     // IR sensor LEFT
-    sensorTable[INDEX_SENSOR_IR_LEFT     ].init(INDEX_SENSOR_IR_LEFT,      TYPE_SENSOR_IR,    POSITION_LEFT);
+    //sensorTable[INDEX_SENSOR_IR_LEFT     ].init(INDEX_SENSOR_IR_LEFT,      TYPE_SENSOR_IR,    POSITION_LEFT);
     // IR sensor RIGHT
-    sensorTable[INDEX_SENSOR_IR_RIGHT    ].init(INDEX_SENSOR_IR_RIGHT,     TYPE_SENSOR_IR,    POSITION_RIGHT);
+    //sensorTable[INDEX_SENSOR_IR_RIGHT    ].init(INDEX_SENSOR_IR_RIGHT,     TYPE_SENSOR_IR,    POSITION_RIGHT);
 
     // Light sensor UNDER
     sensorTable[INDEX_SENSOR_LIGHT_LEFT  ].init(INDEX_SENSOR_LIGHT_LEFT,   TYPE_SENSOR_LIGHT, POSITION_LEFT);
@@ -76,6 +81,8 @@ void SensorController::setupSensors(void)
     sensorTable[INDEX_SENSOR_LIGHT_RIGHT ].init(INDEX_SENSOR_LIGHT_RIGHT,  TYPE_SENSOR_LIGHT, POSITION_RIGHT);
     // Light sensor UNDER
     sensorTable[INDEX_SENSOR_LIGHT_UNDER ].init(INDEX_SENSOR_LIGHT_UNDER,  TYPE_SENSOR_LIGHT, POSITION_UNDER);
+
+    sensorTable[INDEX_SENSOR_SONAR       ].init(INDEX_SENSOR_SONAR,        TYPE_SENSOR_SONAR, POSITION_FRONT);
 }
 
 int

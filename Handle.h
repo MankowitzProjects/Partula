@@ -21,7 +21,7 @@ public:
     void docking();
     void localization();
     void* frequency(void * param);
-
+    void* scanArea(void* param);
 private:
 
 };

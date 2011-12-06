@@ -19,6 +19,7 @@ public:
 
     Robot(void);
     ~Robot(void);
+    bool hasHitBumper();
 private:
 
     bool isInit;

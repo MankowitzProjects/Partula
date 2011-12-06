@@ -1,10 +1,12 @@
+
+
 #include <sys/time.h>
 
-typedef{
+typedef struct{
 double x,y,theta;
-}pose
+}pose;
 
-class Pose{
+/*class Pose{
     pose robotPose;
     timeval startTime,endtime;
     double velocity,distance;
@@ -41,4 +43,4 @@ class Pose{
     {
         //dtor
     }
-}
+};*/

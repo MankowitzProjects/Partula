@@ -1,7 +1,7 @@
-/* 
+/*
  * File:   Event.cpp
  * Author: daniel
- * 
+ *
  * Created on December 4, 2011, 4:18 PM
  */
 
@@ -145,9 +145,10 @@ EVENT Event::genLightSensorEvent(const INPUT &input)
     return EVENT_NULL;
 }
 
+
 EVENT Event::genLightSensorFrontEvent(const INPUT &input)
 {
-    /*if (input.value < VALUE_MIN_LED_LIGHT)
+  /*  if (input.value < VALUE_MIN_LED_LIGHT)
     {
         return EVENT_NULL;
     }
@@ -176,7 +177,7 @@ EVENT Event::genLightSensorFrontEvent(const INPUT &input)
 
 
 void Event::handleInput(const INPUT &input){
-  
+
      currentEvent =  checkEventType(input);
 }
 

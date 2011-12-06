@@ -4,7 +4,7 @@
 
 extern SensorController g_sensorCtrl;
 extern MotorController g_motorCtrl;
-
+extern Event g_eventCenter;
 //Declare the event and robot status variables
 STATUS_ROBOT robotStatus;
 extern EVENT currentEvent;
@@ -18,33 +18,50 @@ Robot::~Robot(void) {
     ;
 }
 
+bool Robot::hasHitBumper(){
+
+return (currentEvent == EVENT_HIT_FRONT|| currentEvent==EVENT_HIT_FRONT_LEFT || currentEvent==EVENT_HIT_FRONT_RIGHT);
+}
+
 void Robot::run(void) {
 
     g_motorCtrl.setAcc(100.00);
     g_motorCtrl.setVel(100.00);
     Handle handle;
     Event event;
-    currentEvent = EVENT_COLLISION;
+    currentEvent = EVENT_NULL;
 
     printf("Robot::run\n");
     while (1) {
-      
-        if (currentEvent == EVENT_COLLISION) {
-            
+
+//      INPUT switchInput;
+//        switchInput.type  = TYPE_INPUT_SWITCH;
+//        switchInput.index = INDEX_SWITCH_BUMPER_LEFT ;
+//        switchInput.value = STATE_ON;
+//
+//        g_sensorCtrl.setSwitchState(INDEX_SWITCH_BUMPER_LEFT , STATE_ON);
+//
+//
+//        g_eventCenter.handleInput(switchInput);
+
+        if (hasHitBumper()) {
+
             handle.collision();
 
 
         } else if (currentEvent == EVENT_DETECT_BLACK){
-            
+
             handle.docking();
 
     } else if (currentEvent == EVENT_TRIGGER_ACTIVATED) {
-        
+
         handle.localization();
     }
     //Pose.updatePose();
 
 }
+
+
 /*   EVENT e = EVENT_NULL;
 
    e = GenEvent(TYPE_INPUT_SWITCH, INDEX_SWITCH_BUMPER_LEFT, STATE_ON);
