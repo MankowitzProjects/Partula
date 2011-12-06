@@ -1,7 +1,8 @@
 #include "SensorController.h"
-//#include "Event.h"
+#include "Event.h"
 
 SensorController g_sensorCtrl;
+Event g_eventCenter;
 
 /** \brief Default constructor
  * \param void
@@ -9,6 +10,7 @@ SensorController g_sensorCtrl;
  */
 SensorController::SensorController(void)
 {
+  
     ;
 }
 
@@ -137,9 +139,19 @@ __stdcall
 #endif
 ifKitInputChangeHandler(CPhidgetInterfaceKitHandle IFK, void *usrptr, int index, int state)
 {
-    g_sensorCtrl.setSwitchState(index, state);
+     //if (g_sensorCtrl.switchTable[index].isExist())
+    //{
+        INPUT switchInput;
+        switchInput.type  = TYPE_INPUT_SWITCH;
+        switchInput.index = index;
+        switchInput.value = state;
 
-    //HandleEvent(GenEvent(TYPE_INPUT_SWITCH, index, state));
+        g_sensorCtrl.setSwitchState(index, state);
+
+        #if (!DEBUG_MODE_BLOCK_SENSORS)
+        g_eventCenter.handleInput(switchInput);
+        #endif
+    //}
 
     return 0;
 }
@@ -174,14 +186,25 @@ int
 #if defined(_MSC_VER) && (_MSC_VER >= 1200)
 __stdcall
 #endif
-ifKitSensorChangeHandler(CPhidgetInterfaceKitHandle IFK, void *usrptr, int index, int state)
+ifKitSensorChangeHandler(CPhidgetInterfaceKitHandle IFK, void *usrptr, int index, int value)
 {
   //Sets the sensor value based on its index
   //The sensor values can be IR, Light Sensors
-    g_sensorCtrl.setSensorValue(index, state);
+    //if (g_sensorCtrl.sensorTable[index].isExist())
+    //{
+        INPUT sensorInput;
+        sensorInput.type  = TYPE_INPUT_SENSOR;
+        sensorInput.index = index;
+        sensorInput.value = value;
 
-    //Once the sensor value has been set, we need to see if it has generated an event
-    //HandleEvent(GenEvent(TYPE_INPUT_SENSOR, index, state));
+        g_sensorCtrl.setSensorValue(index, value);
+
+        #if (!DEBUG_MODE_BLOCK_SENSORS)
+        g_eventCenter.handleInput(sensorInput);
+        #endif
+   // }
+
+    return 0;
 
     return 0;
 }

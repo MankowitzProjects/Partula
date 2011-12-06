@@ -98,6 +98,7 @@ void ActTurnRight(unsigned long milisec)
 
 void moveForward(void)
 {
+    //MOVEMENTSTATUS = FORWARD;
     g_motorCtrl.setAcc(VALUE_MOTOR_ACC_NORMAL);
     g_motorCtrl.setVel(VALUE_MOTOR_VEL_NORMAL);
 }

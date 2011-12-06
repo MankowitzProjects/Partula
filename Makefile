@@ -1,6 +1,6 @@
 PROG ?= Partula
 OBJS = main.o Robot.o Action.o SensorController.o MotorController.o \
-       Motor.o Sensor.o Switch.o Handle.o \
+       Motor.o Sensor.o Switch.o Handle.o Event.o \
 
 all: $(PROG)
 
@@ -14,6 +14,7 @@ $(PROG): main.o
 		"./obj/lin/Motor.o" \
 		"./obj/lin/Handle.o" \
 		"./obj/lin/Action.o" \
+		"./obj/lin/Event.o" \
 		-o Partula \
 		-lphidget21
 		
@@ -23,7 +24,7 @@ main.o: Robot.o main.cpp
 Handle.o: Handle.cpp Action.o
 	g++ -c Handle.cpp -o "./obj/lin/Handle.o"
 
-Robot.o: Robot.cpp Robot.h SensorController.o MotorController.o Handle.o
+Robot.o: Robot.cpp Robot.h SensorController.o MotorController.o Handle.o Event.o
 	g++ -c Robot.cpp -o "./obj/lin/Robot.o"
 
 SensorController.o: SensorController.cpp SensorController.h Sensor.o Switch.o
@@ -44,6 +45,9 @@ Switch.o: Switch.cpp Switch.h
 Action.o: Action.cpp Action.h MotorController.o
 	g++ -c Action.cpp -o "./obj/lin/Action.o"
 
+Event.o: Event.cpp Event.h
+	g++ -c Event.cpp -o "./obj/lin/Event.o"
+
 clean:
 	rm "./obj/lin/main.o" \
 		"./obj/lin/Robot.o" \
@@ -54,3 +58,4 @@ clean:
 		"./obj/lin/Motor.o"\
 		"./obj/lin/Handle.o"\
 		"./obj/lin/Action.o"\
+		"./obj/lin/Event.o"\

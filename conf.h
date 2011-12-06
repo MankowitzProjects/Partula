@@ -147,6 +147,17 @@ static inline const char *GetPositionChar(POSITION position)
 }
 
 //*************************** Event ********************************
+typedef struct
+{
+    TYPE_INPUT type;
+    int subType;
+
+    int index;
+    int value;
+
+    POSITION pos;
+} INPUT;
+
 //Determines all of the possible events
 typedef enum
 {

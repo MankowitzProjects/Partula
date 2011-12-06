@@ -1,11 +1,13 @@
 #include "Robot.h"
 #include "Handle.h"
-//#include "Action.h"
+#include "Event.h"
 
 extern SensorController g_sensorCtrl;
 extern MotorController g_motorCtrl;
+
+//Declare the event and robot status variables
 STATUS_ROBOT robotStatus;
-EVENT currentEvent;
+extern EVENT currentEvent;
 
 Robot::Robot(void) {
     prt_debug("Creating robot\n");
@@ -21,12 +23,11 @@ void Robot::run(void) {
     g_motorCtrl.setAcc(100.00);
     g_motorCtrl.setVel(100.00);
     Handle handle;
+    Event event;
     currentEvent = EVENT_COLLISION;
 
     printf("Robot::run\n");
     while (1) {
-
-      //checkForEvents();
       
         if (currentEvent == EVENT_COLLISION) {
             
@@ -41,7 +42,6 @@ void Robot::run(void) {
         
         handle.localization();
     }
-
     //Pose.updatePose();
 
 }
