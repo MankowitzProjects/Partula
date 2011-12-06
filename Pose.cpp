@@ -1,6 +1,6 @@
 #include <sys/time.h>
 
-typedef{
+typedef struct{
 double x,y,theta;
 }pose
 
