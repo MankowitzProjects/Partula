@@ -34,6 +34,7 @@ public:
 
     inline void         setSensorValue(const int index, const int value);
     inline int          getSensorValue(const int index);
+    inline int          getSensorValuePre(const int index);
     inline int          getSensorValueAvrg(const int index);
 
     inline void         setSensorType(const int index, const TYPE_SENSOR type);
@@ -85,6 +86,10 @@ inline int SensorController::getSensorValueAvrg(const int index)
     return sensorTable[index].getValueAvrg();
 }
 
+inline int SensorController::getSensorValuePre(const int index)
+{
+    return sensorTable[index].getValuePre();
+}
 
 inline void SensorController::setSensorType(const int index, const TYPE_SENSOR type)
 {

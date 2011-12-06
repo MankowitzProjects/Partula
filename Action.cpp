@@ -207,7 +207,7 @@ void* p_thrd_turnRight(void *para)
 	      switch(currentEvent)
 	      {
 		case EVENT_HIT_FRONT:
-    	      ActMoveBackward(waitTime);
+        ActMoveBackward(waitTime);
 	      ActTurnLeft(waitTime);
 	      ActMoveForward(waitTime);
 		break;

@@ -148,7 +148,7 @@ EVENT Event::genLightSensorEvent(const INPUT &input)
 
 EVENT Event::genLightSensorFrontEvent(const INPUT &input)
 {
-  /*  if (input.value < VALUE_MIN_LED_LIGHT)
+    /*if (input.value < VALUE_MIN_LED_LIGHT)
     {
         return EVENT_NULL;
     }

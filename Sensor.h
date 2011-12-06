@@ -28,7 +28,10 @@ public:
 
     inline void  setValue(int value);
     inline int   getValue(void);
+    inline int   getValuePre(void);
     inline int   getValueAvrg(void);
+    
+    inline bool  isExist(void) {return bIsInit;}
 
 private:
 
@@ -41,6 +44,8 @@ private:
     int valuePre;       /**< The previous value */
     int valueArray[SENSOR_SAMPLE_RATE]; /**< Store several recent values in the array */
     int iValuePos;      /**< Current Position of the value array */
+    
+    bool bIsInit;
 };
 
 
@@ -81,6 +86,11 @@ inline void Sensor::setValue(int value)
 inline int Sensor::getValue(void)
 {
     return value;
+}
+
+inline int Sensor::getValuePre(void)
+{
+    return valuePre;
 }
 
 inline int Sensor::getValueAvrg(void)

@@ -11,6 +11,7 @@
 
 extern EVENT currentEvent;
 extern SensorController g_sensorCtrl;
+extern STATUS_ROBOT robotStatus;
 
 Handle::Handle()
 {
@@ -28,7 +29,6 @@ Handle::~Handle()
 //Handles collisions
 void Handle::collision()
 {
-
 
     hitBumper(1000);
     currentEvent = EVENT_NULL;

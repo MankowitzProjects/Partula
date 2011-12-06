@@ -33,6 +33,7 @@ void Robot::run(void)
     g_motorCtrl.setVel(100.00);
     Handle handle;
     Event event;
+    robotStatus = STATUS_ROBOT_EXPLORING;
     currentEvent = EVENT_NULL;
 
     printf("Robot::run\n");

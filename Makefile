@@ -21,10 +21,10 @@ $(PROG): main.o
 main.o: Robot.o main.cpp
 	g++ -c main.cpp -o "./obj/lin/main.o"
 
-Handle.o: Handle.cpp Action.o
+Handle.o: Handle.cpp Action.o 
 	g++ -c Handle.cpp -o "./obj/lin/Handle.o"
 
-Robot.o: Robot.cpp Robot.h SensorController.o MotorController.o Handle.o Event.o
+Robot.o: Robot.cpp Robot.h SensorController.o MotorController.o Handle.o Event.o 
 	g++ -c Robot.cpp -o "./obj/lin/Robot.o"
 
 SensorController.o: SensorController.cpp SensorController.h Sensor.o Switch.o
@@ -47,6 +47,7 @@ Action.o: Action.cpp Action.h MotorController.o
 
 Event.o: Event.cpp Event.h
 	g++ -c Event.cpp -o "./obj/lin/Event.o"
+
 
 clean:
 	rm "./obj/lin/main.o" \

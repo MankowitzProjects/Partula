@@ -11,6 +11,7 @@
 
 #include "conf.h"
 #include <sys/time.h>
+//#include "Frequency.h"
 
 class Handle {
 public:
@@ -20,8 +21,11 @@ public:
     void collision();
     void docking();
     void localization();
-    void* frequency(void * param);
+    //void* frequency(void * param);
     static void* scanArea(void* param);
+    void triggerSwitch();
+
+    //Frequency frequency(3);
 private:
 
 };
