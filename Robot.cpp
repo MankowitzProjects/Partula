@@ -1,6 +1,7 @@
 #include "Robot.h"
 #include "Handle.h"
 #include "Event.h"
+#include "Pose.h"
 
 extern SensorController g_sensorCtrl;
 extern MotorController g_motorCtrl;

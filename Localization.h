@@ -1,4 +1,4 @@
-/* 
+/*
  * File:   Localization.h
  * Author: daniel
  *
@@ -9,19 +9,19 @@
 #define	LOCALIZATION_H
 
 class Localization {
+
 public:
     Localization();
-    Localization(const Localization& orig);
-    virtual ~Localization();
-    
-    void initialisePosition();
-    
+    ~Localization();
+
+    void initializePosition();
+
     void EstimateResourceSiteLocations();
-    
+
     void takeMeasurement();
-    
+
     void updateParticles();
-   
+
 private:
 
 };

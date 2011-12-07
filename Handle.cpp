@@ -8,136 +8,108 @@
 #include "Handle.h"
 #include "Action.h"
 #include "SensorController.h"
+#include "Localization.h"
 
 extern EVENT currentEvent;
 extern SensorController g_sensorCtrl;
-extern STATUS_ROBOT robotStatus;
 
-Handle::Handle()
-{
+Handle::Handle() {
 
 }
 
-Handle::Handle(const Handle& orig)
-{
+Handle::Handle(const Handle& orig) {
 }
 
-Handle::~Handle()
-{
+Handle::~Handle() {
 }
 
 //Handles collisions
-void Handle::collision()
-{
-
-    hitBumper(1000);
-    currentEvent = EVENT_NULL;
-
-}
+void Handle::collision(){
 
 
-void Handle::docking()
-{
-    //Set the robot status to docking
-    robotStatus = STATUS_ROBOT_DOCKING;
-    //Black tape has been detected
-    //1. PerformShape Detection
-
-    cout<<"Black Tape Detected"<<endl;
-    //navigSpeed=50.00;
-    cout<<"Thread cancelled\n"<<endl;
-    int id = 0;
-    pthread_t scanningThread;
-    pthread_create(&scanningThread, NULL, &Handle::scanArea,(void*)&id);
+      hitBumper(1000);
+      currentEvent = EVENT_NULL;
 
 }
 
-void Handle::localization()
-{
+
+void Handle::docking(){
+      //Black tape has been detected
+      //1. PerformShape Detection
 
 }
 
-void Handle::triggerSwitch(){
-
-
-
+void Handle::localization(){
 
 }
 
-//****************************************************SCANNINGTHREAD****************************************
+ //****************************************************SCANNINGTHREAD****************************************
 
-//Perform a scan in order to detect the center of the obstacle
-void* Handle::scanArea(void* param)
-{
-
-    cout<<"Entered Scan Area"<<endl;
-    ActTurnLeft(0);
-    //leftDirectionDistance = irMainValueBottom;
-    bool foundFlag=false;
-    bool edgeDetected=false;
-
-    double irMainValueTop;
-    double irMainValueBottom;
-
-    while(foundFlag==false && edgeDetected==false)
+    //Perform a scan in order to detect the center of the obstacle
+    void* scanArea(void* param)
     {
+      cout<<"Entered Scan Area"<<endl;
+      ActTurnLeft(0);
+      //leftDirectionDistance = irMainValueBottom;
+      bool foundFlag=false;
+      bool edgeDetected=false;
 
-        irMainValueTop = g_sensorCtrl.getSensorValue(INDEX_SENSOR_IR_TOP);
-        irMainValueBottom = g_sensorCtrl.getSensorValue(INDEX_SENSOR_IR_BOTTOM);
+      double irMainValueTop;
+      double irMainValueBottom;
 
-        if(irMainValueTop<90 && irMainValueBottom>90)
-        {
-            cout<<"Stopped due to gap in first loop"<<endl;
-            ActStop();
-            foundFlag=true;
-        }
-        else if(irMainValueTop<90 && irMainValueBottom<90)
-        {
-            cout<<"Stopped due to edge in first loop"<<endl;
-            ActStop();
-            edgeDetected=true;
+      while(foundFlag==false && edgeDetected==false){
 
-        }
-    }
+	irMainValueTop = g_sensorCtrl.getSensorValue(INDEX_SENSOR_IR_TOP);
+	irMainValueBottom = g_sensorCtrl.getSensorValue(INDEX_SENSOR_IR_BOTTOM);
 
-    //printf("Left direction Distance is %d",leftDirectionPrevious);
+	if(irMainValueTop<90 && irMainValueBottom>90){
+	cout<<"Stopped due to gap in first loop"<<endl;
+	 ActStop();
+	 foundFlag=true;
+	}
+	else if(irMainValueTop<90 && irMainValueBottom<90){
+	  cout<<"Stopped due to edge in first loop"<<endl;
+	  ActStop();
+	  edgeDetected=true;
 
-    if(foundFlag==false)
-    {
-        ActTurnRight(1000);
+	}
+      }
 
-        //rightDirectionDistance = irMainValueBottom;
-        while(foundFlag==false)
-        {
+      //printf("Left direction Distance is %d",leftDirectionPrevious);
 
-            irMainValueTop = g_sensorCtrl.getSensorValue(INDEX_SENSOR_IR_TOP);
-            irMainValueBottom = g_sensorCtrl.getSensorValue(INDEX_SENSOR_IR_BOTTOM);
+      if(foundFlag==false){
+      ActTurnRight(1000);
 
-            if(irMainValueTop<90 && irMainValueBottom>90)
-            {
-                cout<<"Stopped due to gap in second loop"<<endl;
-                ActStop();
-                ActTurnRight(300);
-                foundFlag=true;
+      //rightDirectionDistance = irMainValueBottom;
+      while(foundFlag==false){
 
-            }
-            else if(irMainValueTop<90 && irMainValueBottom<90)
-            {
-                cout<<"Stopped due to edge in second loop"<<endl;
-                ActStop();
+	irMainValueTop = g_sensorCtrl.getSensorValue(INDEX_SENSOR_IR_TOP);
+	irMainValueBottom = g_sensorCtrl.getSensorValue(INDEX_SENSOR_IR_BOTTOM);
 
-            }
+	if(irMainValueTop<90 && irMainValueBottom>90){
+	cout<<"Stopped due to gap in second loop"<<endl;
+	 ActStop();
+	 ActTurnRight(300);
+	 foundFlag=true;
 
-        }
+	}
+	else
+	  if(irMainValueTop<90 && irMainValueBottom<90){
+	    cout<<"Stopped due to edge in second loop"<<endl;
+	  ActStop();
+
+	  }
+
+      }
 
 
+
+      }
+      ActMoveForward(0);
+
+      pthread_exit(NULL);
 
     }
-    ActMoveForward(0);
-
-    pthread_exit(NULL);
-
-}
 
 
 /*void ActMoveForward(unsigned long milisec);

@@ -6,12 +6,10 @@
  */
 
 #include "Localization.h"
+#include "Pose.h"
 
-#if 0
 Localization::Localization() {
-}
 
-Localization::Localization(const Localization& orig) {
 }
 
 Localization::~Localization() {
@@ -35,12 +33,11 @@ void Localization::takeMeasurement(){
 
 }
 
-void Localization::UpdateParticles(){
+void Localization::updateParticles(){
 
 
 
 }
 
-#endif
 
 

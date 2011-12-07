@@ -10,7 +10,7 @@ Event g_eventCenter;
  */
 SensorController::SensorController(void)
 {
-  
+
     ;
 }
 
@@ -66,7 +66,7 @@ void SensorController::setupSensors(void)
      // IR sensor MIDDLE
 
     sensorTable[INDEX_SENSOR_IR_TOP   ].init(INDEX_SENSOR_IR_TOP,    TYPE_SENSOR_IR,    POSITION_MIDDLE);
-    
+
     sensorTable[INDEX_SENSOR_IR_BOTTOM   ].init(INDEX_SENSOR_IR_BOTTOM,    TYPE_SENSOR_IR,    POSITION_UNDER);
     // IR sensor LEFT
     //sensorTable[INDEX_SENSOR_IR_LEFT     ].init(INDEX_SENSOR_IR_LEFT,      TYPE_SENSOR_IR,    POSITION_LEFT);
@@ -150,6 +150,7 @@ ifKitInputChangeHandler(CPhidgetInterfaceKitHandle IFK, void *usrptr, int index,
     //{
         INPUT switchInput;
         switchInput.type  = TYPE_INPUT_SWITCH;
+        switchInput.subType = g_sensorCtrl.getSwitchType(index);
         switchInput.index = index;
         switchInput.value = state;
 
@@ -201,6 +202,7 @@ ifKitSensorChangeHandler(CPhidgetInterfaceKitHandle IFK, void *usrptr, int index
     //{
         INPUT sensorInput;
         sensorInput.type  = TYPE_INPUT_SENSOR;
+        sensorInput.subType = g_sensorCtrl.getSensorType(index);
         sensorInput.index = index;
         sensorInput.value = value;
 
