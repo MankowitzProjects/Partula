@@ -43,6 +43,10 @@ void Handle::localization(){
 
 }
 
+void Handle::triggerSwitch(){
+
+}
+
  //****************************************************SCANNINGTHREAD****************************************
 
     //Perform a scan in order to detect the center of the obstacle
