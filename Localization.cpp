@@ -93,8 +93,9 @@ void Localization::EstimateResourceSiteLocations()
 //Take a measurement of the nearby obstacles
 void Localization::takeMeasurement()
 {
-
-   // pthread_create(&sonarThread, NULL, sonarScan,(void*)&sonarStatus);
+    int sonarStatus = 0;
+    pthread_t sonarThread;
+    pthread_create(&sonarThread, NULL, sonarScan,(void*)&sonarStatus);
 
 }
 
@@ -176,7 +177,8 @@ void* Localization::sonarScan(void* param)
 
       }
       //Move towards the new obstacle
-      ActMoveForward(0);
+      //ActMoveForward(0);
+      //moveForward();
 
       pthread_exit(NULL);
 
