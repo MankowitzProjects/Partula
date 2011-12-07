@@ -41,6 +41,17 @@ void Robot::run(void)
 
     cout<<"Robot::run"<<endl;
 
+    INPUT switchInput;
+    switchInput.type    = TYPE_INPUT_SWITCH;
+    switchInput.subType = g_sensorCtrl.getSwitchType(INDEX_SWITCH_BUMPER_LEFT);
+    switchInput.index   = INDEX_SWITCH_BUMPER_LEFT;
+    switchInput.value   = STATE_ON;
+    switchInput.pos     = POSITION_FRONT;
+
+    g_sensorCtrl.setSwitchState(INDEX_SWITCH_BUMPER_LEFT, STATE_ON);
+
+    g_eventCenter.handleInput(switchInput);
+
     while (true)
     {
         ;
@@ -49,15 +60,7 @@ void Robot::run(void)
     #if 0
     while (1)
     {
-//      INPUT switchInput;
-//        switchInput.type  = TYPE_INPUT_SWITCH;
-//        switchInput.index = INDEX_SWITCH_BUMPER_LEFT ;
-//        switchInput.value = STATE_ON;
-//
-//        g_sensorCtrl.setSwitchState(INDEX_SWITCH_BUMPER_LEFT , STATE_ON);
-//
-//
-//        g_eventCenter.handleInput(switchInput);
+
         if(robotStatus == STATUS_ROBOT_EXPLORING)
         {
             if (hasHitBumper())
@@ -84,43 +87,6 @@ void Robot::run(void)
     }
     #endif
 
-    /*   EVENT e = EVENT_NULL;
-
-       e = GenEvent(TYPE_INPUT_SWITCH, INDEX_SWITCH_BUMPER_LEFT, STATE_ON);
-       HandleEvent(e);
-
-       e = GenEvent(TYPE_INPUT_SWITCH, INDEX_SWITCH_BUMPER_RIGHT, STATE_ON);
-       HandleEvent(e);
-
-       e = GenEvent(TYPE_INPUT_SWITCH, INDEX_SWITCH_BUMPER_FRONT, STATE_ON);
-       HandleEvent(e);
-
-       g_sensorCtrl.setSensorValue(INDEX_SENSOR_LIGHT_UNDER, 120);
-       e = GenEvent(TYPE_INPUT_SENSOR, INDEX_SENSOR_LIGHT_UNDER, 20);
-       HandleEvent(e);
-
-       g_sensorCtrl.setSensorValue(INDEX_SENSOR_LIGHT_UNDER, 130);
-       e = GenEvent(TYPE_INPUT_SENSOR, INDEX_SENSOR_LIGHT_UNDER, 130);
-       HandleEvent(e);
-
-       g_sensorCtrl.setSensorValue(INDEX_SENSOR_LIGHT_UNDER, 150);
-       e = GenEvent(TYPE_INPUT_SENSOR, INDEX_SENSOR_LIGHT_UNDER, 150);
-       HandleEvent(e);
-
-       g_sensorCtrl.setSensorValue(INDEX_SENSOR_LIGHT_UNDER, 121);
-       e = GenEvent(TYPE_INPUT_SENSOR, INDEX_SENSOR_LIGHT_UNDER, 121);
-       HandleEvent(e);
-
-       g_sensorCtrl.setSensorValue(INDEX_SENSOR_LIGHT_UNDER, 140);
-       e = GenEvent(TYPE_INPUT_SENSOR, INDEX_SENSOR_LIGHT_UNDER, 140);
-       HandleEvent(e);
-
-       e = GenEvent(TYPE_INPUT_SENSOR, INDEX_SENSOR_LIGHT_UNDER, 130);
-       HandleEvent(e);
-
-       e = GenEvent(TYPE_INPUT_SENSOR, INDEX_SENSOR_LIGHT_UNDER, 250);
-       HandleEvent(e);
-     */
     printf("Robot::run - DONE~!\n");
 }
 
