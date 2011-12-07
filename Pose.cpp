@@ -6,7 +6,7 @@ typedef struct{
 double x,y,theta;
 }pose;
 
-/*class Pose{
+class Pose{
     pose robotPose;
     timeval startTime,endtime;
     double velocity,distance;
@@ -43,4 +43,4 @@ double x,y,theta;
     {
         //dtor
     }
-};*/
+};

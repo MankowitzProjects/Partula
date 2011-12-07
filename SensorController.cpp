@@ -150,11 +150,12 @@ ifKitInputChangeHandler(CPhidgetInterfaceKitHandle IFK, void *usrptr, int index,
     //{
         INPUT switchInput;
         switchInput.type  = TYPE_INPUT_SWITCH;
+        switchInput.subType = g_sensorCtrl.getSwitchType(index);
         switchInput.index = index;
         switchInput.value = state;
 
         g_sensorCtrl.setSwitchState(index, state);
-
+        
         #if (!DEBUG_MODE_BLOCK_SENSORS)
         g_eventCenter.handleInput(switchInput);
         #endif
@@ -201,6 +202,7 @@ ifKitSensorChangeHandler(CPhidgetInterfaceKitHandle IFK, void *usrptr, int index
     //{
         INPUT sensorInput;
         sensorInput.type  = TYPE_INPUT_SENSOR;
+        sensorInput.subType = g_sensorCtrl.getSensorType(index);
         sensorInput.index = index;
         sensorInput.value = value;
 
