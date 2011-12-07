@@ -5,6 +5,7 @@
 
 extern MotorController g_motorCtrl;
 extern EVENT currentEvent;
+extern Pose pose;
 
 pthread_t g_thrd_motor;
 bool      b_thrd_motor_created = false;
@@ -166,11 +167,18 @@ void stop(void)
 
 void* p_thrd_moveForward(void *para)
 {
+    //Set the timestamp for updating the position
+    double time = *((unsigned long *)para);
+    pose.setTimestamp();
+
+    //Perform the movement
     moveForward();
 
     if (0 != *((unsigned long *)para))
     {
         wait(*((unsigned long *)para));
+        //Update the position based on the time
+        pose.updatePosition();
 
         stop();
     }
@@ -184,14 +192,20 @@ void* p_thrd_moveForward(void *para)
 
 void* p_thrd_moveBackward(void *para)
 {
+     //Set the timestamp for updating the position
+    double time = *((unsigned long *)para);
+    pose.setTimestamp();
     moveBackward();
 
     if (0 != *((unsigned long *)para))
     {
         wait(*((unsigned long *)para));
 
+        //Update the position based on the time
+        pose.updatePosition();
         stop();
     }
+
 
     pthread_exit(NULL);
 
@@ -200,11 +214,16 @@ void* p_thrd_moveBackward(void *para)
 
 void* p_thrd_turnLeft(void *para)
 {
+    //Set the timestamp for updating the position
+    double time = *((unsigned long *)para);
+    pose.setTimestamp();
     turnLeft();
 
     if (0 != *((unsigned long *)para))
     {
         wait(*((unsigned long *)para));
+        //Update the angle based on the time
+        pose.updateAngle(time);
 
         stop();
     }
@@ -216,12 +235,17 @@ void* p_thrd_turnLeft(void *para)
 
 void* p_thrd_turnRight(void *para)
 {
+    //Set the timestamp for updating the position
+    double time = *((unsigned long *)para);
+    pose.setTimestamp();
     turnRight();
 
     if (0 != *((unsigned long *)para))
     {
         wait(*((unsigned long *)para));
 
+        //Update the angle based on the time
+        pose.updateAngle(time);
         stop();
     }
 
@@ -232,10 +256,20 @@ void* p_thrd_turnRight(void *para)
 
 void* p_thrd_hitBumperFront(void *para)
 {
+    //Set the timestamp for updating the position
+    double time = *((unsigned long *)para);
+
+    pose.setTimestamp();
     moveBackward();
     wait(*((unsigned long *)para));
+    pose.updatePosition();
+
+    pose.setTimestamp();
     turnLeft();
     wait(*((unsigned long *)para));
+    pose.updateAngle(time);
+
+    pose.setTimestamp();
     moveForward();
 
     pthread_exit(NULL);
@@ -245,10 +279,20 @@ void* p_thrd_hitBumperFront(void *para)
 
 void* p_thrd_hitBumperLeft(void *para)
 {
+    //Set the timestamp for updating the position
+    double time = *((unsigned long *)para);
+    pose.updatePosition();
+    pose.setTimestamp();
     moveBackward();
     wait(*((unsigned long *)para));
+    pose.updatePosition();
+
+    pose.setTimestamp();
     turnRight();
     wait(*((unsigned long *)para));
+    pose.updateAngle(time);
+
+    pose.setTimestamp();
     moveForward();
 
     pthread_exit(NULL);
@@ -258,10 +302,20 @@ void* p_thrd_hitBumperLeft(void *para)
 
 void* p_thrd_hitBumperRight(void *para)
 {
+    //Set the timestamp for updating the position
+    double time = *((unsigned long *)para);
+
+    pose.setTimestamp();
     moveBackward();
     wait(*((unsigned long *)para));
+    pose.updatePosition();
+
+    pose.setTimestamp();
     turnLeft();
     wait(*((unsigned long *)para));
+    pose.updateAngle(time);
+
+    pose.setTimestamp();
     moveForward();
 
     pthread_exit(NULL);
@@ -291,45 +345,109 @@ void hitBumper(long unsigned waitTime)
 
 void frequencyMovement(FREQUENCY frequency)
 {
-
+    pose.setTimestamp();
     switch(frequency)
     {
 
     case FREQUENCY_HALF:
-        ActMoveBackward( 1000);
-        ActTurnLeft( 5600);
+    {
+
+        moveBackward();
+        wait(1000);
+        pose.updatePosition();
+
+        pose.setTimestamp();
+        turnLeft( );
+        wait(5600);
+        pose.updateAngle(5600);
         stop();
         break;
+    }
     case FREQUENCY_1:
-        ActMoveBackward( 1000);
-        ActTurnRight( 5600);
+    {
+
+        moveBackward();
+        wait(1000);
+        pose.updatePosition();
+
+        pose.setTimestamp();
+        turnRight();
+        wait(5600);
+        pose.updateAngle(5600);
+
         stop();
         break;
+    }
     case FREQUENCY_2:
-        ActMoveBackward( 1000);
+    {
+
+        moveBackward();
+        wait(1000);
+        pose.updatePosition();
+
         stop();
-        ActMoveBackward( 1000);
+
+        pose.setTimestamp();
+        moveBackward();
+        wait(1000);
+        pose.updatePosition();
+
         stop();
         break;
+    }
     case FREQUENCY_4:
-        ActMoveBackward( 1000);
-        ActTurnLeft( 2600);
+    {
+
+        moveBackward();
+        wait(1000);
+        pose.updatePosition();
+
+        pose.setTimestamp();
+        turnLeft( );
+        wait(2600);
+        pose.updateAngle(2600);
+
         stop();
         break;
+    }
     case FREQUENCY_6:
-        ActMoveBackward( 2000);
-        ActTurnRight( 2600);
+    {
+
+        moveBackward( );
+        wait(2000);
+        pose.updatePosition();
+
+        pose.setTimestamp();
+        turnRight();
+        wait(2600);
+        pose.updateAngle(2600);
+
         stop();
         break;
+    }
     case FREQUENCY_8:
-        ActMoveBackward( 2000);
+    {
+
+        moveBackward();
+        wait(2000);
+        pose.updatePosition();
+
         stop();
-        ActMoveForward( 1000);
+
+        pose.setTimestamp();
+        moveForward();
+        wait(1000);
+        pose.updatePosition();
+
         stop();
         break;
+    }
     default:
+    {
+
 
         break;
+    }
 
     }
 

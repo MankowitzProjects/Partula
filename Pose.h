@@ -1,4 +1,5 @@
-
+#ifndef POSE_H
+#define	POSE_H
 
 #include <sys/time.h>
 #include <math.h>
@@ -6,13 +7,13 @@
 
 typedef struct{
 double x,y,theta;
-}pose;
+}RobotPose;
 
 class Pose{
 
 
     public:
-        pose robotPose;
+        RobotPose robotPose;
         timeval starttime;
         timeval endtime;
         double distance;
@@ -20,10 +21,11 @@ class Pose{
         Pose(double x,double y, double theta );
         ~Pose();
         void setTimestamp();
-        void updatePosition(double distance);
+        void updatePosition();
         void updateAngle(double angle);
-        pose getPose();
+        RobotPose getPose();
         void setPose(double x,double y, double theta );
 
 
 };
+#endif

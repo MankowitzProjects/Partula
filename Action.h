@@ -2,6 +2,7 @@
 #define ACTION_H_INCLUDED
 
 #include "MotorController.h"
+#include "Pose.h"
 
 void ActMoveForward(unsigned long milisec);
 void ActMoveBackward(unsigned long milisec);
