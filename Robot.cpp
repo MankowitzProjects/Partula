@@ -57,10 +57,13 @@ void Robot::run(void)
 
     g_eventCenter.handleInput(switchInput);*/
 
-    /*while (true)
-    {
-        ;
-    }*/
+
+   // while (true)
+    //{
+    //    ;
+    //}
+
+    //trainSensors();
 
     #if 1
     while (1)
@@ -119,3 +122,34 @@ void Robot::fin(void)
     g_sensorCtrl.fin();
     //g_servoCtrl.fin();
 }
+
+    void Robot::trainSensors(){
+	      robotStatus=STATUS_TRAINING;
+	      int samples = 0;
+	      int blackTapeTotal=0;
+	      int blackTapeAvg=0;
+          int lightReading = 0;
+	      int lightReadingPrevious=0;
+	      cout<<"Press to start training"<<endl;
+	      getchar();
+	      while(samples<5){
+                lightReading = g_sensorCtrl.getSensorValue(INDEX_SENSOR_LIGHT_UNDER);
+
+		      if(lightReading!=lightReadingPrevious)
+		      {
+			      cout<<"Light Reading Trainer Value"<<lightReading<<endl;
+			      lightReadingPrevious = lightReading;
+			      blackTapeTotal = blackTapeTotal+lightReading;
+			      samples++;
+		      }
+	      }
+	      blackTapeAvg = blackTapeTotal/(samples+1);
+	      VALUE_BLACK_TAPE_MAX = blackTapeAvg;
+	      VALUE_BLACK_TAPE_MIN = blackTapeAvg - 60;
+
+	      cout<<"Black Tape Threshold max threshold is "<<VALUE_BLACK_TAPE_MAX<<endl;
+	      cout<<"Black Tape Threshold min threshold is "<<VALUE_BLACK_TAPE_MIN<<endl;
+	      getchar();
+	      robotStatus=STATUS_ROBOT_EXPLORING;
+
+      }

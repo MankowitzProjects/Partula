@@ -9,6 +9,9 @@
 
 Localization g_localization;
 extern Pose pose;
+extern ServoController g_servoController;
+extern SensorController g_sensorCtrl;
+extern STATUS_ROBOT robotStatus;
 
 Localization::Localization()
 {
@@ -103,16 +106,16 @@ void Localization::updateParticles()
 
 }
 
-/*void* Localization::sonarScan(void* param)
+void* Localization::sonarScan(void* param)
 {
-	printf("Entered Sonar Scanning Mode...\n");
-	robotStatus=0;
+    cout<<"Entered Sonar Scanning Mode..."<<endl;
+    robotStatus=STATUS_ROBOT_EXPLORING;
 
       int servoPosition = -1;
       int minSonarValue = 1000;
       double minSonarPosition = -1.0;
       double currentPosition;
-
+      double sonarValue;
       //The distance the servo has moved from the center position
       double servoOffset = 0.0;
 
@@ -120,61 +123,65 @@ void Localization::updateParticles()
       double degreeTurn=0.0;
       unsigned long turnMilisecs=0;
       //Find the nearest obstacle
-	for (int i=0;i<220;i=i+5)
-	{
-	  moveServo(i);
-	  //Get the current servo position
-	  CPhidgetAdvancedServo_getPosition (servo, 0, &currentPosition);
-	  if(sonarValue<minSonarValue){
+    for (int i=0;i<220;i=i+5)
+    {
+      g_servoController.setPos(i);
+      //Get the current servo position
+      g_servoController.getPos();
 
-	    minSonarValue = sonarValue;
+      //Set the current sonar value
+      sonarValue = g_sensorCtrl.getSensorValue(INDEX_SENSOR_SONAR);
+      //CPhidgetAdvancedServo_getPosition (servo, 0, &currentPosition);
+      if(sonarValue<minSonarValue){
 
-	    printf("\nSonar Value %f\n", currentPosition);
-	    minSonarPosition = currentPosition;
-	  }
-	  wait(200);
+        minSonarValue = sonarValue;
 
- 	}
+        cout<<"Sonar Value: "<<currentPosition;
+        minSonarPosition = currentPosition;
+      }
+      wait(200);
 
-	moveServo(130);
+    }
 
-	servoOffset = 120 - minSonarPosition;
+    g_servoController.setPos(130);
 
-	printf("\nServo offset %f\n\n",servoOffset);
-	  //0.81 is the number of degrees that the servo turns after each step as the range
-	  //is from 0 to 220. Dividing 180 degrees by the number of steps yields the number
-	  //of degrees per servo step
-	degreeTurn = servoOffset*0.81;
+    servoOffset = 120 - minSonarPosition;
 
-
-	if(servoOffset>0){
-	  printf("\n\nservo offset greater than 0\n\n");
-	//How long the car must turn clockwise (in milisecs) to reach the current servo position.
-	turnMilisecs = degreeTurn*16;
-
-	printf("\n\nNumber of degrees is %f and number of milisecs is %d\n\n",degreeTurn, turnMilisecs);
-	turn_left(navigAcc, navigSpeed, turnMilisecs);
-
-	}
-	else
-	  if(servoOffset<0)
-	  {
-	    printf("\n\nservo offset less than 0\n\n");
+    cout<<"Servo offset: "<<servoOffset;
+      //0.81 is the number of degrees that the servo turns after each step as the range
+      //is from 0 to 220. Dividing 180 degrees by the number of steps yields the number
+      //of degrees per servo step
+    degreeTurn = servoOffset*0.81;
 
 
-	    //Note the turnMilisecs are unequal as the car requires slightly more time to turn clockwise
-	   turnMilisecs = degreeTurn*(-15);
+    if(servoOffset>0){
+      cout<<"servo offset greater than 0"<<endl;
+    //How long the car must turn clockwise (in milisecs) to reach the current servo position.
+    turnMilisecs = degreeTurn*16;
 
-	   printf("\n\nNumber of degrees is %f and number of milisecs is %d\n\n",degreeTurn, turnMilisecs);
-	   turn_right(navigAcc, navigSpeed, turnMilisecs);
+    cout<<"Number of degrees is "<<degreeTurn<<"and number of milisecs is "<<turnMilisecs<<endl;
+    ActTurnLeft(turnMilisecs);
 
-	  }
+    }
+    else
+      if(servoOffset<0)
+      {
+        cout<<"servo offset less than 0"<<endl;
+
+
+        //Note the turnMilisecs are unequal as the car requires slightly more time to turn clockwise
+       turnMilisecs = degreeTurn*(-15);
+
+       cout<<"Number of degrees is "<<degreeTurn<<"and number of milisecs is"<<turnMilisecs<<endl;
+       ActTurnRight(turnMilisecs);
+
+      }
       //Move towards the new obstacle
-      go_straight(navigAcc, navigSpeed, 0);
+      ActMoveForward(0);
 
       pthread_exit(NULL);
 
-}*/
+}
 
 
 

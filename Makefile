@@ -58,10 +58,10 @@ Sensor.o: Sensor.cpp Sensor.h
 Switch.o: Switch.cpp Switch.h
 	g++ -c Switch.cpp -o "./obj/lin/Switch.o"
 
-Event.o: Event.cpp Event.h
+Event.o: Event.cpp Event.h SensorController.o
 	g++ -c Event.cpp -o "./obj/lin/Event.o"
 
-Localization.o: Localization.cpp Localization.h Pose.o
+Localization.o: Localization.cpp Localization.h Pose.o ServoController.o SensorController.o Action.o
 	g++ -c Localization.cpp -o "./obj/lin/Localization.o"
 
 
@@ -83,4 +83,3 @@ clean:
 		"./obj/lin/Localization.o"\
 		"./obj/lin/ServoController.o"\
 		"./obj/lin/ServoMotor.o"\
-		
