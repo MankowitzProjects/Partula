@@ -5,14 +5,15 @@
 #include <math.h>
 #include "conf.h"
 
-
 //Direction and time given to localization
-typedef struct{
-int direction;
-unsigned long time;
-}DirTime;
+typedef struct
+{
+    int direction;
+    unsigned long time;
+} DirTime;
 
 //Robot's pose
+
 typedef struct{
 double x,y,theta;
 SIDE ret_value;

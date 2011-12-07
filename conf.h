@@ -94,13 +94,14 @@ static inline const char *GetSensorTypeChar(TYPE_SENSOR type)
 }
 
 //*********************************** TYPE ***********************************
-typedef enum{
-SITE_NULL = 0x00,
-SITE_1,
-SITE_2,
-SITE_3,
-SITE_4,
-SITE_5
+typedef enum
+{
+    SITE_NULL = 0x00,
+    SITE_1,
+    SITE_2,
+    SITE_3,
+    SITE_4,
+    SITE_5
 
 }SITE;
 
@@ -176,13 +177,13 @@ static inline const char *GetPositionChar(POSITION position)
 //****************************Frequency*****************************
 typedef enum
 {
- FREQUENCY_NULL = 0x00000000,
- FREQUENCY_HALF,
- FREQUENCY_1,
- FREQUENCY_2,
- FREQUENCY_4,
- FREQUENCY_6,
- FREQUENCY_8
+    FREQUENCY_NULL = 0x00000000,
+    FREQUENCY_HALF,
+    FREQUENCY_1,
+    FREQUENCY_2,
+    FREQUENCY_4,
+    FREQUENCY_6,
+    FREQUENCY_8
 }FREQUENCY;
 //*************************** Event ********************************
 

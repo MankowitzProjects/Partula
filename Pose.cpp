@@ -46,12 +46,14 @@ void Pose::updateAngle(SIDE turn_side){
     }
     robotPose.theta=normRad(robotPose.theta);
    cout<<"New Angle: (theta): "<<"("<<robotPose.theta<<")"<<endl;
+
 }
 
 DirTime Pose::shiftToGoal(SITE id_site)
 {
     //get goal coordinates
     //goal_y=sites[id_site].readypoint.y;
+
     //goal_x=sites[id_site].readypoint.x;
     goal_y=0;
     goal_x =0;
@@ -68,6 +70,7 @@ DirTime Pose::shiftToGoal(SITE id_site)
         ret_val.direction=SIDE_LEFT;
     }
 return ret_val;
+
 }
 RobotPose Pose::getPose()
 {

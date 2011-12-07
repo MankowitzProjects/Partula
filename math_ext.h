@@ -15,7 +15,8 @@
 
 #define MIN(a, b) ((a<b)?a:b)
 
-#define Ang2Rad(angle) ((double(angle) / 360.0)*M_PI)
+#define Rad2Ang(rad) (rad*(180/M_PI))
+#define Ang2Rad(ang) (ang*(M_PI/180))
 
 /** \brief Swap two integer values
  *
