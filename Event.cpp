@@ -28,19 +28,17 @@ EVENT Event::checkEventType(const INPUT &input)
     switch (input.type)
     {
     case TYPE_INPUT_SWITCH:
-    {
-        genSwitchEvent(input);
-        break;
-    }
+        {
+            return genSwitchEvent(input);
+        }
     case TYPE_INPUT_SENSOR:
-    {
-        genSensorEvent(input);
-        break;
-    }
+        {
+            return genSensorEvent(input);
+        }
     default:
-    {
-        break;
-    }
+        {
+            break;
+        }
     }
 
     return EVENT_NULL;
