@@ -33,7 +33,7 @@ class Pose{
         ~Pose();
         void setTimestamp();
         void updatePosition();
-        void updateAngle();
+        void updateAngle(SIDE turn);
         DirTime shiftToGoal(SITE id_site);
         RobotPose getPose();
         void setPose(double x,double y, double theta );
