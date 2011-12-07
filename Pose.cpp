@@ -2,6 +2,8 @@
 
 
     Pose pose(0,0,0);
+    double velocity;
+    double ang_velocity;
 
     Pose::Pose(double x,double y, double theta)
     {
@@ -32,18 +34,20 @@
         void Pose::updateAngle(){
         gettimeofday(&endtime,NULL);
         robotPose.theta=ang_velocity*((endtime.tv_sec * 1000000) + (endtime.tv_usec)) - ((starttime.tv_sec * 1000000) + (starttime.tv_usec));
-        if (robotPose.theta>2*PI){
-        robotPose.theta-=2*PI;
+        if (robotPose.theta>2*M_PI){
+        robotPose.theta-=2*M_PI;
         }
         else if(robotPose.theta<0){
-        robotPose.theta+=2*PI;
+        robotPose.theta+=2*M_PI;
         }
         }
 
-        void Pose::shiftToGoal(SITE id_site){
+        DirTime Pose::shiftToGoal(SITE id_site){
         //get goal coordinates
-        goal_y=sites[id_site].readypoint.y;
-        goal_x=sites[id_site].readypoint.x;
+        //goal_y=sites[id_site].readypoint.y;
+        //goal_x=sites[id_site].readypoint.x;
+        goal_y=0;
+        goal_x =0;
         //relative position of goal to robot
         diff_y=goal_y-robotPose.y;
         diff_x=goal_x-robotPose.x;
@@ -65,7 +69,7 @@
             return ret_val;
         }
         else if(diff_x<0&&diff_y<0){
-            angle=PI+angle;
+            angle=M_PI+angle;
             diff_ang=angle-robotPose.theta;
             if(diff_ang>0){
                 ret_val.time=(diff_ang/ang_velocity)*1000;
@@ -78,7 +82,7 @@
             return ret_val;
         }
         else if(diff_x>0&&diff_y<0){
-            angle=2*PI-angle;
+            angle=2*M_PI-angle;
             diff_ang=angle-robotPose.theta;
             if(diff_ang>0){
                 ret_val.time=(diff_ang/ang_velocity)*1000;
@@ -91,7 +95,7 @@
             return ret_val;
         }
         else if(diff_x<0&&diff_y>0){
-            angle=PI-angle;
+            angle=M_PI-angle;
             diff_ang=angle-robotPose.theta;
             if(diff_ang>0){
                 ret_val.time=(diff_ang/ang_velocity)*1000;
@@ -104,14 +108,14 @@
             return ret_val;
         }
         }
-        robotPose Pose::getPose(){
+        RobotPose Pose::getPose(){
         return robotPose;
         }
 
-        void Pose::setPose(double x,double y, double robotPose.theta ){
+        void Pose::setPose(double x,double y, double theta ){
         robotPose.x=x;
         robotPose.y=y;
-        robotPose.robotPose.theta=theta;
+        robotPose.theta=theta;
         }
 
 

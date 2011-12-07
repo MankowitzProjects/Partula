@@ -222,7 +222,7 @@ void* p_thrd_turnLeft(void *para)
     {
         wait(*((unsigned long *)para));
         //Update the angle based on the time
-        pose.updateAngle(time);
+        pose.updateAngle();
 
         stop();
     }
@@ -244,7 +244,7 @@ void* p_thrd_turnRight(void *para)
         wait(*((unsigned long *)para));
 
         //Update the angle based on the time
-        pose.updateAngle(time);
+        pose.updateAngle();
         stop();
     }
 
@@ -266,7 +266,7 @@ void* p_thrd_hitBumperFront(void *para)
     pose.setTimestamp();
     turnLeft();
     wait(*((unsigned long *)para));
-    pose.updateAngle(time);
+    pose.updateAngle();
 
     pose.setTimestamp();
     moveForward();
@@ -289,7 +289,7 @@ void* p_thrd_hitBumperLeft(void *para)
     pose.setTimestamp();
     turnRight();
     wait(*((unsigned long *)para));
-    pose.updateAngle(time);
+    pose.updateAngle();
 
     pose.setTimestamp();
     moveForward();
@@ -312,7 +312,7 @@ void* p_thrd_hitBumperRight(void *para)
     pose.setTimestamp();
     turnLeft();
     wait(*((unsigned long *)para));
-    pose.updateAngle(time);
+    pose.updateAngle();
 
     pose.setTimestamp();
     moveForward();
@@ -358,7 +358,7 @@ void frequencyMovement(FREQUENCY frequency)
         pose.setTimestamp();
         turnLeft( );
         wait(5600);
-        pose.updateAngle(5600);
+        pose.updateAngle();
         stop();
         break;
     }
@@ -372,7 +372,7 @@ void frequencyMovement(FREQUENCY frequency)
         pose.setTimestamp();
         turnRight();
         wait(5600);
-        pose.updateAngle(5600);
+        pose.updateAngle();
 
         stop();
         break;
@@ -404,7 +404,7 @@ void frequencyMovement(FREQUENCY frequency)
         pose.setTimestamp();
         turnLeft( );
         wait(2600);
-        pose.updateAngle(2600);
+        pose.updateAngle();
 
         stop();
         break;
@@ -419,7 +419,7 @@ void frequencyMovement(FREQUENCY frequency)
         pose.setTimestamp();
         turnRight();
         wait(2600);
-        pose.updateAngle(2600);
+        pose.updateAngle();
 
         stop();
         break;

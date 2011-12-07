@@ -94,6 +94,16 @@ static inline const char *GetSensorTypeChar(TYPE_SENSOR type)
 }
 
 //*********************************** TYPE ***********************************
+typedef enum{
+SITE_NULL = 0x00,
+SITE_1,
+SITE_2,
+SITE_3,
+SITE_4,
+SITE_5
+
+}SITE;
+
 
 typedef enum
 {
