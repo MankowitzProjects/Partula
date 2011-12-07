@@ -48,7 +48,7 @@ void SensorController::fin(void)
 void SensorController::setupSwitches(void)
 {
     // Bumper switch LEFT
-    switchTable[INDEX_SWITCH_BUMPER_LEFT ].init(INDEX_SWITCH_BUMPER_LEFT,   TYPE_SWITCH_BUMPER, POSITION_LEFT);
+    switchTable[INDEX_SWITCH_BUMPER_LEFT ].init(INDEX_SWITCH_BUMPER_LEFT,  TYPE_SWITCH_BUMPER, POSITION_LEFT);
     // Bumper switch RIGHT
     switchTable[INDEX_SWITCH_BUMPER_RIGHT].init(INDEX_SWITCH_BUMPER_RIGHT, TYPE_SWITCH_BUMPER, POSITION_RIGHT);
     // Bumper switch LEFT
@@ -147,6 +147,7 @@ ifKitInputChangeHandler(CPhidgetInterfaceKitHandle IFK, void *usrptr, int index,
         switchInput.subType = g_sensorCtrl.getSwitchType(index);
         switchInput.index   = index;
         switchInput.value   = state;
+        switchInput.pos     = g_sensorCtrl.getSwitchPos(index);
 
         g_sensorCtrl.setSwitchState(index, state);
 
@@ -198,6 +199,7 @@ ifKitSensorChangeHandler(CPhidgetInterfaceKitHandle IFK, void *usrptr, int index
         sensorInput.subType = g_sensorCtrl.getSensorType(index);
         sensorInput.index   = index;
         sensorInput.value   = value;
+        sensorInput.pos     = g_sensorCtrl.getSensorPos(index);
 
         g_sensorCtrl.setSensorValue(index, value);
 
