@@ -13,6 +13,7 @@ void Switch::init(void)
     pos      = POSITION_NULL;
     value    = 0;
     valuePre = 0;
+
     bIsInit  = false;
 }
 
