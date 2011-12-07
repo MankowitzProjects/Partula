@@ -40,7 +40,7 @@ void Robot::run(void)
     cout<<"Robot::run"<<endl;
 
     cout << g_sensorCtrl.switchTable[1].isExist() << endl;
-    #if 0
+    #if 1
     while (1)
     {
 
