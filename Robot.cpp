@@ -4,6 +4,8 @@
 #include "Pose.h"
 #include "Localization.h"
 
+#include "Site.h"
+
 extern SensorController g_sensorCtrl;
 extern MotorController g_motorCtrl;
 extern ServoController g_servoCtrl;
@@ -102,6 +104,8 @@ void Robot::init(void)
     {
         return;
     }
+
+    initSites();
 
     g_motorCtrl.init();
     g_sensorCtrl.init();
