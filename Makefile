@@ -31,16 +31,16 @@ ServoMotor.o: ServoMotor.cpp ServoMotor.h
 ServoController.o: ServoController.cpp ServoController.h ServoMotor.o
 	g++ -c ServoController.cpp -o "./obj/lin/ServoController.o"
 
-Action.o: Action.cpp Action.h MotorController.o
+Action.o: Action.cpp Action.h MotorController.o Pose.o
 	g++ -c Action.cpp -o "./obj/lin/Action.o"
 
-Handle.o: Handle.cpp Action.o Localization.o ServoController.o
+Handle.o: Handle.cpp Action.o Localization.o ServoController.o Pose.o
 	g++ -c Handle.cpp -o "./obj/lin/Handle.o"
 
 Pose.o: Pose.cpp Pose.h
 	g++ -c Pose.cpp -o "./obj/lin/Pose.o"
 
-Robot.o: Robot.cpp Robot.h SensorController.o MotorController.o Handle.o Event.o Pose.o 
+Robot.o: Robot.cpp Robot.h SensorController.o MotorController.o Handle.o Event.o Pose.o Localization.o
 	g++ -c Robot.cpp -o "./obj/lin/Robot.o"
 
 SensorController.o: SensorController.cpp SensorController.h Sensor.o Switch.o

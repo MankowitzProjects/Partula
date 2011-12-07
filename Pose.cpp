@@ -1,5 +1,7 @@
 #include "Pose.h"
 
+    Pose pose(0,0,0);
+
     Pose::Pose(double x,double y, double theta)
     {
         robotPose.x=x;
@@ -19,7 +21,7 @@
 
         }
 
-        void Pose::updatePosition(double distance){
+        void Pose::updatePosition(){
         gettimeofday(&endtime,NULL);
         distance=velocity*((endtime.tv_sec * 1000000) + (endtime.tv_usec)) - ((starttime.tv_sec * 1000000) + (starttime.tv_usec));
         robotPose.x+=distance*cos(robotPose.theta);
@@ -30,7 +32,7 @@
         robotPose.theta=angle;
         }
 
-        pose Pose::getPose(){
+        RobotPose Pose::getPose(){
         return robotPose;
         }
 
