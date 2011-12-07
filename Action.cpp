@@ -23,8 +23,12 @@ void *p_thrd_moveForward(void *para);
 void *p_thrd_moveBackward(void *para);
 void *p_thrd_turnLeft(void *para);
 void *p_thrd_turnRight(void *para);
+void *p_thrd_hitBumperFront(void *para);
+void *p_thrd_hitBumperLeft(void *para);
+void *p_thrd_hitBumperRight(void *para);
 
 void _kill_thrd_motor(void);
+
 
 
 void __kill_thrd_motor(void)
@@ -68,35 +72,60 @@ void ActStop(void)
 
 void ActMoveForward(unsigned long milisec)
 {
-    #if (DEBUG_MODE)
+#if (DEBUG_MODE)
     printf("ActMoveForward: %d\n", (unsigned int)milisec);
-    #endif
+#endif
     __start_thrd_motor(p_thrd_moveForward, milisec);
 }
 
 void ActMoveBackward(unsigned long milisec)
 {
-    #if (DEBUG_MODE)
+#if (DEBUG_MODE)
     printf("ActMoveBackWard: %d\n", (unsigned int)milisec);
-    #endif
+#endif
     __start_thrd_motor(p_thrd_moveBackward, milisec);
 }
 
 void ActTurnLeft(unsigned long milisec)
 {
-    #if (DEBUG_MODE)
+#if (DEBUG_MODE)
     printf("ActTurnLeft: %d\n", (unsigned int)milisec);
-    #endif
+#endif
     __start_thrd_motor(p_thrd_turnLeft, milisec);
 }
 
 void ActTurnRight(unsigned long milisec)
 {
-    #if (DEBUG_MODE)
+#if (DEBUG_MODE)
     printf("ActTurnRight: %d\n", (unsigned int)milisec);
-    #endif
+#endif
     __start_thrd_motor(p_thrd_turnRight, milisec);
 }
+
+void ActHitBumperFront(unsigned long milisec)
+{
+#if (DEBUG_MODE)
+    printf("ActHitBumperFront: %d\n", (unsigned int)milisec);
+#endif
+    __start_thrd_motor(p_thrd_hitBumperFront, milisec);
+}
+
+void ActHitBumperLeft(unsigned long milisec)
+{
+#if (DEBUG_MODE)
+    printf("ActHitBumperLeft: %d\n", (unsigned int)milisec);
+#endif
+    __start_thrd_motor(p_thrd_hitBumperLeft, milisec);
+}
+
+void ActHitBumperRight(unsigned long milisec)
+{
+#if (DEBUG_MODE)
+    printf("ActHitBumperLeft: %d\n", (unsigned int)milisec);
+#endif
+    __start_thrd_motor(p_thrd_hitBumperRight, milisec);
+}
+
 
 void moveForward(void)
 {
@@ -201,73 +230,109 @@ void* p_thrd_turnRight(void *para)
     return NULL;
 }
 
+void* p_thrd_hitBumperFront(void *para)
+{
+    moveBackward();
+    wait(*((unsigned long *)para));
+    turnLeft();
+    wait(*((unsigned long *)para));
+    moveForward();
 
-      void hitBumper(long unsigned waitTime){
+    pthread_exit(NULL);
 
-	      switch(currentEvent)
-	      {
-		case EVENT_HIT_FRONT:
-        ActMoveBackward(waitTime);
-	      ActTurnLeft(waitTime);
-	      ActMoveForward(waitTime);
-		break;
-		case EVENT_HIT_FRONT_LEFT:
-		ActMoveBackward(waitTime);
-		ActTurnRight(waitTime);
-		ActMoveForward(0);
-		break;
-		case EVENT_HIT_FRONT_RIGHT:
-		  ActMoveBackward(waitTime);
-	      ActTurnLeft(waitTime);
-	      ActMoveForward(0);
-	      break;
-		default:
+    return NULL;
+}
 
-		break;
-	      }
-      }
+void* p_thrd_hitBumperLeft(void *para)
+{
+    moveBackward();
+    wait(*((unsigned long *)para));
+    turnRight();
+    wait(*((unsigned long *)para));
+    moveForward();
 
-      void frequencyMovement(FREQUENCY frequency){
+    pthread_exit(NULL);
 
-	switch(frequency){
+    return NULL;
+}
 
-	  case FREQUENCY_HALF:
-	  ActMoveBackward( 1000);
-	  ActTurnLeft( 5600);
-	  stop();
-	  break;
-	  case FREQUENCY_1:
-	    ActMoveBackward( 1000);
-	  ActTurnRight( 5600);
-	  stop();
-	  break;
-	  case FREQUENCY_2:
-	     ActMoveBackward( 1000);
-	  stop();
-	  ActMoveBackward( 1000);
-	  stop();
-	  break;
-	  case FREQUENCY_4:
-	      ActMoveBackward( 1000);
-	  ActTurnLeft( 2600);
-	  stop();
-	  break;
-	  case FREQUENCY_6:
-	  ActMoveBackward( 2000);
-	  ActTurnRight( 2600);
-	  stop();
-	  break;
-	  case FREQUENCY_8:
-	      ActMoveBackward( 2000);
-	  stop();
-	  ActMoveForward( 1000);
-	  stop();
-	  break;
-	  default:
+void* p_thrd_hitBumperRight(void *para)
+{
+    moveBackward();
+    wait(*((unsigned long *)para));
+    turnLeft();
+    wait(*((unsigned long *)para));
+    moveForward();
 
-	    break;
+    pthread_exit(NULL);
 
-	}
+    return NULL;
+}
 
-      }
+
+void hitBumper(long unsigned waitTime)
+{
+
+    switch(currentEvent)
+    {
+    case EVENT_HIT_FRONT:
+        ActHitBumperFront(waitTime);
+        break;
+    case EVENT_HIT_FRONT_LEFT:
+        ActHitBumperLeft(waitTime);
+        break;
+    case EVENT_HIT_FRONT_RIGHT:
+        ActHitBumperRight(waitTime);
+        break;
+    default:
+
+        break;
+    }
+}
+
+void frequencyMovement(FREQUENCY frequency)
+{
+
+    switch(frequency)
+    {
+
+    case FREQUENCY_HALF:
+        ActMoveBackward( 1000);
+        ActTurnLeft( 5600);
+        stop();
+        break;
+    case FREQUENCY_1:
+        ActMoveBackward( 1000);
+        ActTurnRight( 5600);
+        stop();
+        break;
+    case FREQUENCY_2:
+        ActMoveBackward( 1000);
+        stop();
+        ActMoveBackward( 1000);
+        stop();
+        break;
+    case FREQUENCY_4:
+        ActMoveBackward( 1000);
+        ActTurnLeft( 2600);
+        stop();
+        break;
+    case FREQUENCY_6:
+        ActMoveBackward( 2000);
+        ActTurnRight( 2600);
+        stop();
+        break;
+    case FREQUENCY_8:
+        ActMoveBackward( 2000);
+        stop();
+        ActMoveForward( 1000);
+        stop();
+        break;
+    default:
+
+        break;
+
+    }
+
+}
 

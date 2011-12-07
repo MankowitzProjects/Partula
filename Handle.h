@@ -11,6 +11,9 @@
 
 #include "conf.h"
 #include <sys/time.h>
+#include "Action.h"
+#include "ServoController.h"
+#include <sys/time.h>
 //#include "Frequency.h"
 
 class Handle {
@@ -18,12 +21,16 @@ public:
     Handle();
     Handle(const Handle& orig);
     virtual ~Handle();
+
+
     void collision();
     void docking();
     void localization();
-    //void* frequency(void * param);
-    static void* scanArea(void* param);
     void triggerSwitch();
+
+
+    static void* fr_check(void * param);
+    static void* scanArea(void* param);
 
     //Frequency frequency(3);
 private:

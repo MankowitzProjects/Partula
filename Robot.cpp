@@ -75,7 +75,7 @@ void Robot::run(void)
         }else if(robotStatus==STATUS_ROBOT_DOCKING)
         {
 
-            if (hasHitBumper())
+            if (hasHitBumper() && robotStatus!=STATUS_ROBOT_DETECTING_FREQUENCY)
             {
 
                 handle.triggerSwitch();
