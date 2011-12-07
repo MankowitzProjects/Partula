@@ -178,7 +178,7 @@ EVENT Event::genLightSensorFrontEvent(const INPUT &input)
 
 void Event::handleInput(const INPUT &input){
 
-     currentEvent =  checkEventType(input);
+     currentEvent = checkEventType(input);
 }
 
 

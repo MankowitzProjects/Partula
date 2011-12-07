@@ -5,6 +5,7 @@
 
 extern SensorController g_sensorCtrl;
 extern MotorController g_motorCtrl;
+extern ServoController g_servoCtrl;
 extern Event g_eventCenter;
 //Declare the event and robot status variables
 STATUS_ROBOT robotStatus;
@@ -23,8 +24,9 @@ Robot::~Robot(void)
 
 bool Robot::hasHitBumper()
 {
-
-    return (currentEvent == EVENT_HIT_FRONT|| currentEvent==EVENT_HIT_FRONT_LEFT || currentEvent==EVENT_HIT_FRONT_RIGHT);
+    return (   (currentEvent == EVENT_HIT_FRONT)
+            || (currentEvent == EVENT_HIT_FRONT_LEFT)
+            || (currentEvent == EVENT_HIT_FRONT_RIGHT));
 }
 
 void Robot::run(void)
@@ -34,16 +36,19 @@ void Robot::run(void)
     //g_motorCtrl.setVel(100.00);
     Handle handle;
     Event event;
-    robotStatus = STATUS_ROBOT_EXPLORING;
+    robotStatus  = STATUS_ROBOT_EXPLORING;
     currentEvent = EVENT_NULL;
 
     cout<<"Robot::run"<<endl;
 
-    cout << g_sensorCtrl.switchTable[1].isExist() << endl;
-    #if 1
+    while (true)
+    {
+        ;
+    }
+
+    #if 0
     while (1)
     {
-
 //      INPUT switchInput;
 //        switchInput.type  = TYPE_INPUT_SWITCH;
 //        switchInput.index = INDEX_SWITCH_BUMPER_LEFT ;
@@ -55,45 +60,30 @@ void Robot::run(void)
 //        g_eventCenter.handleInput(switchInput);
         if(robotStatus == STATUS_ROBOT_EXPLORING)
         {
-
             if (hasHitBumper())
             {
-
                 handle.collision();
-
-
             }
             else if (currentEvent == EVENT_DETECT_BLACK)
             {
-
                 handle.docking();
-
             }
             else if (currentEvent == EVENT_TRIGGER_ACTIVATED)
             {
-
                 handle.localization();
             }
-
-        }else if(robotStatus==STATUS_ROBOT_DOCKING)
+        }
+        else if(robotStatus==STATUS_ROBOT_DOCKING)
         {
-
             if (hasHitBumper() && robotStatus!=STATUS_ROBOT_DETECTING_FREQUENCY)
             {
-
                 handle.triggerSwitch();
-
-
             }
-
         }
-
-
         //Pose.updatePose();
-
     }
-
     #endif
+
     /*   EVENT e = EVENT_NULL;
 
        e = GenEvent(TYPE_INPUT_SWITCH, INDEX_SWITCH_BUMPER_LEFT, STATE_ON);
@@ -143,6 +133,7 @@ void Robot::init(void)
 
     g_motorCtrl.init();
     g_sensorCtrl.init();
+    g_servoCtrl.init();
 
     isInit = true;
 }
@@ -153,4 +144,5 @@ void Robot::fin(void)
 
     g_motorCtrl.fin();
     g_sensorCtrl.fin();
+    g_servoCtrl.fin();
 }

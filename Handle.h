@@ -22,12 +22,10 @@ public:
     Handle(const Handle& orig);
     virtual ~Handle();
 
-
     void collision();
     void docking();
     void localization();
     void triggerSwitch();
-
 
     static void* fr_check(void * param);
     static void* scanArea(void* param);
