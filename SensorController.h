@@ -156,6 +156,8 @@ inline TYPE_SWITCH SensorController::getSwitchType(const int index)
 #define VALUE_BLACK_TAPE_MIN    90
 #define VALUE_BLACK_TAPE_MAX    150
 
+#define VALUE_GROUND_MIN        200
+#define VALUE_GROUND_MAX        260
 
 inline bool bIsInRange(int value, int valueMin, int valueMax)
 {
@@ -172,6 +174,11 @@ inline bool bIsBlackTape(int value)
     return bIsInRange(value, VALUE_BLACK_PAPER_MIN, VALUE_BLACK_PAPER_MAX);
 }
 
+inline bool bIsGround(int value)
+{
+    return bIsInRange(value, VALUE_GROUND_MIN, VALUE_GROUND_MAX);
+}
+
 TYPE_SWITCH GetSwitchType(int index);
 POSITION    GetSwitchPos(int index);
 int         GetSwitchState(int index);
@@ -180,5 +187,6 @@ TYPE_SENSOR GetSensorType(int index);
 POSITION    GetSensorPos(int index);
 int         GetSensorValue(int index);
 int         GetSensorValueAvrg(int index);
+int         GetSensorValuePre(int index);
 
 #endif // SENSORCONTROLLER_H_INCLUDED

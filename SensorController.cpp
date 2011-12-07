@@ -118,7 +118,7 @@ __stdcall
 #endif
 ifKitErrorHandler(CPhidgetHandle IFK, void *userptr, int ErrorCode, const char *unknown)
 {
-    printf("Error handled. %d - %s", ErrorCode, unknown);
+    printf("** ERROR: ifkit Error handled. %d - %s\n", ErrorCode, unknown);
     return 0;
 }
 
@@ -160,7 +160,6 @@ ifKitInputChangeHandler(CPhidgetInterfaceKitHandle IFK, void *usrptr, int index,
 //callback that will run if an output changes.
 
 //Index - Index of the output that generated the event, State - boolean (0 or 1) representing the output state (on or off)
-
 int
 #if defined(_MSC_VER) && (_MSC_VER >= 1200 )
 __stdcall
@@ -242,7 +241,9 @@ void SensorController::regHandlers(void)
 {
     int result = 0;
     int numSensors = 0;
+    #if (!DEBUG_MODE_PC)
     const char *err;
+    #endif
 
     //create the InterfaceKit object
     CPhidgetInterfaceKit_create(&sensorCtrlHandle);
@@ -336,6 +337,11 @@ POSITION GetSensorPos(int index)
 int GetSensorValue(int index)
 {
     return g_sensorCtrl.getSensorValue(index);
+}
+
+int GetSensorValuePre(int index)
+{
+    return g_sensorCtrl.getSensorValuePre(index);
 }
 
 int GetSensorValueAvrg(int index)

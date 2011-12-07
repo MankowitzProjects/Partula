@@ -272,7 +272,6 @@ void* p_thrd_hitBumperRight(void *para)
 
 void hitBumper(long unsigned waitTime)
 {
-
     switch(currentEvent)
     {
     case EVENT_HIT_FRONT:

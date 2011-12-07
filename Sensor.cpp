@@ -1,7 +1,5 @@
 #include "Sensor.h"
 
-
-
 /** \brief Default init functoin, set the values to null
  *
  * \param void
