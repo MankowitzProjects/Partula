@@ -75,6 +75,11 @@ EVENT Event::genSwitchEvent(const INPUT &input)
 EVENT Event::genBumperEvent(const INPUT &input)
 {
     cout << "genBumperEvent" << endl;
+    cout << input.index << endl;
+    cout << input.type << endl;
+    cout << input.subType << endl;
+    cout << input.pos << endl;
+    cout << input.value << endl;
 
     if (STATE_ON == input.value)
     {
