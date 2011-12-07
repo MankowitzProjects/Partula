@@ -19,7 +19,7 @@
 
         }
 
-        void Pose::updatePosition(double distance){
+        void Pose::updatePosition(){
         gettimeofday(&endtime,NULL);
         distance=velocity*((endtime.tv_sec * 1000000) + (endtime.tv_usec)) - ((starttime.tv_sec * 1000000) + (starttime.tv_usec));
         robotPose.x+=distance*cos(robotPose.theta);
