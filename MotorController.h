@@ -6,8 +6,6 @@
 
 using namespace std;
 
-
-
 class MotorController
 {
 public:
@@ -31,9 +29,7 @@ public:
 
     Motor motorLeft;    /**< The left  side motor */
     Motor motorRight;   /**< The right side motor */
-    
-  
-  
+
 private:
 
     CPhidgetMotorControlHandle motorCtrlHandle; /**< Motor control handle */

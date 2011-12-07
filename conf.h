@@ -53,11 +53,11 @@ using namespace std;
 #define INDEX_SENSOR_LIGHT_LEFT     4
 #define INDEX_SENSOR_LIGHT_UNDER    5
 
-#define INDEX_SENSOR_IR_BOTTOM       6
-#define INDEX_SENSOR_IR_TOP          7
+#define INDEX_SENSOR_IR_BOTTOM      6
+#define INDEX_SENSOR_IR_TOP         7
 
 // Switches
-#define INDEX_SWITCH_BUMPER_LEFT    7
+#define INDEX_SWITCH_BUMPER_LEFT    4
 #define INDEX_SWITCH_BUMPER_FRONT   5
 #define INDEX_SWITCH_BUMPER_RIGHT   6
 
@@ -146,7 +146,14 @@ static const char *g_position[POSITION_NUM] =
 
 static inline const char *GetPositionChar(POSITION position)
 {
-     return g_position[position];
+    if (position < POSITION_NUM)
+    {
+        return g_position[position];
+    }
+    else
+    {
+        return "unknown position";
+    }
 }
 
 
@@ -209,7 +216,14 @@ static const char *g_eventDis[EVENT_NUM] =
 
 static inline const char *GetEventChar(EVENT event)
 {
-    return g_eventDis[event];
+    if (event < EVENT_NUM)
+    {
+        return g_eventDis[event];
+    }
+    else
+    {
+        return "unknown event";
+    }
 }
 
 
@@ -228,7 +242,6 @@ static const char *g_statusDis[STATUS_ROBOT_NUM] =
 /* 0x00000000 */    "status null",
 /* 0x00000001 */    "status EXPLORING",
 /* 0x00000002 */    "status DOCKING",
-
 };
 
 static inline const char *GetStatusChar(STATUS_ROBOT status)

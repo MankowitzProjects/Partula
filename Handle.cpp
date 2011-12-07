@@ -32,13 +32,9 @@ Handle::~Handle()
 //Handles collisions
 void Handle::collision()
 {
-
-
     hitBumper(1000);
     currentEvent = EVENT_NULL;
-
 }
-
 
 void Handle::docking()
 {
@@ -57,9 +53,7 @@ void Handle::docking()
 
 void Handle::localization()
 {
-
-
-
+    ;
 }
 
 void Handle::triggerSwitch()

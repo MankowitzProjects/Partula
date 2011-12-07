@@ -161,8 +161,11 @@ void MotorController::clrHandlers(void)
 int MotorController::regHanlders(void)
 {
     printf("MotorController::regHandlers\n");
+
+	#if (!DEBUG_MODE_PC)
 	int result;
 	const char *err;
+	#endif
 
 	//Declare a motor control handle
 	motorCtrlHandle = 0;
@@ -207,6 +210,3 @@ int MotorController::regHanlders(void)
 	//all done, exit
 	return 0;
 }
-
-
-

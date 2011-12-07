@@ -5,7 +5,7 @@
 
 using namespace std;
 
-#define SENSOR_SAMPLE_RATE  1
+#define SENSOR_SAMPLE_RATE  3
 
 class Sensor
 {
@@ -30,7 +30,7 @@ public:
     inline int   getValue(void);
     inline int   getValuePre(void);
     inline int   getValueAvrg(void);
-    
+
     inline bool  isExist(void) {return bIsInit;}
 
 private:
@@ -44,10 +44,9 @@ private:
     int valuePre;       /**< The previous value */
     int valueArray[SENSOR_SAMPLE_RATE]; /**< Store several recent values in the array */
     int iValuePos;      /**< Current Position of the value array */
-    
+
     bool bIsInit;
 };
-
 
 inline void Sensor::setType(TYPE_SENSOR type)
 {
@@ -71,6 +70,7 @@ inline POSITION Sensor::getPos(void)
 
 inline void Sensor::setValue(int value)
 {
+    valuePre    = this->value;
     this->value = value;
 
     valueArray[iValuePos] = value;

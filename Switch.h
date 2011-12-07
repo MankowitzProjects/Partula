@@ -27,6 +27,8 @@ public:
     inline int   getValue(void);
     inline int   getValuePre(void);
 
+    inline bool  isExist(void) {return bIsInit;}
+
 private:
 
     int index;          /**< The index of the Switch */
@@ -36,6 +38,8 @@ private:
 
     int value;          /**< The current value reported from the Switch */
     int valuePre;       /**< The previous value */
+
+    bool bIsInit;
 };
 
 

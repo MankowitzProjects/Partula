@@ -2,7 +2,8 @@
 #include "Event.h"
 
 SensorController g_sensorCtrl;
-Event g_eventCenter;
+
+extern Event g_eventCenter;
 
 /** \brief Default constructor
  * \param void
@@ -10,7 +11,6 @@ Event g_eventCenter;
  */
 SensorController::SensorController(void)
 {
-
     ;
 }
 
@@ -48,7 +48,7 @@ void SensorController::fin(void)
 void SensorController::setupSwitches(void)
 {
     // Bumper switch LEFT
-    switchTable[INDEX_SWITCH_BUMPER_LEFT].init(INDEX_SWITCH_BUMPER_LEFT, TYPE_SWITCH_BUMPER, POSITION_LEFT);
+    switchTable[INDEX_SWITCH_BUMPER_LEFT ].init(INDEX_SWITCH_BUMPER_LEFT,  TYPE_SWITCH_BUMPER, POSITION_LEFT);
     // Bumper switch RIGHT
     switchTable[INDEX_SWITCH_BUMPER_RIGHT].init(INDEX_SWITCH_BUMPER_RIGHT, TYPE_SWITCH_BUMPER, POSITION_RIGHT);
     // Bumper switch LEFT
@@ -63,16 +63,10 @@ void SensorController::setupSwitches(void)
  */
 void SensorController::setupSensors(void)
 {
-     // IR sensor MIDDLE
-
-    sensorTable[INDEX_SENSOR_IR_TOP   ].init(INDEX_SENSOR_IR_TOP,    TYPE_SENSOR_IR,    POSITION_MIDDLE);
-
+    // IR sensor TOP
+    sensorTable[INDEX_SENSOR_IR_TOP      ].init(INDEX_SENSOR_IR_TOP,       TYPE_SENSOR_IR,    POSITION_MIDDLE);
+    // IR sensor BOTTOM
     sensorTable[INDEX_SENSOR_IR_BOTTOM   ].init(INDEX_SENSOR_IR_BOTTOM,    TYPE_SENSOR_IR,    POSITION_UNDER);
-    // IR sensor LEFT
-    //sensorTable[INDEX_SENSOR_IR_LEFT     ].init(INDEX_SENSOR_IR_LEFT,      TYPE_SENSOR_IR,    POSITION_LEFT);
-    // IR sensor RIGHT
-    //sensorTable[INDEX_SENSOR_IR_RIGHT    ].init(INDEX_SENSOR_IR_RIGHT,     TYPE_SENSOR_IR,    POSITION_RIGHT);
-
     // Light sensor UNDER
     sensorTable[INDEX_SENSOR_LIGHT_LEFT  ].init(INDEX_SENSOR_LIGHT_LEFT,   TYPE_SENSOR_LIGHT, POSITION_LEFT);
     // Light sensor UNDER
@@ -81,7 +75,7 @@ void SensorController::setupSensors(void)
     sensorTable[INDEX_SENSOR_LIGHT_RIGHT ].init(INDEX_SENSOR_LIGHT_RIGHT,  TYPE_SENSOR_LIGHT, POSITION_RIGHT);
     // Light sensor UNDER
     sensorTable[INDEX_SENSOR_LIGHT_UNDER ].init(INDEX_SENSOR_LIGHT_UNDER,  TYPE_SENSOR_LIGHT, POSITION_UNDER);
-
+    // Sonar sensor
     sensorTable[INDEX_SENSOR_SONAR       ].init(INDEX_SENSOR_SONAR,        TYPE_SENSOR_SONAR, POSITION_FRONT);
 }
 
@@ -125,7 +119,7 @@ __stdcall
 #endif
 ifKitErrorHandler(CPhidgetHandle IFK, void *userptr, int ErrorCode, const char *unknown)
 {
-    printf("Error handled. %d - %s", ErrorCode, unknown);
+    printf("** ERROR: ifkit Error handled. %d - %s\n", ErrorCode, unknown);
     return 0;
 }
 
@@ -141,25 +135,26 @@ ifKitErrorHandler(CPhidgetHandle IFK, void *userptr, int ErrorCode, const char *
  *
  */
 int
-#if defined(_MSC_VER) && (_MSC_VER >= 1200 )
+#if defined(_MSC_VER) && (_MSC_VER >= 1200)
 __stdcall
 #endif
 ifKitInputChangeHandler(CPhidgetInterfaceKitHandle IFK, void *usrptr, int index, int state)
 {
-     //if (g_sensorCtrl.switchTable[index].isExist())
-    //{
+    if (g_sensorCtrl.switchTable[index].isExist())
+    {
         INPUT switchInput;
-        switchInput.type  = TYPE_INPUT_SWITCH;
+        switchInput.type    = TYPE_INPUT_SWITCH;
         switchInput.subType = g_sensorCtrl.getSwitchType(index);
-        switchInput.index = index;
-        switchInput.value = state;
+        switchInput.index   = index;
+        switchInput.value   = state;
+        switchInput.pos     = g_sensorCtrl.getSwitchPos(index);
 
         g_sensorCtrl.setSwitchState(index, state);
-        
+
         #if (!DEBUG_MODE_BLOCK_SENSORS)
         g_eventCenter.handleInput(switchInput);
         #endif
-    //}
+    }
 
     return 0;
 }
@@ -167,7 +162,6 @@ ifKitInputChangeHandler(CPhidgetInterfaceKitHandle IFK, void *usrptr, int index,
 //callback that will run if an output changes.
 
 //Index - Index of the output that generated the event, State - boolean (0 or 1) representing the output state (on or off)
-
 int
 #if defined(_MSC_VER) && (_MSC_VER >= 1200 )
 __stdcall
@@ -196,24 +190,23 @@ __stdcall
 #endif
 ifKitSensorChangeHandler(CPhidgetInterfaceKitHandle IFK, void *usrptr, int index, int value)
 {
-  //Sets the sensor value based on its index
-  //The sensor values can be IR, Light Sensors
-    //if (g_sensorCtrl.sensorTable[index].isExist())
-    //{
+    //Sets the sensor value based on its index
+    //The sensor values can be IR, Light Sensors
+    if (g_sensorCtrl.sensorTable[index].isExist())
+    {
         INPUT sensorInput;
-        sensorInput.type  = TYPE_INPUT_SENSOR;
+        sensorInput.type    = TYPE_INPUT_SENSOR;
         sensorInput.subType = g_sensorCtrl.getSensorType(index);
-        sensorInput.index = index;
-        sensorInput.value = value;
+        sensorInput.index   = index;
+        sensorInput.value   = value;
+        sensorInput.pos     = g_sensorCtrl.getSensorPos(index);
 
         g_sensorCtrl.setSensorValue(index, value);
 
         #if (!DEBUG_MODE_BLOCK_SENSORS)
         g_eventCenter.handleInput(sensorInput);
         #endif
-   // }
-
-    return 0;
+    }
 
     return 0;
 }
@@ -251,7 +244,9 @@ void SensorController::regHandlers(void)
 {
     int result = 0;
     int numSensors = 0;
+    #if (!DEBUG_MODE_PC)
     const char *err;
+    #endif
 
     //create the InterfaceKit object
     CPhidgetInterfaceKit_create(&sensorCtrlHandle);
@@ -345,6 +340,11 @@ POSITION GetSensorPos(int index)
 int GetSensorValue(int index)
 {
     return g_sensorCtrl.getSensorValue(index);
+}
+
+int GetSensorValuePre(int index)
+{
+    return g_sensorCtrl.getSensorValuePre(index);
 }
 
 int GetSensorValueAvrg(int index)

@@ -3,11 +3,15 @@
 
 using namespace std;
 
+// change it to 0 if run on robot!!!
+#define DEBUG_MODE_PC                   0
+
 #define DEBUG_MODE                      1
 #define DEBUG_MODE_LOW                  0
-#define DEBUG_MODE_MOTOR                1
-#define DEBUG_MODE_PC                   0
-#define DEBUG_MODE_EVENT                1
+
+#define DEBUG_MODE_MOTOR                0
+#define DEBUG_MODE_EVENT                0
+
 #define DEBUG_MODE_SENSOR_CONTROLLER    0
 #define DEBUG_SENSOR                    1
 #define DEBUG_MODE_STEP_INSTRUCTION     1
