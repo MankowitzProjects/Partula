@@ -135,7 +135,7 @@ ifKitErrorHandler(CPhidgetHandle IFK, void *userptr, int ErrorCode, const char *
  *
  */
 int
-#if defined(_MSC_VER) && (_MSC_VER >= 1200 )
+#if defined(_MSC_VER) && (_MSC_VER >= 1200)
 __stdcall
 #endif
 ifKitInputChangeHandler(CPhidgetInterfaceKitHandle IFK, void *usrptr, int index, int state)
