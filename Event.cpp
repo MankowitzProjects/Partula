@@ -79,15 +79,18 @@ EVENT Event::genBumperEvent(const INPUT &input)
         {
         case POSITION_FRONT:
             {
+                cout<<"Position Front"<<endl;
                 return EVENT_HIT_FRONT;
             }
         case POSITION_LEFT:
             {
+                cout<<"Position Left"<<endl;
                 return EVENT_HIT_FRONT_LEFT;
             }
 
         case POSITION_RIGHT:
             {
+                cout<<"Position right"<<endl;
                 return EVENT_HIT_FRONT_RIGHT;
             }
         default:
@@ -180,5 +183,8 @@ EVENT Event::genLightSensorFrontEvent(const INPUT &input)
 
 void Event::handleInput(const INPUT &input)
 {
+    //cout<<"Handling Input"<<endl;
     currentEvent = checkEventType(input);
+    cout<<"Current Event: "<<currentEvent<<endl;
+    
 }

@@ -46,7 +46,7 @@ void Robot::run(void)
 
     cout<<"Robot::run"<<endl;
 
-    INPUT switchInput;
+    /*INPUT switchInput;
     switchInput.type    = TYPE_INPUT_SWITCH;
     switchInput.subType = g_sensorCtrl.getSwitchType(INDEX_SWITCH_BUMPER_LEFT);
     switchInput.index   = INDEX_SWITCH_BUMPER_LEFT;
@@ -55,20 +55,23 @@ void Robot::run(void)
 
     g_sensorCtrl.setSwitchState(INDEX_SWITCH_BUMPER_LEFT, STATE_ON);
 
-    g_eventCenter.handleInput(switchInput);
+    g_eventCenter.handleInput(switchInput);*/
 
-    while (true)
+    /*while (true)
     {
         ;
-    }
+    }*/
 
-    #if 0
+    #if 1
     while (1)
     {
+        //cout<<"Current Event is %d"<<currentEvent<<endl;
         if(robotStatus == STATUS_ROBOT_EXPLORING)
         {
+            //cout<<"Entered Exploring"<<endl;
             if (hasHitBumper())
             {
+                cout<<"Handling collision"<<endl;
                 handle.collision();
             }
             else if (currentEvent == EVENT_DETECT_BLACK)
