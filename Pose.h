@@ -15,7 +15,7 @@ unsigned long time;
 //Robot's pose
 typedef struct{
 double x,y,theta;
-double ret_value;
+SIDE ret_value;
 }RobotPose;
 
 extern double velocity;
@@ -39,7 +39,7 @@ class Pose{
 
 
     private:
-        double angle,goal_x,goal_y,diff_x,diff_y,diff_ang;
+        double angle,goal_x,goal_y,diff_ang;
         DirTime ret_val;
 };
 

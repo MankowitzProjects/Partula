@@ -104,6 +104,12 @@ SITE_5
 
 }SITE;
 
+typedef enum{
+SIDE_NULL = 0x00,
+SIDE_RIGHT,
+SIDE_LEFT,
+}SIDE;
+
 
 typedef enum
 {
