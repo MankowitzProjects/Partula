@@ -15,7 +15,6 @@ class Pose{
         pose robotPose;
         timeval starttime;
         timeval endtime;
-        double velocity;
         double distance;
 
         Pose(double x,double y, double theta );
