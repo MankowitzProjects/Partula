@@ -26,53 +26,46 @@ Localization::~Localization()
 //Identifies the current site and updates the robots position
 void Localization::identifySite(FREQUENCY frequency)
 {
-
     switch(frequency)
     {
-
-        case FREQUENCY_HALF:
-        {
-            pose.setPose(1,1,2);
-            break;
-        }
-        case FREQUENCY_1:
-        {
-            pose.setPose(1,2,2);
-            break;
-        }
-        case FREQUENCY_2:
-        {
-            pose.setPose(1,3,2);
-            break;
-        }
-        case FREQUENCY_4:
-        {
-            pose.setPose(1,4,2);
-            break;
-        }
-        case FREQUENCY_6:
-        {
-            pose.setPose(1,5,2);
-            break;
-        }
-        case FREQUENCY_8:
-        {
-            pose.setPose(1,6,2);
-            break;
-        }
-
-        default:
-
-        {
-
-            break;
-        }
-
-
-
+    case FREQUENCY_HALF:
+    {
+        pose.setPose(1,1,2);
+        break;
+    }
+    case FREQUENCY_1:
+    {
+        pose.setPose(1,2,2);
+        break;
+    }
+    case FREQUENCY_2:
+    {
+        pose.setPose(1,3,2);
+        break;
+    }
+    case FREQUENCY_4:
+    {
+        pose.setPose(1,4,2);
+        break;
+    }
+    case FREQUENCY_6:
+    {
+        pose.setPose(1,5,2);
+        break;
+    }
+    case FREQUENCY_8:
+    {
+        pose.setPose(1,6,2);
+        break;
     }
 
+    default:
 
+    {
+
+        break;
+    }
+    }
 }
 
 //Set the initial position of the robot
@@ -94,7 +87,7 @@ void Localization::EstimateResourceSiteLocations()
 void Localization::takeMeasurement()
 {
 
-   // pthread_create(&sonarThread, NULL, sonarScan,(void*)&sonarStatus);
+    // pthread_create(&sonarThread, NULL, sonarScan,(void*)&sonarStatus);
 
 }
 
@@ -110,35 +103,36 @@ void* Localization::sonarScan(void* param)
     cout<<"Entered Sonar Scanning Mode..."<<endl;
     robotStatus=STATUS_ROBOT_EXPLORING;
 
-      int servoPosition = -1;
-      int minSonarValue = 1000;
-      double minSonarPosition = -1.0;
-      double currentPosition;
-      double sonarValue;
-      //The distance the servo has moved from the center position
-      double servoOffset = 0.0;
+    int servoPosition = -1;
+    int minSonarValue = 1000;
+    double minSonarPosition = -1.0;
+    double currentPosition;
+    double sonarValue;
+    //The distance the servo has moved from the center position
+    double servoOffset = 0.0;
 
-      //The number of degrees that the robot needs to turn
-      double degreeTurn=0.0;
-      unsigned long turnMilisecs=0;
-      //Find the nearest obstacle
-    for (int i=0;i<220;i=i+5)
+    //The number of degrees that the robot needs to turn
+    double degreeTurn=0.0;
+    unsigned long turnMilisecs=0;
+    //Find the nearest obstacle
+    for (int i=0; i<220; i=i+5)
     {
-      g_servoController.setPos(i);
-      //Get the current servo position
-      g_servoController.getPos();
+        g_servoController.setPos(i);
+        //Get the current servo position
+        g_servoController.getPos();
 
-      //Set the current sonar value
-      sonarValue = g_sensorCtrl.getSensorValue(INDEX_SENSOR_SONAR);
-      //CPhidgetAdvancedServo_getPosition (servo, 0, &currentPosition);
-      if(sonarValue<minSonarValue){
+        //Set the current sonar value
+        sonarValue = g_sensorCtrl.getSensorValue(INDEX_SENSOR_SONAR);
+        //CPhidgetAdvancedServo_getPosition (servo, 0, &currentPosition);
+        if(sonarValue<minSonarValue)
+        {
 
-        minSonarValue = sonarValue;
+            minSonarValue = sonarValue;
 
-        cout<<"Sonar Value: "<<currentPosition;
-        minSonarPosition = currentPosition;
-      }
-      wait(200);
+            cout<<"Sonar Value: "<<currentPosition;
+            minSonarPosition = currentPosition;
+        }
+        wait(200);
 
     }
 
@@ -147,38 +141,38 @@ void* Localization::sonarScan(void* param)
     servoOffset = 120 - minSonarPosition;
 
     cout<<"Servo offset: "<<servoOffset;
-      //0.81 is the number of degrees that the servo turns after each step as the range
-      //is from 0 to 220. Dividing 180 degrees by the number of steps yields the number
-      //of degrees per servo step
+    //0.81 is the number of degrees that the servo turns after each step as the range
+    //is from 0 to 220. Dividing 180 degrees by the number of steps yields the number
+    //of degrees per servo step
     degreeTurn = servoOffset*0.81;
 
 
-    if(servoOffset>0){
-      cout<<"servo offset greater than 0"<<endl;
-    //How long the car must turn clockwise (in milisecs) to reach the current servo position.
-    turnMilisecs = degreeTurn*16;
+    if(servoOffset>0)
+    {
+        cout<<"servo offset greater than 0"<<endl;
+        //How long the car must turn clockwise (in milisecs) to reach the current servo position.
+        turnMilisecs = degreeTurn*16;
 
-    cout<<"Number of degrees is "<<degreeTurn<<"and number of milisecs is "<<turnMilisecs<<endl;
-    ActTurnLeft(turnMilisecs);
+        cout<<"Number of degrees is "<<degreeTurn<<"and number of milisecs is "<<turnMilisecs<<endl;
+        ActTurnLeft(turnMilisecs);
 
     }
-    else
-      if(servoOffset<0)
-      {
+    else if(servoOffset<0)
+    {
         cout<<"servo offset less than 0"<<endl;
 
 
         //Note the turnMilisecs are unequal as the car requires slightly more time to turn clockwise
-       turnMilisecs = degreeTurn*(-15);
+        turnMilisecs = degreeTurn*(-15);
 
-       cout<<"Number of degrees is "<<degreeTurn<<"and number of milisecs is"<<turnMilisecs<<endl;
-       ActTurnRight(turnMilisecs);
+        cout<<"Number of degrees is "<<degreeTurn<<"and number of milisecs is"<<turnMilisecs<<endl;
+        ActTurnRight(turnMilisecs);
 
-      }
-      //Move towards the new obstacle
-      ActMoveForward(0);
+    }
+    //Move towards the new obstacle
+    ActMoveForward(0);
 
-      pthread_exit(NULL);
+    pthread_exit(NULL);
 
 }
 
