@@ -5,26 +5,28 @@
 #include <math.h>
 #include "conf.h"
 
-typedef struct{
-double x,y,theta;
-}RobotPose;
+typedef struct
+{
+    double x,y,theta;
+} RobotPose;
 
-class Pose{
+class Pose
+{
 
+public:
+    RobotPose robotPose;
+    timeval starttime;
+    timeval endtime;
+    double distance;
+    double velocity;
 
-    public:
-        RobotPose robotPose;
-        timeval starttime;
-        timeval endtime;
-        double distance;
-
-        Pose(double x,double y, double theta );
-        ~Pose();
-        void setTimestamp();
-        void updatePosition();
-        void updateAngle(double angle);
-        RobotPose getPose();
-        void setPose(double x,double y, double theta );
+    Pose(double x,double y, double theta );
+    ~Pose();
+    void setTimestamp();
+    void updatePosition();
+    void updateAngle(double angle);
+    RobotPose getPose();
+    void setPose(double x,double y, double theta );
 
 
 };
