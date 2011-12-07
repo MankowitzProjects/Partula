@@ -35,7 +35,7 @@ ServoController.o: ServoController.cpp ServoController.h ServoMotor.o
 Action.o: Action.cpp Action.h MotorController.o Pose.o
 	g++ -c Action.cpp -o "./obj/lin/Action.o"
 
-Handle.o: Handle.cpp Action.o Localization.o ServoController.o Pose.o
+Handle.o: Handle.cpp Action.o Localization.o ServoController.o Pose.o MotorController.o
 	g++ -c Handle.cpp -o "./obj/lin/Handle.o"
 
 Pose.o: Pose.cpp Pose.h

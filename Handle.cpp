@@ -11,9 +11,10 @@
 
 extern EVENT currentEvent;
 extern SensorController g_sensorCtrl;
-ServoController g_servoController;
+extern ServoController g_servoCtrl;
 extern STATUS_ROBOT robotStatus;
 extern Localization g_localization;
+extern MotorController g_motorCtrl;
 
 Handle::Handle()
 {
@@ -76,9 +77,9 @@ void* Handle::scanArea(void* param)
     
     cout<<"Center the sonar"<<endl;
     
-    g_servoController.setPos(130);
+    g_servoCtrl.setPos(130);
     
-    ActTurnLeft(0);
+    ActTurnLeft(5000);
     //leftDirectionDistance = irMainValueBottom;
     bool foundFlag=false;
     bool edgeDetected=false;
@@ -91,7 +92,7 @@ void* Handle::scanArea(void* param)
 
     while(foundFlag==false && edgeDetected==false)
     {
-
+        //cout<<"Stuck"<<endl;
         irMainValueTop = g_sensorCtrl.getSensorValue(INDEX_SENSOR_IR_TOP);
         irMainValueBottom = g_sensorCtrl.getSensorValue(INDEX_SENSOR_IR_BOTTOM);
         
@@ -123,7 +124,7 @@ void* Handle::scanArea(void* param)
 
     if(foundFlag==false)
     {
-        ActTurnRight(1000);
+        ActTurnRight(5000);
 
         //rightDirectionDistance = irMainValueBottom;
         while(foundFlag==false)
@@ -152,8 +153,10 @@ void* Handle::scanArea(void* param)
 
 
     }
-
-    ActMoveForward(0);
+    cout<<"Reached Here"<<endl;
+    //Go forward to center
+    g_motorCtrl.setAcc(100.00);
+    g_motorCtrl.setVel(100.00);
 
     pthread_exit(NULL);
 
@@ -176,7 +179,7 @@ void* Handle::fr_check(void* param)
     //*****************************
     // while(lightFound==false){};
     //lightFound=false;
-    g_servoController.setPos(130);
+    g_servoCtrl.setPos(130);
 
     printf(" Check frequency\n");
     check_frequency=1;

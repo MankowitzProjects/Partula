@@ -9,7 +9,7 @@
 
 Localization g_localization;
 extern Pose pose;
-extern ServoController g_servoController;
+extern ServoController g_servoCtrl;
 extern SensorController g_sensorCtrl;
 extern STATUS_ROBOT robotStatus;
 
@@ -125,9 +125,9 @@ void* Localization::sonarScan(void* param)
       //Find the nearest obstacle
     for (int i=0;i<220;i=i+5)
     {
-      g_servoController.setPos(i);
+      g_servoCtrl.setPos(i);
       //Get the current servo position
-      g_servoController.getPos();
+      g_servoCtrl.getPos();
 
       //Set the current sonar value
       sonarValue = g_sensorCtrl.getSensorValue(INDEX_SENSOR_SONAR);
@@ -143,7 +143,7 @@ void* Localization::sonarScan(void* param)
 
     }
 
-    g_servoController.setPos(130);
+    g_servoCtrl.setPos(130);
 
     servoOffset = 120 - minSonarPosition;
 

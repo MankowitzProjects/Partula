@@ -15,6 +15,7 @@
 #include "ServoController.h"
 #include <sys/time.h>
 #include "Pose.h"
+#include "MotorController.h"
 //#include "Frequency.h"
 
 class Handle {

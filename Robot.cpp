@@ -42,6 +42,10 @@ void Robot::run(void)
     Event event;
     robotStatus  = STATUS_ROBOT_EXPLORING;
     currentEvent = EVENT_NULL;
+    
+    //Initialise servo
+    g_servoCtrl.init();
+    g_servoCtrl.setPos(130);
 
     //Set the initial position
     g_localization.initializePosition(0,0,0);

@@ -53,8 +53,8 @@ using namespace std;
 #define INDEX_SENSOR_LIGHT_LEFT     4
 #define INDEX_SENSOR_LIGHT_UNDER    5
 
-#define INDEX_SENSOR_IR_BOTTOM      6
-#define INDEX_SENSOR_IR_TOP         7
+#define INDEX_SENSOR_IR_BOTTOM      7
+#define INDEX_SENSOR_IR_TOP         6
 
 // Switches
 #define INDEX_SWITCH_BUMPER_LEFT    4
