@@ -4,6 +4,8 @@
 #include "Pose.h"
 #include "Localization.h"
 
+#include "Site.h"
+
 extern SensorController g_sensorCtrl;
 extern MotorController g_motorCtrl;
 extern ServoController g_servoCtrl;
@@ -34,8 +36,8 @@ bool Robot::hasHitBumper()
 void Robot::run(void)
 {
 
-    //g_motorCtrl.setAcc(100.00);
-    //g_motorCtrl.setVel(100.00);
+    g_motorCtrl.setAcc(100.00);
+    g_motorCtrl.setVel(100.00);
     Handle handle;
     Event event;
     robotStatus  = STATUS_ROBOT_EXPLORING;
@@ -57,6 +59,7 @@ void Robot::run(void)
 
     g_eventCenter.handleInput(switchInput);*/
 
+
    // while (true)
     //{
     //    ;
@@ -67,10 +70,13 @@ void Robot::run(void)
     #if 1
     while (1)
     {
+        //cout<<"Current Event is %d"<<currentEvent<<endl;
         if(robotStatus == STATUS_ROBOT_EXPLORING)
         {
+            //cout<<"Entered Exploring"<<endl;
             if (hasHitBumper())
             {
+                cout<<"Handling collision"<<endl;
                 handle.collision();
             }
             else if (currentEvent == EVENT_DETECT_BLACK)
@@ -102,6 +108,8 @@ void Robot::init(void)
     {
         return;
     }
+
+    initSites();
 
     g_motorCtrl.init();
     g_sensorCtrl.init();

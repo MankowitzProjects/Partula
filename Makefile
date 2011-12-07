@@ -1,5 +1,5 @@
 PROG ?= Partula
-OBJS = main.o Robot.o Action.o SensorController.o MotorController.o \
+OBJS = main.o Robot.o Action.o SensorController.o MotorController.o Site.o\
        Motor.o Sensor.o Switch.o Handle.o Event.o Pose.o Localization.o ServoController.o ServoMotor.o\
 
 all: $(PROG)
@@ -19,6 +19,7 @@ $(PROG): main.o
 		"./obj/lin/Localization.o" \
 		"./obj/lin/ServoMotor.o" \
 		"./obj/lin/ServoController.o" \
+		"./obj/lin/Site.o" \
 		-o Partula \
 		-lphidget21
 		
@@ -40,7 +41,7 @@ Handle.o: Handle.cpp Action.o Localization.o ServoController.o Pose.o
 Pose.o: Pose.cpp Pose.h
 	g++ -c Pose.cpp -o "./obj/lin/Pose.o"
 
-Robot.o: Robot.cpp Robot.h SensorController.o MotorController.o Handle.o Event.o Pose.o Localization.o
+Robot.o: Robot.cpp Robot.h SensorController.o MotorController.o Handle.o Event.o Pose.o Localization.o Site.o
 	g++ -c Robot.cpp -o "./obj/lin/Robot.o"
 
 SensorController.o: SensorController.cpp SensorController.h Sensor.o Switch.o
@@ -64,9 +65,8 @@ Event.o: Event.cpp Event.h SensorController.o
 Localization.o: Localization.cpp Localization.h Pose.o ServoController.o SensorController.o Action.o
 	g++ -c Localization.cpp -o "./obj/lin/Localization.o"
 
-
-
-
+Site.o: Site.cpp Site.h wayPoint.h
+	g++ -c Site.cpp -o "./obj/lin/Site.o"
 
 clean:
 	rm "./obj/lin/main.o" \
@@ -83,3 +83,6 @@ clean:
 		"./obj/lin/Localization.o"\
 		"./obj/lin/ServoController.o"\
 		"./obj/lin/ServoMotor.o"\
+		"./obj/lin/Site.o"\
+
+		
