@@ -79,7 +79,8 @@ EVENT Event::genBumperEvent(const INPUT &input)
     if (STATE_ON == input.value)
     {
 #if (DEBUG_MODE)
-        printf("genBumperEvent - %s bumper HIT!\n", GetPositionChar(input.pos));
+        cout << "genBumperEvent - ";
+        cout << GetPositionChar(input.pos) << "bumper HIT!\n" << endl;
 #endif
 
         switch (input.pos)
