@@ -14,7 +14,7 @@ void Sensor::init(void)
     pos      = POSITION_NULL;
     value    = 0;
     valuePre = 0;
-     bIsInit  = false;
+    bIsInit  = false;
 }
 
 /** \brief Initialize the sensor
@@ -34,7 +34,7 @@ int Sensor::init(int index, TYPE_SENSOR type, POSITION pos)
     this->index = index;
     this->type  = type;
     this->pos   = pos;
-    
+
     bIsInit = true;
 
     return 0;

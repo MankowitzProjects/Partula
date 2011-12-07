@@ -13,6 +13,7 @@ void Switch::init(void)
     pos      = POSITION_NULL;
     value    = 0;
     valuePre = 0;
+    bIsInit  = false;
 }
 
 /** \brief Initialize the Switch
@@ -29,9 +30,11 @@ int Switch::init(int index, TYPE_SWITCH type, POSITION pos)
     printf("Switch::init, type: %s, position: %s\n", GetSwitchTypeChar(type), GetPositionChar(pos));
 #endif
 
-    this->index = index;
-    this->type  = type;
-    this->pos   = pos;
+    this->index   = index;
+    this->type    = type;
+    this->pos     = pos;
+
+    this->bIsInit = true;
 
     return 0;
 }

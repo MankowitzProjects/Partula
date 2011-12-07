@@ -30,11 +30,10 @@ public:
     inline int   getValue(void);
     inline int   getValuePre(void);
     inline int   getValueAvrg(void);
-    
+
     inline bool  isExist(void) {return bIsInit;}
 
 private:
-
     int index;          /**< The index of the sensor */
 
     TYPE_SENSOR type;   /**< The sensor type */
@@ -44,7 +43,7 @@ private:
     int valuePre;       /**< The previous value */
     int valueArray[SENSOR_SAMPLE_RATE]; /**< Store several recent values in the array */
     int iValuePos;      /**< Current Position of the value array */
-    
+
     bool bIsInit;
 };
 
