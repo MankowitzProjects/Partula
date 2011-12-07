@@ -3,7 +3,7 @@
 
 using namespace std;
 
-// change it to one if run on robot!!!
+// change it to 0 if run on robot!!!
 #define DEBUG_MODE_PC                   0
 
 #define DEBUG_MODE                      1
