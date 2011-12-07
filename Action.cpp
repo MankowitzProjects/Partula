@@ -6,6 +6,7 @@
 extern MotorController g_motorCtrl;
 extern EVENT currentEvent;
 extern Pose pose;
+extern MOVEMENT_STATUS g_movement;
 
 pthread_t g_thrd_motor;
 bool      b_thrd_motor_created = false;
@@ -130,19 +131,21 @@ void ActHitBumperRight(unsigned long milisec)
 
 void moveForward(void)
 {
-    //MOVEMENTSTATUS = FORWARD;
+    g_movement = MOVING_FORWARD;
     g_motorCtrl.setAcc(VALUE_MOTOR_ACC_NORMAL);
     g_motorCtrl.setVel(VALUE_MOTOR_VEL_NORMAL);
 }
 
 void moveBackward(void)
 {
+    g_movement = MOVING_BACKWARD;
     g_motorCtrl.setAcc(-VALUE_MOTOR_ACC_NORMAL);
     g_motorCtrl.setVel(-VALUE_MOTOR_VEL_NORMAL);
 }
 
 void turnLeft(void)
 {
+    g_movement = TURNING_LEFT;
     g_motorCtrl.setVelLeft(VALUE_MOTOR_VEL_NORMAL);
     g_motorCtrl.setAccLeft(VALUE_MOTOR_ACC_NORMAL);
 
@@ -152,6 +155,7 @@ void turnLeft(void)
 
 void turnRight(void)
 {
+    g_movement = TURNING_RIGHT;
     g_motorCtrl.setVelLeft(-VALUE_MOTOR_VEL_NORMAL);
     g_motorCtrl.setAccLeft(-VALUE_MOTOR_ACC_NORMAL);
 

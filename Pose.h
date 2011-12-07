@@ -4,18 +4,19 @@
 #include <sys/time.h>
 #include <math.h>
 #include "conf.h"
-
+#include "math_ext.h"
 
 //Direction and time given to localization
-typedef struct{
-int direction;
-unsigned long time;
-}DirTime;
+typedef struct
+{
+    int direction;
+    unsigned long time;
+} DirTime;
 
 //Robot's pose
+
 typedef struct{
 double x,y,theta;
-double ret_value;
 }RobotPose;
 
 extern double velocity;
@@ -39,7 +40,7 @@ class Pose{
 
 
     private:
-        double angle,goal_x,goal_y,diff_x,diff_y,diff_ang;
+        double angle,goal_x,goal_y,diff_ang;
         DirTime ret_val;
 };
 
