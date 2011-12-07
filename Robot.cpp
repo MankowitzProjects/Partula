@@ -60,7 +60,6 @@ void Robot::run(void)
     #if 0
     while (1)
     {
-
         if(robotStatus == STATUS_ROBOT_EXPLORING)
         {
             if (hasHitBumper())
