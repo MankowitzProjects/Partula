@@ -12,6 +12,7 @@
         //dtor
     }
 
+
      void Pose::setTimestamp(){
 
         gettimeofday(&starttime,NULL);
@@ -38,5 +39,6 @@
         robotPose.y=y;
         robotPose.theta=theta;
         }
+
 
 

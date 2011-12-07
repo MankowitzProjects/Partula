@@ -155,7 +155,7 @@ ifKitInputChangeHandler(CPhidgetInterfaceKitHandle IFK, void *usrptr, int index,
         switchInput.value = state;
 
         g_sensorCtrl.setSwitchState(index, state);
-
+        
         #if (!DEBUG_MODE_BLOCK_SENSORS)
         g_eventCenter.handleInput(switchInput);
         #endif
