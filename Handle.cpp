@@ -73,19 +73,19 @@ void Handle::triggerSwitch()
 void* Handle::scanArea(void* param)
 {
     cout<<"Entered Scan Area"<<endl;
-    
+
     cout<<"Center the sonar"<<endl;
-    
+
     g_servoController.setPos(130);
-    
-    ActTurnLeft(0);
+
+    ActTurnLeft(5000);
     //leftDirectionDistance = irMainValueBottom;
     bool foundFlag=false;
     bool edgeDetected=false;
 
     double irMainValueTop = 0;
     double irMainValueBottom=  0;
-    
+
     double irTopPrevious;
     double irBottomPrevious;
 
@@ -94,7 +94,7 @@ void* Handle::scanArea(void* param)
 
         irMainValueTop = g_sensorCtrl.getSensorValue(INDEX_SENSOR_IR_TOP);
         irMainValueBottom = g_sensorCtrl.getSensorValue(INDEX_SENSOR_IR_BOTTOM);
-        
+
         if(irMainValueTop!=irTopPrevious){
         cout<<"IR Top Value: "<<irMainValueTop<<endl;
         irTopPrevious = irMainValueTop;
@@ -103,7 +103,7 @@ void* Handle::scanArea(void* param)
         cout<<"IR Bottom Value: "<<irMainValueBottom<<endl;
         irBottomPrevious = irMainValueBottom;
         }
-        
+
         if(irMainValueTop<90 && irMainValueBottom>90)
         {
             cout<<"Stopped due to gap in first loop"<<endl;
@@ -123,7 +123,7 @@ void* Handle::scanArea(void* param)
 
     if(foundFlag==false)
     {
-        ActTurnRight(1000);
+        ActTurnRight(5000);
 
         //rightDirectionDistance = irMainValueBottom;
         while(foundFlag==false)

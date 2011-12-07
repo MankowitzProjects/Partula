@@ -3,6 +3,7 @@
 #include "Event.h"
 #include "Pose.h"
 #include "Localization.h"
+#include "Action.h"
 
 #include "Site.h"
 
@@ -36,8 +37,7 @@ bool Robot::hasHitBumper()
 void Robot::run(void)
 {
 
-    g_motorCtrl.setAcc(100.00);
-    g_motorCtrl.setVel(100.00);
+
     Handle handle;
     Event event;
     robotStatus  = STATUS_ROBOT_EXPLORING;
@@ -48,24 +48,14 @@ void Robot::run(void)
 
     cout<<"Robot::run"<<endl;
 
-    /*INPUT switchInput;
-    switchInput.type    = TYPE_INPUT_SWITCH;
-    switchInput.subType = g_sensorCtrl.getSwitchType(INDEX_SWITCH_BUMPER_LEFT);
-    switchInput.index   = INDEX_SWITCH_BUMPER_LEFT;
-    switchInput.value   = STATE_ON;
-    switchInput.pos     = POSITION_FRONT;
-
-    g_sensorCtrl.setSwitchState(INDEX_SWITCH_BUMPER_LEFT, STATE_ON);
-
-    g_eventCenter.handleInput(switchInput);*/
+    trainSensors();
 
 
-   // while (true)
-    //{
-    //    ;
-    //}
+    moveForward();
 
-    //trainSensors();
+    int sonarStatus = 0;
+    //pthread_t sonarThread;
+    //pthread_create(&sonarThread, NULL, sonarScan,(void*)&sonarStatus);
 
     #if 1
     while (1)
@@ -109,7 +99,7 @@ void Robot::init(void)
         return;
     }
 
-    initSites();
+    //initSites();
 
     g_motorCtrl.init();
     g_sensorCtrl.init();
