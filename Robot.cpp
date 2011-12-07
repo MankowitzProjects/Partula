@@ -38,6 +38,9 @@ void Robot::run(void)
     currentEvent = EVENT_NULL;
 
     cout<<"Robot::run"<<endl;
+
+    cout << g_sensorCtrl.switchTable[1].isExist() << endl;
+    #if 0
     while (1)
     {
 
@@ -90,7 +93,7 @@ void Robot::run(void)
 
     }
 
-
+    #endif
     /*   EVENT e = EVENT_NULL;
 
        e = GenEvent(TYPE_INPUT_SWITCH, INDEX_SWITCH_BUMPER_LEFT, STATE_ON);
