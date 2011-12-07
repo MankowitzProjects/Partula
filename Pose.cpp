@@ -10,6 +10,8 @@
         robotPose.x=x;
         robotPose.y=y;
         robotPose.theta=theta;
+        velocity = 1.0;
+        ang_velocity = 2.0;
     }
 
     Pose::~Pose()
@@ -26,20 +28,23 @@
 
         void Pose::updatePosition(){
         gettimeofday(&endtime,NULL);
-        distance=velocity*((endtime.tv_sec * 1000000) + (endtime.tv_usec)) - ((starttime.tv_sec * 1000000) + (starttime.tv_usec));
+        distance=(velocity*((endtime.tv_sec * 1000000) + (endtime.tv_usec)) - ((starttime.tv_sec * 1000000) + (starttime.tv_usec)))/1000000;
         robotPose.x+=distance*cos(robotPose.theta);
         robotPose.y+=distance*sin(robotPose.theta);
+        cout<<"New Position: (x,y): "<<"("<<robotPose.x<<", "<<robotPose.y<<")"<<endl;
         }
 
         void Pose::updateAngle(){
         gettimeofday(&endtime,NULL);
-        robotPose.theta=ang_velocity*((endtime.tv_sec * 1000000) + (endtime.tv_usec)) - ((starttime.tv_sec * 1000000) + (starttime.tv_usec));
+        robotPose.theta=(ang_velocity*((endtime.tv_sec * 1000000) + (endtime.tv_usec)) - ((starttime.tv_sec * 1000000) + (starttime.tv_usec)))/1000000;
         if (robotPose.theta>2*M_PI){
         robotPose.theta-=2*M_PI;
         }
         else if(robotPose.theta<0){
         robotPose.theta+=2*M_PI;
         }
+        cout<<"New Angle: (theta): "<<"("<<robotPose.theta<<")"<<endl;
+        
         }
 
         DirTime Pose::shiftToGoal(SITE id_site){

@@ -8,6 +8,7 @@
 #include "Event.h"
 
 EVENT currentEvent;
+EVENT previousEvent = EVENT_NULL;
 
 Event g_eventCenter;
 extern SensorController g_sensorCtrl;
@@ -209,6 +210,10 @@ void Event::handleInput(const INPUT &input)
 {
     //cout<<"Handling Input"<<endl;
     currentEvent = checkEventType(input);
+   
+    if(currentEvent != previousEvent)
+    {
     cout<<"Current Event: "<<currentEvent<<endl;
-    
+    previousEvent = currentEvent;
+    }
 }
