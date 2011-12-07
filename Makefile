@@ -1,5 +1,9 @@
 PROG ?= Partula
+<<<<<<< HEAD
 OBJS = main.o Robot.o Action.o SensorController.o MotorController.o \
+=======
+OBJS = main.o Robot.o Action.o SensorController.o MotorController.o Site.o Frequency.o\
+>>>>>>> 22bbe37c5164986f355b6143ba4cba580e932a41
        Motor.o Sensor.o Switch.o Handle.o Event.o Pose.o Localization.o ServoController.o ServoMotor.o\
 
 all: $(PROG)
@@ -19,8 +23,11 @@ $(PROG): main.o
 		"./obj/lin/Localization.o" \
 		"./obj/lin/ServoMotor.o" \
 		"./obj/lin/ServoController.o" \
+		"./obj/lin/Site.o" \
+		"./obj/lin/Frequency.o" \
 		-o Partula \
-		-lphidget21
+		-lphidget21 \
+		-lrt
 		
 main.o: Robot.o main.cpp
 	g++ -c main.cpp -o "./obj/lin/main.o"
@@ -34,13 +41,14 @@ ServoController.o: ServoController.cpp ServoController.h ServoMotor.o
 Action.o: Action.cpp Action.h MotorController.o Pose.o
 	g++ -c Action.cpp -o "./obj/lin/Action.o"
 
-Handle.o: Handle.cpp Action.o Localization.o ServoController.o Pose.o
+Handle.o: Handle.cpp Action.o Localization.o ServoController.o Pose.o Frequency.o
 	g++ -c Handle.cpp -o "./obj/lin/Handle.o"
 
 Pose.o: Pose.cpp Pose.h
 	g++ -c Pose.cpp -o "./obj/lin/Pose.o"
 
-Robot.o: Robot.cpp Robot.h SensorController.o MotorController.o Handle.o Event.o Pose.o Localization.o Action.o
+
+Robot.o: Robot.cpp Robot.h SensorController.o MotorController.o Handle.o Event.o Pose.o Localization.o Site.o Frequency.o
 	g++ -c Robot.cpp -o "./obj/lin/Robot.o"
 
 SensorController.o: SensorController.cpp SensorController.h Sensor.o Switch.o
@@ -58,14 +66,17 @@ Sensor.o: Sensor.cpp Sensor.h
 Switch.o: Switch.cpp Switch.h
 	g++ -c Switch.cpp -o "./obj/lin/Switch.o"
 
-Event.o: Event.cpp Event.h SensorController.o
+Event.o: Event.cpp Event.h SensorController.o Frequency.o
 	g++ -c Event.cpp -o "./obj/lin/Event.o"
 
 Localization.o: Localization.cpp Localization.h Pose.o ServoController.o SensorController.o Action.o
 	g++ -c Localization.cpp -o "./obj/lin/Localization.o"
 
-
-
+Frequency.o: Frequency.cpp Frequency.h
+	g++ -c Frequency.cpp -o "./obj/lin/Frequency.o"
+	
+Site.o: Site.cpp Site.h wayPoint.h
+	g++ -c Site.cpp -o "./obj/lin/Site.o"
 
 
 clean:
@@ -83,3 +94,5 @@ clean:
 		"./obj/lin/Localization.o"\
 		"./obj/lin/ServoController.o"\
 		"./obj/lin/ServoMotor.o"\
+		"./obj/lin/Site.o"\
+		"./obj/lin/Frequency.o"\

@@ -6,12 +6,15 @@
  */
 
 #include "Event.h"
+#include "Frequency.h"
 
 EVENT currentEvent;
 EVENT previousEvent = EVENT_NULL;
 
 Event g_eventCenter;
 extern SensorController g_sensorCtrl;
+
+int g_lightValuePeak;
 
 Event::Event()
 {
@@ -117,6 +120,11 @@ EVENT Event::genSensorEvent(const INPUT &input)
         {
             return genLightSensorEvent(input);
         }
+    case TYPE_SENSOR_SONAR:
+        {
+            // cout << << endl;
+            break;
+        }
     default:
         {
             printf("genSensorEvent: unknown sensor type: %d\n", input.subType);
@@ -138,8 +146,7 @@ EVENT Event::genLightSensorEvent(const INPUT &input)
     {
     case POSITION_FRONT:
         {
-            genLightSensorFrontEvent(input);
-            break;
+            return genLightSensorFrontEvent(input);
         }
     case POSITION_UNDER:
         {
@@ -159,7 +166,7 @@ EVENT Event::genLightSensorEvent(const INPUT &input)
 
 EVENT Event::genLightSensorFrontEvent(const INPUT &input)
 {
-    /*if (input.value < VALUE_MIN_LED_LIGHT)
+    if (input.value < VALUE_MIN_LED_LIGHT)
     {
         return EVENT_NULL;
     }
@@ -181,7 +188,7 @@ EVENT Event::genLightSensorFrontEvent(const INPUT &input)
     else
     {
         ;
-    }*/
+    }
 
     return EVENT_NULL;
 }
@@ -210,7 +217,7 @@ void Event::handleInput(const INPUT &input)
 {
     //cout<<"Handling Input"<<endl;
     currentEvent = checkEventType(input);
-   
+
     if(currentEvent != previousEvent)
     {
     cout<<"Current Event: "<<currentEvent<<endl;
