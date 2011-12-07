@@ -9,14 +9,16 @@
 #include "SensorController.h"
 #include "Localization.h"
 
+
 extern EVENT currentEvent;
 extern SensorController g_sensorCtrl;
 ServoController g_servoController;
 extern STATUS_ROBOT robotStatus;
+extern Localization g_localization;
 
 Handle::Handle()
 {
-
+    //Pose pose;
 }
 
 Handle::Handle(const Handle& orig)
@@ -198,31 +200,42 @@ void* Handle::fr_check(void* param)
     //printf("\n\n\n\nThe counter is \n%d\n\n\n\n",counter);
     //printf("\n\n\n\nThe frequency is \n%f\n\n\n\n",frequency);
     cout<<"The frequency is "<<frequency<<endl;
+
+    //Once the robot knows the frequency, it can identify the site
+
+
+
     if(frequency>0 && frequency <1)
     {
+        g_localization.identifySite(FREQUENCY_HALF);
         frequencyMovement(FREQUENCY_HALF);
     }
     else if(frequency >=0.8 && frequency <1.5)
     {
+        g_localization.identifySite(FREQUENCY_1);
         frequencyMovement(FREQUENCY_1);
     }
     else if(frequency >=1.5 && frequency <3.5)
     {
+        g_localization.identifySite(FREQUENCY_2);
         frequencyMovement(FREQUENCY_2);
     }
     else if(frequency >= 3.5 && frequency <5.5)
     {
+        g_localization.identifySite(FREQUENCY_4);
         frequencyMovement(FREQUENCY_4);
     }
     else if(frequency >=5.5 && frequency <7.5)
     {
+        g_localization.identifySite(FREQUENCY_6);
         frequencyMovement(FREQUENCY_6);
     }
     else if(frequency >=7.5 && frequency <12)
     {
+        g_localization.identifySite(FREQUENCY_8);
         frequencyMovement(FREQUENCY_8);
     }
-
+    currentEvent = EVENT_TRIGGER_ACTIVATED;
     robotStatus=STATUS_ROBOT_EXPLORING;
 
     check_frequency=0;

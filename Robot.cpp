@@ -2,6 +2,7 @@
 #include "Handle.h"
 #include "Event.h"
 #include "Pose.h"
+#include "Localization.h"
 
 extern SensorController g_sensorCtrl;
 extern MotorController g_motorCtrl;
@@ -9,6 +10,7 @@ extern Event g_eventCenter;
 //Declare the event and robot status variables
 STATUS_ROBOT robotStatus;
 extern EVENT currentEvent;
+extern Localization g_localization;
 
 Robot::Robot(void)
 {
@@ -36,6 +38,9 @@ void Robot::run(void)
     Event event;
     robotStatus = STATUS_ROBOT_EXPLORING;
     currentEvent = EVENT_NULL;
+
+    //Set the initial position
+    g_localization.initializePosition(0,0,0);
 
     cout<<"Robot::run"<<endl;
     while (1)

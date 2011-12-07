@@ -7,6 +7,7 @@
 
 #ifndef LOCALIZATION_H
 #define	LOCALIZATION_H
+#include "Pose.h"
 
 class Localization {
 
@@ -14,13 +15,18 @@ public:
     Localization();
     ~Localization();
 
-    void initializePosition();
+    void identifySite(FREQUENCY frequency);
+
+    void initializePosition(double x, double y, double theta);
 
     void EstimateResourceSiteLocations();
 
     void takeMeasurement();
 
     void updateParticles();
+
+    //static void* sonarThread(void* param);
+    //Pose pose(0,0,0);
 
 private:
 
