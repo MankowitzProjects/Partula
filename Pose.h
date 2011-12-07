@@ -17,6 +17,7 @@ class Pose{
         timeval starttime;
         timeval endtime;
         double distance;
+        double velocity;
 
         Pose(double x,double y, double theta );
         ~Pose();

@@ -8,6 +8,9 @@
 #ifndef LOCALIZATION_H
 #define	LOCALIZATION_H
 #include "Pose.h"
+#include "ServoController.h"
+#include "SensorController.h"
+#include "Action.h"
 
 class Localization {
 
@@ -25,7 +28,7 @@ public:
 
     void updateParticles();
 
-    //static void* sonarThread(void* param);
+    static void* sonarScan(void* param);
     //Pose pose(0,0,0);
 
 private:
