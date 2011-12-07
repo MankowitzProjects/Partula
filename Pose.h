@@ -5,6 +5,7 @@
 #include <math.h>
 #include "conf.h"
 
+
 typedef struct{
 double x,y,theta;
 }RobotPose;
@@ -26,6 +27,7 @@ class Pose{
         void updateAngle(double angle);
         RobotPose getPose();
         void setPose(double x,double y, double theta );
+
 
 
 };

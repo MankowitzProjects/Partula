@@ -206,7 +206,6 @@ void* p_thrd_moveBackward(void *para)
         stop();
     }
 
-
     pthread_exit(NULL);
 
     return NULL;
@@ -444,8 +443,6 @@ void frequencyMovement(FREQUENCY frequency)
     }
     default:
     {
-
-
         break;
     }
 

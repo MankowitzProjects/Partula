@@ -9,7 +9,6 @@
 #include "SensorController.h"
 #include "Localization.h"
 
-
 extern EVENT currentEvent;
 extern SensorController g_sensorCtrl;
 ServoController g_servoController;
