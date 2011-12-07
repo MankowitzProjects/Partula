@@ -70,8 +70,6 @@ typedef enum
 
 //*********************************** TYPE ***********************************
 
-
-
 typedef enum
 {
     TYPE_SENSOR_NULL = 0x00,
@@ -98,7 +96,7 @@ static inline const char *GetSensorTypeChar(TYPE_SENSOR type)
 //*********************************** TYPE ***********************************
 typedef enum
 {
-    SITE_NULL = 0x00,
+    SITE_NULL = -1,
     SITE_1,
     SITE_2,
     SITE_3,
