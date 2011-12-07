@@ -1,4 +1,4 @@
-/* 
+/*
  * File:   Event.h
  * Author: daniel
  *
@@ -9,21 +9,23 @@
 #define	EVENT_H
 
 #include "conf.h"
+#include "SensorController.h"
 
 class Event {
 public:
     Event();
     Event(const Event& orig);
     virtual ~Event();
-    
+
     void  handleEvent();
     void  handleInput(const INPUT &input);
 private:
     EVENT checkEventType(const INPUT &input);
-    
+
     EVENT genIREvent(const INPUT &input);
     EVENT genLightSensorEvent(const INPUT &input);
     EVENT genLightSensorFrontEvent(const INPUT &input);
+    EVENT GenLightSensorUnderEvent(const INPUT &input);
     EVENT genSensorEvent(const INPUT &input);
 
     EVENT genSwitchEvent(const INPUT &input);

@@ -20,6 +20,7 @@ public:
     Robot(void);
     ~Robot(void);
     bool hasHitBumper();
+    void trainSensors();
 private:
 
     bool isInit;

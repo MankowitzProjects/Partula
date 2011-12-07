@@ -150,14 +150,14 @@ inline TYPE_SWITCH SensorController::getSwitchType(const int index)
     return switchTable[index].getType();
 }
 //Need to change these values based on training data
-#define VALUE_BLACK_PAPER_MIN   480
-#define VALUE_BLACK_PAPER_MAX   580
+extern int VALUE_BLACK_PAPER_MIN;
+extern int VALUE_BLACK_PAPER_MAX ;
 
-#define VALUE_BLACK_TAPE_MIN    90
-#define VALUE_BLACK_TAPE_MAX    150
+extern int VALUE_BLACK_TAPE_MIN ;
+extern int VALUE_BLACK_TAPE_MAX;
 
-#define VALUE_GROUND_MIN        200
-#define VALUE_GROUND_MAX        260
+extern int VALUE_GROUND_MIN ;
+extern int VALUE_GROUND_MAX ;
 
 inline bool bIsInRange(int value, int valueMin, int valueMax)
 {

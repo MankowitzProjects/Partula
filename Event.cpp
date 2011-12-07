@@ -10,6 +10,7 @@
 EVENT currentEvent;
 
 Event g_eventCenter;
+extern SensorController g_sensorCtrl;
 
 Event::Event()
 {
@@ -28,19 +29,17 @@ EVENT Event::checkEventType(const INPUT &input)
     switch (input.type)
     {
     case TYPE_INPUT_SWITCH:
-    {
-        genSwitchEvent(input);
-        break;
-    }
+        {
+            return genSwitchEvent(input);
+        }
     case TYPE_INPUT_SENSOR:
-    {
-        genSensorEvent(input);
-        break;
-    }
+        {
+            return genSensorEvent(input);
+        }
     default:
-    {
-        break;
-    }
+        {
+            break;
+        }
     }
 
     return EVENT_NULL;
@@ -138,6 +137,11 @@ EVENT Event::genLightSensorEvent(const INPUT &input)
             genLightSensorFrontEvent(input);
             break;
         }
+    case POSITION_UNDER:
+        {
+            // test the value against the known value
+            return GenLightSensorUnderEvent(input);
+        }
     default:
         {
             printf("genLightSensorEvent: light sensor %d, unkown position: %s.\n", input.index, GetPositionChar(input.pos));
@@ -177,6 +181,26 @@ EVENT Event::genLightSensorFrontEvent(const INPUT &input)
 
     return EVENT_NULL;
 }
+
+EVENT Event::GenLightSensorUnderEvent(const INPUT &input)
+{
+    int valueAvrg = g_sensorCtrl.getSensorValueAvrg(input.index);
+
+    // if the value range is in the black paper and black tape
+    if (bIsBlackTape(valueAvrg) || bIsBlackPaper(valueAvrg))
+    {
+        return EVENT_DETECT_BLACK;
+    }
+    else if (bIsGround(valueAvrg))
+    {
+        return EVENT_DETECT_GROUND;
+    }
+    else
+    {
+        return EVENT_DETECT_GROUND;
+    }
+}
+
 
 void Event::handleInput(const INPUT &input)
 {

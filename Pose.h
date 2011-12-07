@@ -5,6 +5,7 @@
 #include <math.h>
 #include "conf.h"
 
+
 typedef struct{
 int direction;
 unsigned long time;
@@ -32,6 +33,7 @@ class Pose{
         DirTime shiftToGoal(SITE id_site);
         RobotPose getPose();
         void setPose(double x,double y, double theta );
+
 
     private:
         double angle,goal_x,goal_y,diff_x,diff_y,diff_ang;

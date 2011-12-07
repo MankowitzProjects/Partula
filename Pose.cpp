@@ -1,5 +1,6 @@
 #include "Pose.h"
 
+
     Pose pose(0,0,0);
 
     Pose::Pose(double x,double y, double theta)

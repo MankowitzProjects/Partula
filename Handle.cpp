@@ -9,7 +9,6 @@
 #include "SensorController.h"
 #include "Localization.h"
 
-
 extern EVENT currentEvent;
 extern SensorController g_sensorCtrl;
 ServoController g_servoController;
@@ -44,6 +43,7 @@ void Handle::docking()
     //Black tape has been detected
     //1. PerformShape Detection
     cout<<"Black Tape Detected"<<endl;
+    cout<<"Robot is docking"<<endl;
     //navigSpeed=50.00;
     cout<<"Thread cancelled"<<endl;
     int scanParam=0;
@@ -135,6 +135,7 @@ void* Handle::scanArea(void* param)
 
 
     }
+
     ActMoveForward(0);
 
     pthread_exit(NULL);
