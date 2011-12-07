@@ -79,7 +79,8 @@ void Localization::initializePosition(double x, double y, double theta)
 //Determine the resource site locations based on the current position
 void Localization::EstimateResourceSiteLocations()
 {
-
+    
+    
 
 }
 

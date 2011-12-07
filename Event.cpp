@@ -8,6 +8,7 @@
 #include "Event.h"
 
 EVENT currentEvent;
+EVENT previousEvent = EVENT_NULL;
 
 Event g_eventCenter;
 extern SensorController g_sensorCtrl;
@@ -78,15 +79,18 @@ EVENT Event::genBumperEvent(const INPUT &input)
         {
         case POSITION_FRONT:
             {
+                cout<<"Position Front"<<endl;
                 return EVENT_HIT_FRONT;
             }
         case POSITION_LEFT:
             {
+                cout<<"Position Left"<<endl;
                 return EVENT_HIT_FRONT_LEFT;
             }
 
         case POSITION_RIGHT:
             {
+                cout<<"Position right"<<endl;
                 return EVENT_HIT_FRONT_RIGHT;
             }
         default:
@@ -204,5 +208,12 @@ EVENT Event::GenLightSensorUnderEvent(const INPUT &input)
 
 void Event::handleInput(const INPUT &input)
 {
+    //cout<<"Handling Input"<<endl;
     currentEvent = checkEventType(input);
+   
+    if(currentEvent != previousEvent)
+    {
+    cout<<"Current Event: "<<currentEvent<<endl;
+    previousEvent = currentEvent;
+    }
 }
