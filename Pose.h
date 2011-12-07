@@ -42,4 +42,5 @@ class Pose{
         double angle,goal_x,goal_y,diff_x,diff_y,diff_ang;
         DirTime ret_val;
 };
+
 #endif
