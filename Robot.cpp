@@ -32,8 +32,8 @@ bool Robot::hasHitBumper()
 void Robot::run(void)
 {
 
-    //g_motorCtrl.setAcc(100.00);
-    //g_motorCtrl.setVel(100.00);
+    g_motorCtrl.setAcc(100.00);
+    g_motorCtrl.setVel(100.00);
     Handle handle;
     Event event;
     robotStatus  = STATUS_ROBOT_EXPLORING;
@@ -133,7 +133,7 @@ void Robot::init(void)
 
     g_motorCtrl.init();
     g_sensorCtrl.init();
-    g_servoCtrl.init();
+    //g_servoCtrl.init();
 
     isInit = true;
 }
@@ -144,5 +144,5 @@ void Robot::fin(void)
 
     g_motorCtrl.fin();
     g_sensorCtrl.fin();
-    g_servoCtrl.fin();
+    //g_servoCtrl.fin();
 }
