@@ -2,7 +2,8 @@
 #include "Event.h"
 
 SensorController g_sensorCtrl;
-Event g_eventCenter;
+
+extern Event g_eventCenter;
 
 /** \brief Default constructor
  * \param void

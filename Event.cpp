@@ -9,34 +9,40 @@
 
 EVENT currentEvent;
 
+Event g_eventCenter;
 
-Event::Event() {
+Event::Event()
+{
 }
 
-Event::Event(const Event& orig) {
+Event::Event(const Event& orig)
+{
 }
 
-Event::~Event() {
+Event::~Event()
+{
 }
 
-EVENT Event::checkEventType(const INPUT &input){
+EVENT Event::checkEventType(const INPUT &input)
+{
+    cout << "checkEventType" << endl;
 
     switch (input.type)
     {
     case TYPE_INPUT_SWITCH:
-        {
-            genSwitchEvent(input);
-            break;
-        }
+    {
+        genSwitchEvent(input);
+        break;
+    }
     case TYPE_INPUT_SENSOR:
-        {
-            genSensorEvent(input);
-            break;
-        }
+    {
+        genSensorEvent(input);
+        break;
+    }
     default:
-        {
-            break;
-        }
+    {
+        break;
+    }
     }
 
     return EVENT_NULL;
@@ -44,6 +50,8 @@ EVENT Event::checkEventType(const INPUT &input){
 
 EVENT Event::genSwitchEvent(const INPUT &input)
 {
+    cout << "genSwitchEvent" << endl;
+
     switch (input.subType)
     {
     case TYPE_SWITCH_BUMPER:
@@ -66,11 +74,13 @@ EVENT Event::genSwitchEvent(const INPUT &input)
 
 EVENT Event::genBumperEvent(const INPUT &input)
 {
-    if (STATE_ON == input.type)
+    cout << "genBumperEvent" << endl;
+
+    if (STATE_ON == input.value)
     {
-        #if (DEBUG_MODE)
+#if (DEBUG_MODE)
         printf("genBumperEvent - %s bumper HIT!\n", GetPositionChar(input.pos));
-        #endif
+#endif
 
         switch (input.pos)
         {
@@ -175,11 +185,8 @@ EVENT Event::genLightSensorFrontEvent(const INPUT &input)
     return EVENT_NULL;
 }
 
-
-void Event::handleInput(const INPUT &input){
-
-     currentEvent = checkEventType(input);
+void Event::handleInput(const INPUT &input)
+{
+    cout << "handleInput" << endl;
+    currentEvent = checkEventType(input);
 }
-
-
-
