@@ -1,9 +1,6 @@
 PROG ?= Partula
-<<<<<<< HEAD
-OBJS = main.o Robot.o Action.o SensorController.o MotorController.o \
-=======
+
 OBJS = main.o Robot.o Action.o SensorController.o MotorController.o Site.o Frequency.o\
->>>>>>> 22bbe37c5164986f355b6143ba4cba580e932a41
        Motor.o Sensor.o Switch.o Handle.o Event.o Pose.o Localization.o ServoController.o ServoMotor.o\
 
 all: $(PROG)

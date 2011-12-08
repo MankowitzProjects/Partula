@@ -33,14 +33,14 @@ using namespace std;
 #define NUM_SENSOR_SLOTS 8
 #define NUM_SWITCH_SLOTS 8
 
-#define VALUE_MOTOR_VEL_NORMAL  100
-#define VALUE_MOTOR_ACC_NORMAL  100
+#define VALUE_MOTOR_VEL_NORMAL  75
+#define VALUE_MOTOR_ACC_NORMAL  75
 
 #define VALUE_MIN_LED_LIGHT     300
 
 #define VALUE_SERVO_POS_MIN     0.0
 #define VALUE_SERVO_POS_MAX   220.0
-#define VALUE_SERVO_POS_MID   110.0
+#define VALUE_SERVO_POS_MID   130.0
 
 //*********************************** INDEX **********************************
 // Sensors
@@ -252,6 +252,8 @@ typedef enum
     STATUS_ROBOT_EXPLORING,
     STATUS_ROBOT_DOCKING,
     STATUS_ROBOT_DETECTING_FREQUENCY,
+    STATUS_ROBOT_SONAR_SCANNING,
+    STATUS_ROBOT_FINDING_TRIGGER,
     STATUS_TRAINING,
 
     STATUS_ROBOT_NUM

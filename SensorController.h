@@ -161,17 +161,17 @@ extern int VALUE_GROUND_MAX ;
 
 inline bool bIsInRange(int value, int valueMin, int valueMax)
 {
-    return ((valueMin < value) && (value < valueMax));
+    return ((valueMin < value) && (value < valueMax) && (value>20));
 }
 
 inline bool bIsBlackPaper(int value)
 {
-    return bIsInRange(value, VALUE_BLACK_TAPE_MIN, VALUE_BLACK_TAPE_MAX);
+    return bIsInRange(value, VALUE_BLACK_PAPER_MIN, VALUE_BLACK_PAPER_MAX);
 }
 
 inline bool bIsBlackTape(int value)
 {
-    return bIsInRange(value, VALUE_BLACK_PAPER_MIN, VALUE_BLACK_PAPER_MAX);
+    return bIsInRange(value, VALUE_BLACK_TAPE_MIN, VALUE_BLACK_TAPE_MAX);
 }
 
 inline bool bIsGround(int value)

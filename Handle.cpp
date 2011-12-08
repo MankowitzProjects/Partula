@@ -11,7 +11,7 @@
 
 extern EVENT currentEvent;
 extern SensorController g_sensorCtrl;
-ServoController g_servoController;
+extern ServoController g_servoCtrl;
 extern STATUS_ROBOT robotStatus;
 extern Localization g_localization;
 
@@ -39,14 +39,15 @@ void Handle::docking()
 {
     //Set the robot status to docking
     robotStatus = STATUS_ROBOT_DOCKING;
-
+    cout<<"docking() - Detected sensor value: "<<g_sensorCtrl.getSensorValue(INDEX_SENSOR_LIGHT_UNDER)<<endl;
     //Black tape has been detected
     //1. PerformShape Detection
-    cout<<"Black Tape Detected"<<endl;
-    cout<<"Robot is docking"<<endl;
+    cout<<"docking() Black Tape Detected"<<endl;
+    cout<<"docking() Robot is docking"<<endl;
     //navigSpeed=50.00;
-    cout<<"Thread cancelled"<<endl;
+    cout<<"docking() scanning Thread started"<<endl;
     int scanParam=0;
+    ActStop();
     pthread_t scanningThread;
     pthread_create(&scanningThread, NULL, &scanArea,(void*)&scanParam);
 }
@@ -72,13 +73,16 @@ void Handle::triggerSwitch()
 //Perform a scan in order to detect the center of the resource site
 void* Handle::scanArea(void* param)
 {
-    cout<<"Entered Scan Area"<<endl;
 
-    cout<<"Center the sonar"<<endl;
+    robotStatus = STATUS_ROBOT_FINDING_TRIGGER;
+    cout<<"scanArea: Entered Scan Area"<<endl;
 
-    g_servoController.setPos(130);
+    cout<<"scanArea: Center the sonar"<<endl;
 
-    ActTurnLeft(5000);
+    g_servoCtrl.setPos(130);
+
+    cout<<"scanArea: Turning left"<<endl;
+    turnLeft();
     //leftDirectionDistance = irMainValueBottom;
     bool foundFlag=false;
     bool edgeDetected=false;
@@ -89,33 +93,42 @@ void* Handle::scanArea(void* param)
     double irTopPrevious;
     double irBottomPrevious;
 
-    while(foundFlag==false && edgeDetected==false)
+    // The centre is not found
+    // The edge is not detected
+    while ((!foundFlag) || (!edgeDetected))
     {
-
-        irMainValueTop = g_sensorCtrl.getSensorValue(INDEX_SENSOR_IR_TOP);
+        irMainValueTop    = g_sensorCtrl.getSensorValue(INDEX_SENSOR_IR_TOP);
         irMainValueBottom = g_sensorCtrl.getSensorValue(INDEX_SENSOR_IR_BOTTOM);
 
-        if(irMainValueTop!=irTopPrevious){
-        cout<<"IR Top Value: "<<irMainValueTop<<endl;
-        irTopPrevious = irMainValueTop;
-        }
-        if(irMainValueBottom != irBottomPrevious){
-        cout<<"IR Bottom Value: "<<irMainValueBottom<<endl;
-        irBottomPrevious = irMainValueBottom;
+        if (irMainValueTop!=irTopPrevious){
+            cout<<"IR Top Value: "<<irMainValueTop<<endl;
+            irTopPrevious = irMainValueTop;
         }
 
-        if(irMainValueTop<90 && irMainValueBottom>90)
+        if(irMainValueBottom != irBottomPrevious){
+            cout<<"IR Bottom Value: "<<irMainValueBottom<<endl;
+            irBottomPrevious = irMainValueBottom;
+        }
+
+        // if it is the gap
+        if( abs(irMainValueBottom - irMainValueTop) >120)
         {
             cout<<"Stopped due to gap in first loop"<<endl;
             ActStop();
             foundFlag=true;
+            break;
         }
-        else if(irMainValueTop<90 && irMainValueBottom<90)
+        // it is the edge
+        else if((irMainValueTop < 140) && (irMainValueBottom<140))
         {
             cout<<"Stopped due to edge in first loop"<<endl;
             ActStop();
             edgeDetected=true;
-
+            break;
+        }
+        else
+        {
+            ;
         }
     }
 
@@ -123,27 +136,31 @@ void* Handle::scanArea(void* param)
 
     if(foundFlag==false)
     {
-        ActTurnRight(5000);
+        cout<<"Turning right"<<endl;
+        turnRight();
 
         //rightDirectionDistance = irMainValueBottom;
-        while(foundFlag==false)
+        while(!(foundFlag))
         {
 
             irMainValueTop = g_sensorCtrl.getSensorValue(INDEX_SENSOR_IR_TOP);
             irMainValueBottom = g_sensorCtrl.getSensorValue(INDEX_SENSOR_IR_BOTTOM);
 
-            if(irMainValueTop<90 && irMainValueBottom>90)
+            if(abs(irMainValueBottom - irMainValueTop)>120)
             {
                 cout<<"Stopped due to gap in second loop"<<endl;
                 ActStop();
                 ActTurnRight(300);
                 foundFlag=true;
+                break;
 
             }
-            else if(irMainValueTop<90 && irMainValueBottom<90)
+            else if(irMainValueTop<140 && irMainValueBottom<140)
             {
                 cout<<"Stopped due to edge in second loop"<<endl;
+                foundFlag=false;
                 ActStop();
+                break;
 
             }
 
@@ -153,7 +170,8 @@ void* Handle::scanArea(void* param)
 
     }
 
-    ActMoveForward(0);
+    moveForward();
+    robotStatus = STATUS_ROBOT_DOCKING;
 
     pthread_exit(NULL);
 
@@ -176,7 +194,7 @@ void* Handle::fr_check(void* param)
     //*****************************
     // while(lightFound==false){};
     //lightFound=false;
-    g_servoController.setPos(130);
+    g_servoCtrl.setPos(130);
 
     printf(" Check frequency\n");
     check_frequency=1;
@@ -248,6 +266,7 @@ void* Handle::fr_check(void* param)
         frequencyMovement(FREQUENCY_8);
     }
     currentEvent = EVENT_TRIGGER_ACTIVATED;
+
     robotStatus=STATUS_ROBOT_EXPLORING;
 
     check_frequency=0;

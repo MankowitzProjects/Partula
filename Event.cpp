@@ -63,7 +63,7 @@ EVENT Event::genSwitchEvent(const INPUT &input)
         }
     default:
         {
-            printf("genSwitchEvent - switch %d with unknown type: %d\n", input.index, input.subType);
+            //printf("genSwitchEvent - switch %d with unknown type: %d\n", input.index, input.subType);
         }
     }
 
@@ -98,7 +98,7 @@ EVENT Event::genBumperEvent(const INPUT &input)
             }
         default:
             {
-                printf("genBumperEvent: unknown bumper HIT!\n");
+                //printf("genBumperEvent: unknown bumper HIT!\n");
                 break;
             }
         }
@@ -127,7 +127,7 @@ EVENT Event::genSensorEvent(const INPUT &input)
         }
     default:
         {
-            printf("genSensorEvent: unknown sensor type: %d\n", input.subType);
+            //printf("genSensorEvent: unknown sensor type: %d\n", input.subType);
             break;
         }
     }
@@ -155,7 +155,7 @@ EVENT Event::genLightSensorEvent(const INPUT &input)
         }
     default:
         {
-            printf("genLightSensorEvent: light sensor %d, unkown position: %s.\n", input.index, GetPositionChar(input.pos));
+            //printf("genLightSensorEvent: light sensor %d, unkown position: %s.\n", input.index, GetPositionChar(input.pos));
             break;
         }
     }
@@ -196,10 +196,12 @@ EVENT Event::genLightSensorFrontEvent(const INPUT &input)
 EVENT Event::GenLightSensorUnderEvent(const INPUT &input)
 {
     int valueAvrg = g_sensorCtrl.getSensorValueAvrg(input.index);
-
+    int value = g_sensorCtrl.getSensorValue(input.index);
     // if the value range is in the black paper and black tape
-    if (bIsBlackTape(valueAvrg) || bIsBlackPaper(valueAvrg))
+    if (bIsBlackTape(value)) //|| bIsBlackPaper(valueAvrg))
     {
+        //cout<<"Average Value: "<<value<<endl;
+        //cout<<"Got to BLACK TAPE EVENT with sensor value: "<<g_sensorCtrl.getSensorValue(input.index)<<endl;
         return EVENT_DETECT_BLACK;
     }
     else if (bIsGround(valueAvrg))
@@ -220,7 +222,7 @@ void Event::handleInput(const INPUT &input)
 
     if(currentEvent != previousEvent)
     {
-    cout<<"Current Event: "<<currentEvent<<endl;
+    //cout<<"Current Event: "<<currentEvent<<endl;
     previousEvent = currentEvent;
     }
 }

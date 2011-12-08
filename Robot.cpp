@@ -7,6 +7,7 @@
 
 #include "Site.h"
 
+
 extern SensorController g_sensorCtrl;
 extern MotorController g_motorCtrl;
 extern ServoController g_servoCtrl;
@@ -40,41 +41,58 @@ void Robot::run(void)
 
     Handle handle;
     Event event;
-    robotStatus  = STATUS_ROBOT_EXPLORING;
+    robotStatus  = STATUS_ROBOT_SONAR_SCANNING;
     currentEvent = EVENT_NULL;
 
     //Set the initial position
-    g_localization.initializePosition(0,0,0);
+    g_localization.initializePosition(190,120,0);
 
+    g_servoCtrl.setPos(130);
     cout<<"Robot::run"<<endl;
 
-    trainSensors();
+    //trainSensors();
 
+    //moveForward();
+    //turnRight();
 
-    moveForward();
+    wait(2000);
+
+    cout << "Freq:" << FreqGetFreqency() << endl;
+
+    #if 0
 
     int sonarStatus = 0;
-    //pthread_t sonarThread;
-    //pthread_create(&sonarThread, NULL, sonarScan,(void*)&sonarStatus);
+    pthread_t sonarThread;
+    pthread_create(&sonarThread, NULL, g_localization.sonarScan,(void*)&sonarStatus);
 
-    #if 1
+    while(robotStatus==STATUS_ROBOT_SONAR_SCANNING){
+
+    }
+    cout<<"Finished scan, moving forward"<<endl;
+
+    ActMoveForward(6000);
+
+
     while (1)
     {
+        //cout<<"Light under car is: "<<g_sensorCtrl.getSensorValue(INDEX_SENSOR_LIGHT_UNDER)<<endl;
         //cout<<"Current Event is %d"<<currentEvent<<endl;
         if(robotStatus == STATUS_ROBOT_EXPLORING)
         {
             //cout<<"Entered Exploring"<<endl;
             if (hasHitBumper())
             {
-                cout<<"Handling collision"<<endl;
+                //cout<<"Handling collision"<<endl;
                 handle.collision();
             }
             else if (currentEvent == EVENT_DETECT_BLACK)
             {
+                //cout<<"Handling Docking"<<endl;
                 handle.docking();
             }
             else if (currentEvent == EVENT_TRIGGER_ACTIVATED)
             {
+                //cout<<"Handling localization"<<endl;
                 handle.localization();
             }
         }
@@ -82,6 +100,7 @@ void Robot::run(void)
         {
             if (hasHitBumper() && robotStatus!=STATUS_ROBOT_DETECTING_FREQUENCY)
             {
+                cout<<"Handling trigger switch"<<endl;
                 handle.triggerSwitch();
             }
         }
@@ -103,7 +122,7 @@ void Robot::init(void)
 
     g_motorCtrl.init();
     g_sensorCtrl.init();
-    //g_servoCtrl.init();
+    g_servoCtrl.init();
 
     isInit = true;
 }
@@ -114,7 +133,7 @@ void Robot::fin(void)
 
     g_motorCtrl.fin();
     g_sensorCtrl.fin();
-    //g_servoCtrl.fin();
+    g_servoCtrl.fin();
 }
 
     void Robot::trainSensors(){
@@ -147,3 +166,4 @@ void Robot::fin(void)
 	      robotStatus=STATUS_ROBOT_EXPLORING;
 
       }
+

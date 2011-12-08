@@ -190,4 +190,6 @@ void initSites(void)
     }
 
     // add information
+    //sites[1].readyPoint.x =
+
 }
