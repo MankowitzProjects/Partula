@@ -56,6 +56,7 @@ public:
     WayPoint dotLeft;   /**< the coordinates of left edge */
     WayPoint dotMid;    /**< the coordinates of middle corner */
     WayPoint dotRight;  /**< the coordinates of right edge */
+    WayPoint readyPoint;
 };
 
 
