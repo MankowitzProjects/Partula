@@ -40,7 +40,7 @@ using namespace std;
 
 #define VALUE_SERVO_POS_MIN     0.0
 #define VALUE_SERVO_POS_MAX   220.0
-#define VALUE_SERVO_POS_MID   130.0
+#define VALUE_SERVO_POS_MID   125.0
 
 //*********************************** INDEX **********************************
 // Sensors
