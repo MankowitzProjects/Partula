@@ -201,7 +201,7 @@ void* Handle::fr_check(void* param)
 
     if (frequency>0 && frequency <1)
     {
-        
+
         frequencyMovement(FREQUENCY_HALF);
     }
     else if(frequency >=0.8 && frequency <1.5)

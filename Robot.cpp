@@ -47,7 +47,7 @@ void Robot::run(void)
     
     //Initialise servo
     //g_servoCtrl.init();
-    g_servoCtrl.setPos(130);
+    g_servoCtrl.setPos(VALUE_SERVO_POS_MID);
 
     //Set the initial position
     g_localization.initializePosition(190,120,0);
@@ -128,7 +128,7 @@ void Robot::init(void)
     g_motorCtrl.init();
     g_sensorCtrl.init();
     g_servoCtrl.init();
-    
+
 
     isInit = true;
 }
@@ -145,29 +145,29 @@ void Robot::fin(void)
 void Robot::trainSensors()
 {
     robotStatus=STATUS_TRAINING;
-   
-    
+
+
     int lightSensor =0;
     int numberSamples=0;
     while(numberSamples<10)
     {
         if(lightSensor!=0){
-            
+
             lightSensor = lightSensor + g_sensorCtrl.getSensorValue(INDEX_SENSOR_LIGHT_UNDER);
             numberSamples++;
         }
     }
-    
+
     lightSensor = lightSensor/10;
-    
+
     VALUE_BLACK_TAPE_MAX = lightSensor*0.75;
     VALUE_BLACK_TAPE_MIN = VALUE_BLACK_TAPE_MAX*0.5;
-    
+
     cout<<"The black max value is: "<<VALUE_BLACK_TAPE_MAX<<endl;
-    
+
     cout<<"The black min value is: "<<VALUE_BLACK_TAPE_MIN<<endl;
-    
-    
+
+
     /*int samples = 0;
     int blackTapeTotal=0;
     int blackTapeAvg=0;
