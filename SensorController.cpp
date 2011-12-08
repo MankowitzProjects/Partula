@@ -300,7 +300,7 @@ void SensorController::regHandlers(void)
     //Change the sensitivity trigger of the sensors
     for (int i = 0; i < numSensors; i++)
     {
-        CPhidgetInterfaceKit_setSensorChangeTrigger(sensorCtrlHandle, i, 10);  //we'll just use 10 for fun
+        CPhidgetInterfaceKit_setSensorChangeTrigger(sensorCtrlHandle, i, 6);  //we'll just use 10 for fun
     }
 
     printf("Toggling Ratiometric....\n");

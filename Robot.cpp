@@ -17,6 +17,7 @@ STATUS_ROBOT robotStatus;
 extern EVENT currentEvent;
 extern Localization g_localization;
 extern MOVEMENT_STATUS g_movement;
+extern Pose pose;
 
 Robot::Robot(void)
 {
@@ -43,7 +44,8 @@ void Robot::run(void)
 
     Handle handle;
     Event event;
-    robotStatus  = STATUS_ROBOT_SONAR_SCANNING;
+    //robotStatus  = STATUS_ROBOT_SONAR_SCANNING;
+    robotStatus = STATUS_ROBOT_EXPLORING;
     currentEvent = EVENT_NULL;
 
     //Initialise servo
@@ -70,18 +72,14 @@ void Robot::run(void)
     //pthread_t sonarThread;
     //pthread_create(&sonarThread, NULL, g_localization.sonarScan,(void*)&sonarStatus);
 
-    //ActMoveForward(4000);
-    ActMoveBackward(4000);
-    //ActTurnLeft(4000);
-    //ActTurnRight(4000);
 
-    while(robotStatus==STATUS_ROBOT_SONAR_SCANNING){
+    //while(robotStatus==STATUS_ROBOT_SONAR_SCANNING){
 
-    }
+    //}
     cout<<"Finished scan, moving forward"<<endl;
 
-    //ActMoveForward(6000);
-    //trainSensors();
+    ActMoveForward(6000);
+    trainSensors();
 
     while (1)
     {
@@ -119,7 +117,7 @@ void Robot::run(void)
                 handle.triggerSwitch();
             }
         }
-        //Pose.updatePose();
+        
     }
 
 #endif
@@ -156,24 +154,27 @@ void Robot::fin(void)
 
 void Robot::trainSensors()
 {
-    robotStatus=STATUS_TRAINING;
-
 
     int lightSensor =0;
     int numberSamples=0;
-    while(numberSamples<10)
+    int lightTotal = 0;
+            
+    while(numberSamples<100)
     {
-        if(lightSensor!=0){
-
-            lightSensor = lightSensor + g_sensorCtrl.getSensorValue(INDEX_SENSOR_LIGHT_UNDER);
+        lightSensor = g_sensorCtrl.getSensorValue(INDEX_SENSOR_LIGHT_UNDER);
+        
+        if(lightSensor>100){
+            
+            cout<<"Accepted light value: "<<lightSensor<<endl;
+            lightTotal = lightTotal + lightSensor;
             numberSamples++;
         }
     }
 
-    lightSensor = lightSensor/10;
+    lightTotal = lightTotal/numberSamples;
 
-    VALUE_BLACK_TAPE_MAX = lightSensor*0.75;
-    VALUE_BLACK_TAPE_MIN = VALUE_BLACK_TAPE_MAX*0.5;
+    VALUE_BLACK_TAPE_MAX = lightTotal*0.6;
+    VALUE_BLACK_TAPE_MIN = VALUE_BLACK_TAPE_MAX*0.4;
 
     cout<<"The black max value is: "<<VALUE_BLACK_TAPE_MAX<<endl;
 
@@ -206,7 +207,6 @@ void Robot::trainSensors()
     cout<<"Black Tape Threshold max threshold is "<<VALUE_BLACK_TAPE_MAX<<endl;
     cout<<"Black Tape Threshold min threshold is "<<VALUE_BLACK_TAPE_MIN<<endl;
     getchar();*/
-    robotStatus=STATUS_ROBOT_EXPLORING;
 
 }
 
