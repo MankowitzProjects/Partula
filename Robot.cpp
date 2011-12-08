@@ -35,6 +35,8 @@ bool Robot::hasHitBumper()
             || (currentEvent == EVENT_HIT_FRONT_RIGHT));
 }
 
+#include "Frequency.h"
+
 void Robot::run(void)
 {
 
@@ -47,7 +49,7 @@ void Robot::run(void)
     //Set the initial position
     g_localization.initializePosition(190,120,0);
 
-    g_servoCtrl.setPos(130);
+    //g_servoCtrl.setPos(130);
     cout<<"Robot::run"<<endl;
 
     //trainSensors();
@@ -55,11 +57,7 @@ void Robot::run(void)
     //moveForward();
     //turnRight();
 
-    wait(2000);
-
-    cout << "Freq:" << FreqGetFreqency() << endl;
-
-
+#if 1
 
     int sonarStatus = 0;
     pthread_t sonarThread;
@@ -72,7 +70,7 @@ void Robot::run(void)
 
     ActMoveForward(6000);
 
-#if 1
+
 
     while (1)
     {

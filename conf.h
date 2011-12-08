@@ -36,7 +36,7 @@ using namespace std;
 #define VALUE_MOTOR_VEL_NORMAL  75
 #define VALUE_MOTOR_ACC_NORMAL  75
 
-#define VALUE_MIN_LED_LIGHT     300
+#define VALUE_MIN_LED_LIGHT     200
 
 #define VALUE_SERVO_POS_MIN     0.0
 #define VALUE_SERVO_POS_MAX   220.0
@@ -48,9 +48,10 @@ using namespace std;
 
 #define INDEX_SENSOR_SONAR          1
 
+#define INDEX_SENSOR_LIGHT_LEFT     3
+#define INDEX_SENSOR_LIGHT_MIDDLE   4
 #define INDEX_SENSOR_LIGHT_RIGHT    2
-#define INDEX_SENSOR_LIGHT_MIDDLE   3
-#define INDEX_SENSOR_LIGHT_LEFT     4
+
 #define INDEX_SENSOR_LIGHT_UNDER    5
 
 #define INDEX_SENSOR_IR_BOTTOM      6

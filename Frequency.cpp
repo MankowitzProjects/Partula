@@ -1,14 +1,83 @@
 #include "Frequency.h"
+#include "debug_tools.h"
+#include <iostream>
 
-Frequency g_freqLight(FREQUENCY_DEFAULT_SAMPLE_RATE);
+Frequency g_freqLightLeft(FREQUENCY_DEFAULT_SAMPLE_RATE);
+Frequency g_freqLightMiddle(FREQUENCY_DEFAULT_SAMPLE_RATE);
+Frequency g_freqLightRight(FREQUENCY_DEFAULT_SAMPLE_RATE);
 
-void FreqTick(void)
+void FreqTickLeft(void)
 {
-    g_freqLight.tick();
+    #if DEBUG_MODE_FREQUENCY
+    cout << "FreqTickLeft" << endl;
+    #endif
+    g_freqLightLeft.tick();
 }
-float FreqGetFreqency(void)
+
+float FreqGetFrequencyLeft(void)
 {
-    return g_freqLight.getFrequency();
+    return g_freqLightLeft.getFrequency();
+}
+
+void FreqTickMiddle(void)
+{
+    #if DEBUG_MODE_FREQUENCY
+    cout << "FreqTickMiddle" << endl;
+    #endif
+    g_freqLightMiddle.tick();
+}
+
+float FreqGetFrequencyMiddle(void)
+{
+    return g_freqLightMiddle.getFrequency();
+}
+
+void FreqTickRight(void)
+{
+    #if DEBUG_MODE_FREQUENCY
+    cout << "FreqTickRight" << endl;
+    #endif
+    g_freqLightRight.tick();
+}
+
+float FreqGetFrequencyRight(void)
+{
+    return g_freqLightRight.getFrequency();
+}
+
+float FreqGetFrequency(void)
+{
+    float freq = 0.0;
+
+    if (   (FreqGetFrequencyRight() > 0.3)
+        && (FreqGetFrequencyRight() < 10.0))
+    {
+        freq = FreqGetFrequencyRight();
+    }
+    else if (   (FreqGetFrequencyLeft() > 0.3)
+             && (FreqGetFrequencyLeft() < 10.0))
+    {
+        freq = FreqGetFrequencyLeft();
+    }
+    else if (   (FreqGetFrequencyMiddle() > 0.3)
+             && (FreqGetFrequencyMiddle() < 10.0))
+    {
+        freq = FreqGetFrequencyMiddle();
+    }
+    else
+    {
+        freq = 0.0;
+    }
+
+    #if DEBUG_MODE_FREQUENCY
+    cout << "Freq left  : " << FreqGetFrequencyLeft() << endl;
+    cout << "Freq middle: " << FreqGetFrequencyMiddle() << endl;
+    cout << "Freq right : " << FreqGetFrequencyRight() << endl;
+
+    cout << "Freq result: " << freq << endl;
+    #endif
+
+    return freq;
 }
 
 float Frequency::getFrequency(void)

@@ -183,16 +183,17 @@ void* Handle::scanArea(void* param)
 void* Handle::fr_check(void* param)
 {
     // wait for 2 seconds, until the robot get the frequency
-    wait(2000);
+    wait(4500);
 
-    float frequency = FreqGetFreqency();
+    // get the sensible value from the front sensors
+    float frequency = FreqGetFrequency();
 
     cout<<"The frequency is " << frequency << endl;
 
 
     //Once the robot knows the frequency, it can identify the site
 
-    if(frequency>0 && frequency <1)
+    if (frequency>0 && frequency <1)
     {
         g_localization.identifySite(FREQUENCY_HALF);
         frequencyMovement(FREQUENCY_HALF);
