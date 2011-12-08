@@ -7,6 +7,7 @@
 
 #include "Event.h"
 #include "Frequency.h"
+#include "debug_tools.h"
 
 EVENT currentEvent;
 EVENT previousEvent = EVENT_NULL;
@@ -143,6 +144,9 @@ EVENT Event::genSensorEvent(const INPUT &input)
 
 EVENT Event::genIREvent(const INPUT &input)
 {
+    #if DEBUG_MODE_SENSOR_IR
+    cout << "genIREvent - " << GetPositionChar(input.pos) << " IR sensor: " << input.value << endl;
+    #endif
     return EVENT_NULL;
 }
 
@@ -294,6 +298,5 @@ void Event::handleInput(const INPUT &input)
     {
         // cout<<"Current Event: "<<currentEvent<<endl;
         previousEvent = currentEvent;
-
     }
 }

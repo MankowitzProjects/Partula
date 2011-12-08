@@ -82,6 +82,44 @@ void Handle::triggerSwitch()
 }
 
 
+#define VALUE_DIFF_IR_TOP_BOTTOM 20
+
+#define VALUE_DIFF_GAP_TOP_BOTTOM   80
+#define VALUE_DIFF_GAP              30
+#define VALUE_DIFF_EDGE             20
+
+#define VALUE_DIV_IR                13
+
+bool bIsEdge(float irBottom, float irBottomPre)
+{
+    // if the value changes a lot
+    if ((irBottomPre - irBottom) > VALUE_DIFF_EDGE)
+    {
+        if (irBottom < 90)
+        {
+            return true;
+        }
+    }
+
+    return false;
+}
+
+bool bIsGap(float irTop, float irTopPre, float irBottom, float irBottomPre)
+{
+    // if it is the gap, top sensor will have very low reading compare to previous value
+    // the bottom one will have similar value like before
+
+    // the previous value should be similar
+    if (   ((irTopPre - irTop) > VALUE_DIFF_GAP)
+        && (abs(irBottomPre - irBottom) < VALUE_DIV_IR)
+        && (irBottom - irTop) > 60)
+    {
+        return true;
+    }
+
+    return false;
+}
+
 void Handle::reScan(){
 
     int scanParam=0;
@@ -100,17 +138,22 @@ void Handle::reScan(){
  */
 void* Handle::scanArea(void* param)
 {
+    // change the status to find the trigger
     robotStatus = STATUS_ROBOT_FINDING_TRIGGER;
     cout<<"scanArea: Entered Scan Area"<<endl;
     cout<<"scanArea: Center the sonar"<<endl;
-
     g_servoCtrl.setPos(VALUE_SERVO_POS_MID);
 
-    cout<<"scanArea: Turning left"<<endl;
+    ActStop();
 
+    #if DEBUG_MODE_SONAR_SCAN
+    cout << "scanArea - turn left at start" <<  endl;
+    #endif
+    wait(2000);
 
     turnLeft();
 
+#if 1
     //leftDirectionDistance = irMainValueBottom;
     bool foundFlag    = false;
     bool edgeDetected = false;
@@ -197,6 +240,110 @@ void* Handle::scanArea(void* param)
     cout<<"Reached Here"<<endl;
     //Go forward to center
     moveForward();
+
+#else
+    bool bFoundGap       = false;
+    bool bFoundLeftEdge  = false;
+    bool bFoundRightEdge = false;
+
+    float irTop       = 0.0;
+    float irTopPre    = 0.0;
+    float irBottom    = 0.0;
+    float irBottomPre = 0.0;
+
+    // turn to the left edge until found the gap or edge
+    while ((!bFoundGap) || (!bFoundLeftEdge))
+    {
+        irTop       = g_sensorCtrl.getSensorValue(INDEX_SENSOR_IR_TOP);
+        irBottom    = g_sensorCtrl.getSensorValuePre(INDEX_SENSOR_IR_BOTTOM);
+        irTopPre    = g_sensorCtrl.getSensorValue(INDEX_SENSOR_IR_TOP);
+        irBottomPre = g_sensorCtrl.getSensorValuePre(INDEX_SENSOR_IR_BOTTOM);
+
+        // detect if it's the edge using the only bottom sensor
+        if (bIsEdge(irBottom, irBottomPre))
+        {
+            #if DEBUG_MODE_SONAR_SCAN
+            cout << "scanArea - 1st loop found edge: irBottom = " << irBottom << " irBottomPre = " << irBottomPre <<  endl;
+            #endif
+            bFoundLeftEdge = true;
+            break;
+        }
+
+        #if 1
+        // detect if it's a gap
+        if (bIsGap(irTop, irTopPre, irBottom, irBottomPre))
+        {
+            #if DEBUG_MODE_SONAR_SCAN
+            cout << "scanArea - 1st loop found gap: irBottom = " << irBottom << " irBottomPre = " << irBottomPre << " irTop = " << irTop << " irTopPre = " << irTopPre <<  endl;
+            #endif
+            bFoundGap = true;
+            break;
+        }
+        #endif
+    }
+
+    #if DEBUG_MODE_SONAR_SCAN
+    cout << "scanArea - stop motor after 1st loop" <<  endl;
+    #endif
+    ActStop();
+
+    // if facing to the left edge
+    if (!bFoundGap) // that means we didn't found the gap
+    {
+        // turn to right
+        #if DEBUG_MODE_SONAR_SCAN
+        cout << "scanArea - turn right, start 2nd loop" <<  endl;
+        #endif
+        turnRight();
+        wait(100);
+
+        while ((!bFoundGap) || (!bFoundRightEdge))
+        {
+            irTop       = g_sensorCtrl.getSensorValue(INDEX_SENSOR_IR_TOP);
+            irBottom    = g_sensorCtrl.getSensorValuePre(INDEX_SENSOR_IR_BOTTOM);
+            irTopPre    = g_sensorCtrl.getSensorValue(INDEX_SENSOR_IR_TOP);
+            irBottomPre = g_sensorCtrl.getSensorValuePre(INDEX_SENSOR_IR_BOTTOM);
+
+            // detect if it's the edge using the only bottom sensor
+            if (bIsEdge(irBottom, irBottomPre))
+            {
+                #if DEBUG_MODE_SONAR_SCAN
+                cout << "scanArea - 2nd loop found edge: irBottom = " << irBottom << " irBottomPre = " << irBottomPre <<  endl;
+                #endif
+                bFoundRightEdge = true;
+                break;
+            }
+
+            // detect if it's a gap
+            if (bIsGap(irTop, irTopPre, irBottom, irBottomPre))
+            {
+                #if DEBUG_MODE_SONAR_SCAN
+                cout << "scanArea - 2nd loop found gap" << endl;
+                #endif
+                bFoundGap = true;
+                break;
+            }
+        }
+
+        #if DEBUG_MODE_SONAR_SCAN
+        cout << "scanArea - stop motor after 2nd loop" <<  endl;
+        #endif
+        ActStop();
+
+        // what if only edge is found?
+        if (bFoundRightEdge)
+        {
+            cout << "Only edge is found" << endl;
+        }
+    }
+
+    // done, now the robot should be facing either the centre or the "right" edge
+
+    #if DEBUG_MODE_SONAR_SCAN
+    cout << "scanArea - done, now the robot should be facing either the centre or the right edge" <<  endl;
+    #endif
+
+#endif
 
     pthread_exit(NULL);
 }
