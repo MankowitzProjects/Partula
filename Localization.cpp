@@ -121,7 +121,7 @@ void* Localization::sonarScan(void* param)
     //Find the nearest obstacle
     for (int i=0; i<220; i=i+5)
     {
-<<<<<<< HEAD
+
       g_servoCtrl.setPos(i);
       //Get the current servo position
       g_servoCtrl.getPos();
@@ -130,17 +130,7 @@ void* Localization::sonarScan(void* param)
       sonarValue = g_sensorCtrl.getSensorValue(INDEX_SENSOR_SONAR);
       //CPhidgetAdvancedServo_getPosition (servo, 0, &currentPosition);
       if(sonarValue<minSonarValue){
-=======
-        g_servoController.setPos(i);
-        //Get the current servo position
-        g_servoController.getPos();
 
-        //Set the current sonar value
-        sonarValue = g_sensorCtrl.getSensorValue(INDEX_SENSOR_SONAR);
-        //CPhidgetAdvancedServo_getPosition (servo, 0, &currentPosition);
-        if(sonarValue<minSonarValue)
-        {
->>>>>>> 99a12db98b1b1b1fdfd4e2cb42b3d20272416cd9
 
             minSonarValue = sonarValue;
 

@@ -60,7 +60,7 @@ EVENT Event::genSwitchEvent(const INPUT &input)
         }
     default:
         {
-            printf("genSwitchEvent - switch %d with unknown type: %d\n", input.index, input.subType);
+           // printf("genSwitchEvent - switch %d with unknown type: %d\n", input.index, input.subType);
         }
     }
 
@@ -72,7 +72,7 @@ EVENT Event::genBumperEvent(const INPUT &input)
     if (STATE_ON == input.value)
     {
 #if (DEBUG_MODE)
-        cout << "genBumperEvent - " << GetPositionChar(input.pos) << "bumper HIT!\n" << endl;
+        //cout << "genBumperEvent - " << GetPositionChar(input.pos) << "bumper HIT!\n" << endl;
 #endif
 
         switch (input.pos)
@@ -95,7 +95,7 @@ EVENT Event::genBumperEvent(const INPUT &input)
             }
         default:
             {
-                printf("genBumperEvent: unknown bumper HIT!\n");
+                //printf("genBumperEvent: unknown bumper HIT!\n");
                 break;
             }
         }
@@ -119,7 +119,7 @@ EVENT Event::genSensorEvent(const INPUT &input)
         }
     default:
         {
-            printf("genSensorEvent: unknown sensor type: %d\n", input.subType);
+            //printf("genSensorEvent: unknown sensor type: %d\n", input.subType);
             break;
         }
     }
@@ -148,7 +148,7 @@ EVENT Event::genLightSensorEvent(const INPUT &input)
         }
     default:
         {
-            printf("genLightSensorEvent: light sensor %d, unkown position: %s.\n", input.index, GetPositionChar(input.pos));
+            //printf("genLightSensorEvent: light sensor %d, unkown position: %s.\n", input.index, GetPositionChar(input.pos));
             break;
         }
     }

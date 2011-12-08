@@ -36,8 +36,8 @@ bool Robot::hasHitBumper()
 void Robot::run(void)
 {
 
-    g_motorCtrl.setAcc(100.00);
-    g_motorCtrl.setVel(100.00);
+   
+    
     Handle handle;
     Event event;
     robotStatus  = STATUS_ROBOT_EXPLORING;
@@ -51,27 +51,10 @@ void Robot::run(void)
     g_localization.initializePosition(0,0,0);
 
     cout<<"Robot::run"<<endl;
-
-    /*INPUT switchInput;
-    switchInput.type    = TYPE_INPUT_SWITCH;
-    switchInput.subType = g_sensorCtrl.getSwitchType(INDEX_SWITCH_BUMPER_LEFT);
-    switchInput.index   = INDEX_SWITCH_BUMPER_LEFT;
-    switchInput.value   = STATE_ON;
-    switchInput.pos     = POSITION_FRONT;
-
-    g_sensorCtrl.setSwitchState(INDEX_SWITCH_BUMPER_LEFT, STATE_ON);
-
-    g_eventCenter.handleInput(switchInput);*/
-
-
-   // while (true)
-    //{
-    //    ;
-    //}
-
+    
     //trainSensors();
 
-    #if 1
+    //#if 1
     while (1)
     {
         //cout<<"Current Event is %d"<<currentEvent<<endl;
@@ -101,7 +84,7 @@ void Robot::run(void)
         }
         //Pose.updatePose();
     }
-    #endif
+   // #endif
 
     printf("Robot::run - DONE~!\n");
 }
