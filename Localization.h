@@ -7,6 +7,8 @@
 
 #ifndef LOCALIZATION_H
 #define	LOCALIZATION_H
+
+#include "debug_tools.h"
 #include "Pose.h"
 #include "ServoController.h"
 #include "SensorController.h"

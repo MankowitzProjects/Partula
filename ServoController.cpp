@@ -80,7 +80,9 @@ __stdcall
 #endif
 ServoPositionChangeHandler(CPhidgetAdvancedServoHandle SERV, void *usrptr, int Index, double Value)
 {
+    #if DEBUG_MODE_SERVO_CONTROLLER
 	printf("Servo Motor: %d > Current Position: %f\n", Index, Value);
+	#endif
 	return 0;
 }
 

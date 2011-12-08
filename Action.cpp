@@ -55,8 +55,10 @@ void __start_thrd_motor(void *func(void *), unsigned long milisec)
     {
         printf("** ERROR: __start_thrd_motor, code is %d\n", rc);
     }
-
-    b_thrd_motor_created = true;
+    else
+    {
+        b_thrd_motor_created = true;
+    }
 }
 
 void ActStop(void)

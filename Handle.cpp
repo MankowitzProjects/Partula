@@ -40,17 +40,18 @@ void Handle::docking()
 {
     //Set the robot status to docking
     robotStatus = STATUS_ROBOT_DOCKING;
-    cout<<"docking() - Detected sensor value: "<<g_sensorCtrl.getSensorValue(INDEX_SENSOR_LIGHT_UNDER)<<endl;
+    cout<<"docking - Detected sensor value: "<<g_sensorCtrl.getSensorValue(INDEX_SENSOR_LIGHT_UNDER)<<endl;
     //Black tape has been detected
     //1. PerformShape Detection
-    cout<<"docking() Black Tape Detected"<<endl;
-    cout<<"docking() Robot is docking"<<endl;
+    cout<<"docking - Black Tape Detected"<<endl;
+    cout<<"docking - Robot is docking"<<endl;
     //navigSpeed=50.00;
-    cout<<"docking() scanning Thread started"<<endl;
+    cout<<"docking - scanning Thread started"<<endl;
     int scanParam=0;
     ActStop();
     pthread_t scanningThread;
-    pthread_create(&scanningThread, NULL, &scanArea,(void*)&scanParam);
+    int rc = pthread_create(&scanningThread, NULL, &scanArea,(void*)&scanParam);
+    cout << "docking - craet" << rc << endl;
 }
 
 void Handle::localization()
@@ -123,7 +124,7 @@ void* Handle::scanArea(void* param)
             break;
         }
         // it is the edge
-        else if((irMainValueTop < 140) && (irMainValueBottom<140))
+        else if((irMainValueTop < 90) && (irMainValueBottom < 90))
         {
             cout<<"Stopped due to edge in first loop"<<endl;
             ActStop();
@@ -158,7 +159,8 @@ void* Handle::scanArea(void* param)
                 break;
 
             }
-            else if(irMainValueTop<140 && irMainValueBottom<140)
+            else if (   (irMainValueTop    < 90)
+                     && (irMainValueBottom < 90))
             {
                 cout<<"Stopped due to edge in second loop"<<endl;
                 foundFlag=false;
