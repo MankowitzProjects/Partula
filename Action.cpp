@@ -133,17 +133,17 @@ void moveForward(void)
     g_movement = MOVING_FORWARD;
     g_motorCtrl.setAccLeft(VALUE_MOTOR_ACC_NORMAL);
     g_motorCtrl.setVelLeft(VALUE_MOTOR_VEL_NORMAL);
-    
-    g_motorCtrl.setAccRight(VALUE_MOTOR_ACC_NORMAL);
+
+    g_motorCtrl.setAccRight(-VALUE_MOTOR_ACC_NORMAL);
     g_motorCtrl.setVelRight(-VALUE_MOTOR_VEL_NORMAL);
 }
 
 void moveBackward(void)
 {
     g_movement = MOVING_BACKWARD;
-    g_motorCtrl.setAccLeft(VALUE_MOTOR_ACC_NORMAL);
+    g_motorCtrl.setAccLeft(-VALUE_MOTOR_ACC_NORMAL);
     g_motorCtrl.setVelLeft(-VALUE_MOTOR_VEL_NORMAL);
-    
+
     g_motorCtrl.setAccRight(VALUE_MOTOR_ACC_NORMAL);
     g_motorCtrl.setVelRight(VALUE_MOTOR_VEL_NORMAL);
 }
@@ -152,10 +152,10 @@ void turnLeft(void)
 {
     g_movement = TURNING_LEFT;
     g_motorCtrl.setVelLeft(-VALUE_MOTOR_VEL_NORMAL);
-    g_motorCtrl.setAccLeft(VALUE_MOTOR_ACC_NORMAL);
+    g_motorCtrl.setAccLeft(-VALUE_MOTOR_ACC_NORMAL);
 
     g_motorCtrl.setVelRight(-VALUE_MOTOR_VEL_NORMAL);
-    g_motorCtrl.setAccRight(VALUE_MOTOR_ACC_NORMAL);
+    g_motorCtrl.setAccRight(-VALUE_MOTOR_ACC_NORMAL);
 }
 
 void turnRight(void)
@@ -170,6 +170,7 @@ void turnRight(void)
 
 void stop(void)
 {
+    g_movement = STOPPED;
     prt_debug("MotorStop\n");
     g_motorCtrl.stop();
 }
@@ -269,7 +270,7 @@ void* p_thrd_hitBumperFront(void *para)
 
     pose.updatePosition();
     pose.updateAngle();
-    
+
     pose.setTimestamp();
     moveBackward();
     wait(*((unsigned long *)para));
@@ -294,7 +295,7 @@ void* p_thrd_hitBumperLeft(void *para)
     double time = *((unsigned long *)para);
     pose.updatePosition();
     pose.updateAngle();
-    
+
     pose.setTimestamp();
     moveBackward();
     wait(*((unsigned long *)para));
@@ -319,7 +320,7 @@ void* p_thrd_hitBumperRight(void *para)
     double time = *((unsigned long *)para);
     pose.updatePosition();
     pose.updateAngle();
-    
+
     pose.setTimestamp();
     moveBackward();
     wait(*((unsigned long *)para));

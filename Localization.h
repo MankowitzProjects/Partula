@@ -26,18 +26,27 @@ public:
 
     void initializePosition(double x, double y, double theta);
 
-    void EstimateResourceSiteLocations();
+    void turnToFaceResourceSite();
 
-    void takeMeasurement();
+    void takeMeasurements();
 
-    void updateParticles();
+    void updateParticle();
 
     static void* sonarScan(void* param);
 
     static void readSensorData(int sensorValue);
+
+    void moveToResourceSite();
     //Pose pose(0,0,0);
 
 private:
+    int timeToTravelToResourceSite;
+    double sonarDistanceToSite;
+    double predictedDistanceToResourceSite;
+
+
+    double distanceToSite;
+    double angleToSite;
 
 };
 

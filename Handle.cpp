@@ -58,7 +58,17 @@ void Handle::docking()
 
 void Handle::localization()
 {
-    ;
+    currentEvent = EVENT_LOCALIZING;
+
+    g_localization.turnToFaceResourceSite();
+
+    g_localization.takeMeasurements();
+
+    g_localization.updateParticle();
+
+    g_localization.moveToResourceSite();
+
+
 }
 
 void Handle::triggerSwitch()
@@ -71,6 +81,15 @@ void Handle::triggerSwitch()
     pthread_create(&thr, NULL, fr_check,(void*)&frequencyParam);
 }
 
+
+void Handle::reScan(){
+
+    int scanParam=0;
+    pthread_t scanningThread;
+    int rc = pthread_create(&scanningThread, NULL, &scanArea,(void*)&scanParam);
+    cout << "reScanning - create" << rc << endl;
+
+}
 //****************************************************SCANNINGTHREAD****************************************
 
 //Perform a scan in order to detect the center of the resource site
@@ -79,9 +98,9 @@ void* Handle::scanArea(void* param)
     cout<<"Entered Scan Area"<<endl;
 
     cout<<"Center the sonar"<<endl;
-    
+
     g_servoCtrl.setPos(130);
-    
+
     turnLeft();
 
     //leftDirectionDistance = irMainValueBottom;
@@ -155,7 +174,7 @@ void* Handle::scanArea(void* param)
             {
                 cout<<"Stopped due to edge in second loop"<<endl;
                 ActStop();
-                
+
                 //Hasn't found an edge
                 //Move forward and scan
                 break;
@@ -181,44 +200,48 @@ void* Handle::fr_check(void* param)
     float frequency = FreqGetFrequencyMiddle();
 
 
+
     cout<<"The frequency is " << frequency << endl;
 
     //Update the site status, and set the robots position to the site position
     //then do frequency movements
-    g_localization.updateSiteStatus();
+    if(frequency>0 && frequency<10)
+    {
+     g_localization.updateSiteStatus();
+    }
 
     if(frequency>0 && frequency <1)
     {
-        
+
         frequencyMovement(FREQUENCY_HALF);
     }
     else if(frequency >=0.8 && frequency <1.5)
     {
-        
+
         frequencyMovement(FREQUENCY_1);
     }
     else if(frequency >=1.5 && frequency <3.5)
     {
-        
+
         frequencyMovement(FREQUENCY_2);
     }
     else if(frequency >= 3.5 && frequency <5.5)
     {
-        
+
         frequencyMovement(FREQUENCY_4);
     }
     else if(frequency >=5.5 && frequency <7.5)
     {
-        
+
         frequencyMovement(FREQUENCY_6);
     }
     else if(frequency >=7.5 && frequency <12)
     {
-        
+
         frequencyMovement(FREQUENCY_8);
     }
-    
-    
+
+
 
     currentEvent = EVENT_TRIGGER_ACTIVATED;
     robotStatus  = STATUS_ROBOT_EXPLORING;

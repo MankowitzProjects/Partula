@@ -14,6 +14,10 @@ extern ServoController g_servoCtrl;
 extern SensorController g_sensorCtrl;
 extern STATUS_ROBOT robotStatus;
 extern Site sites[NUM_SITE];
+extern double velocity;
+double sonarMeasurement;
+double sonarMeasurementPosition;
+
 
 Localization::Localization()
 {
@@ -28,18 +32,18 @@ Localization::~Localization()
 //Identifies the current site and updates the robots position
 void Localization::updateSiteStatus()
 {
-    
-    
+
+
     int siteIndex = 1;
-    
+
     while(sites[siteIndex].bVisited ==true)
     {
         siteIndex++;
-        
+
     }
-    
-    
-    
+
+
+
     switch(siteIndex)
     {
         case SITE_1:
@@ -91,18 +95,18 @@ void Localization::initializePosition(double x, double y, double theta)
 }
 
 //Determine the resource site locations based on the current position
-void Localization::EstimateResourceSiteLocations()
+void Localization::turnToFaceResourceSite()
 {
-    
+
     DirTime directionTime;
     SITE currentSite;
-    
+
     int siteIndex = 1;
     while(sites[NUM_SITE].bVisited==true)
     {
         siteIndex++;
     }
-    
+
     switch(siteIndex){
         case 1:
         {
@@ -131,43 +135,113 @@ void Localization::EstimateResourceSiteLocations()
         }
         default:
         {
-            
+
             break;
         }
-        
-        
-        
+
+
+
     }
-    
+
+
+    //Get the time that is needed to turn towards the next resource site
     directionTime = pose.shiftToGoal(currentSite);
-    
+
     if(directionTime.direction==TURNING_LEFT)
     {
         ActTurnLeft(directionTime.time);
     }
     else if(directionTime.direction==TURNING_RIGHT){
-        
+
         ActTurnRight(directionTime.time);
     }
 
+    //Calculate the distance to the resource site
+    timeToTravelToResourceSite = pose.distanceToResourceSite(currentSite);
 
 }
 
 //Take a measurement of the nearby obstacles
-void Localization::takeMeasurement()
+void Localization::takeMeasurements()
 {
-
+    robotStatus = STATUS_ROBOT_TAKING_MEASUREMENTS;
     int sonarStatus = 0;
+
     pthread_t sonarThread;
     pthread_create(&sonarThread, NULL, sonarScan,(void*)&sonarStatus);
 
 
 }
 
-void Localization::updateParticles()
+void Localization::updateParticle()
 {
 
+    while (robotStatus==STATUS_ROBOT_TAKING_MEASUREMENTS)
+    {
 
+    }
+
+    //sonarMeasurement
+    //sonarMeasurementPosition
+
+    //pose.getPose
+
+    //Get sonar distance in cm
+    double sonarDistance = (sonarMeasurement/255)*645;
+
+    predictedDistanceToResourceSite = timeToTravelToResourceSite*velocity;
+
+    //Take the maximum of the two distances
+    if((sonarDistanceToSite>predictedDistanceToResourceSite) && sonarDistanceToSite<400)
+    {
+    predictedDistanceToResourceSite = sonarDistance;
+
+    }
+    else if ((predictedDistanceToResourceSite>sonarDistanceToSite) && (predictedDistanceToResourceSite<400)){
+
+    distanceToSite = predictedDistanceToResourceSite;
+
+    }
+    else if(predictedDistanceToResourceSite>400 && sonarDistanceToSite>400)
+    {
+        if(predictedDistanceToResourceSite>sonarDistanceToSite)
+        {
+            distanceToSite = predictedDistanceToResourceSite;
+        }
+        else{
+        distanceToSite = sonarDistanceToSite;
+        }
+
+    }
+
+    //Take the angular values
+    double sonarAngle = sonarMeasurementPosition*(M_PI/220);
+    double currenBearing = pose.getPose().theta;
+
+
+    /*if(abs(sonarAngle-currenBearing)>(M_PI/4)){
+
+        angleToSite = 0;
+
+    }else{
+        angleToSite = (sonarAngle)/4;
+
+    }*/
+
+
+
+    //If sonar value is very different from our predicted value, use sonar value.
+
+
+    //
+
+
+}
+
+//Move the robot towards the resource site
+void Localization::moveToResourceSite(){
+
+ActMoveForward(distanceToSite/velocity);
 
 }
 
@@ -301,6 +375,9 @@ void* Localization::sonarScan(void* param)
     }
     //Move towards the new obstacle
     //ActMoveForward(0);
+    sonarMeasurement = minSonarValue;
+    sonarMeasurementPosition = minSonarPosition;
+
 
     robotStatus = STATUS_ROBOT_EXPLORING;
     pthread_exit(NULL);

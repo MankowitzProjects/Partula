@@ -28,6 +28,7 @@ public:
     void docking();
     void localization();
     void triggerSwitch();
+    void reScan();
 
     static void* fr_check(void * param);
     static void* scanArea(void* param);

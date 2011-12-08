@@ -38,6 +38,8 @@ class Pose{
         DirTime shiftToGoal(SITE id_site);
         RobotPose getPose();
         void setPose(double x,double y, double theta );
+        int distanceToResourceSite(SITE site);
+        double distanceToTime(double);
 
 
     private:

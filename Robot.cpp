@@ -16,6 +16,7 @@ extern Event g_eventCenter;
 STATUS_ROBOT robotStatus;
 extern EVENT currentEvent;
 extern Localization g_localization;
+extern MOVEMENT_STATUS g_movement;
 
 Robot::Robot(void)
 {
@@ -44,7 +45,7 @@ void Robot::run(void)
     Event event;
     robotStatus  = STATUS_ROBOT_SONAR_SCANNING;
     currentEvent = EVENT_NULL;
-    
+
     //Initialise servo
     //g_servoCtrl.init();
     g_servoCtrl.setPos(130);
@@ -54,27 +55,33 @@ void Robot::run(void)
 
     //g_servoCtrl.setPos(130);
     cout<<"Robot::run"<<endl;
-    
-    
-    
-    
-    
+
+
+
+    //moveBackward();
+
+
     //moveForward();
     //turnRight();
 
 #if 1
 
-    int sonarStatus = 0;
-    pthread_t sonarThread;
-    pthread_create(&sonarThread, NULL, g_localization.sonarScan,(void*)&sonarStatus);
+    //int sonarStatus = 0;
+    //pthread_t sonarThread;
+    //pthread_create(&sonarThread, NULL, g_localization.sonarScan,(void*)&sonarStatus);
+
+    //ActMoveForward(4000);
+    ActMoveBackward(4000);
+    //ActTurnLeft(4000);
+    //ActTurnRight(4000);
 
     while(robotStatus==STATUS_ROBOT_SONAR_SCANNING){
 
     }
     cout<<"Finished scan, moving forward"<<endl;
 
-    ActMoveForward(6000);
-    trainSensors();
+    //ActMoveForward(6000);
+    //trainSensors();
 
     while (1)
     {
@@ -97,6 +104,11 @@ void Robot::run(void)
             {
                 cout<<"Handling localization"<<endl;
                 handle.localization();
+            }
+            else if(currentEvent==EVENT_LOCALIZING && g_movement==STOPPED){
+
+                handle.reScan();
+
             }
         }
         else if(robotStatus==STATUS_ROBOT_DOCKING)
@@ -128,7 +140,7 @@ void Robot::init(void)
     g_motorCtrl.init();
     g_sensorCtrl.init();
     g_servoCtrl.init();
-    
+
 
     isInit = true;
 }
@@ -145,29 +157,29 @@ void Robot::fin(void)
 void Robot::trainSensors()
 {
     robotStatus=STATUS_TRAINING;
-   
-    
+
+
     int lightSensor =0;
     int numberSamples=0;
     while(numberSamples<10)
     {
         if(lightSensor!=0){
-            
+
             lightSensor = lightSensor + g_sensorCtrl.getSensorValue(INDEX_SENSOR_LIGHT_UNDER);
             numberSamples++;
         }
     }
-    
+
     lightSensor = lightSensor/10;
-    
+
     VALUE_BLACK_TAPE_MAX = lightSensor*0.75;
     VALUE_BLACK_TAPE_MIN = VALUE_BLACK_TAPE_MAX*0.5;
-    
+
     cout<<"The black max value is: "<<VALUE_BLACK_TAPE_MAX<<endl;
-    
+
     cout<<"The black min value is: "<<VALUE_BLACK_TAPE_MIN<<endl;
-    
-    
+
+
     /*int samples = 0;
     int blackTapeTotal=0;
     int blackTapeAvg=0;

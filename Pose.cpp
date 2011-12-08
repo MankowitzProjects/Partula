@@ -58,7 +58,7 @@ DirTime Pose::shiftToGoal(SITE id_site)
     goal_y=sites[id_site].readyPoint.y;
 
     goal_x=sites[id_site].readyPoint.x;
-    
+
     goal_y=0;
     goal_x =0;
     //relative position of goal to robot
@@ -86,6 +86,25 @@ void Pose::setPose(double x,double y, double theta )
     robotPose.x=x;
     robotPose.y=y;
     robotPose.theta=theta;
+}
+
+int Pose::distanceToResourceSite(SITE site){
+
+        double x_site = sites[site].readyPoint.x;
+        double y_site = sites[site].readyPoint.y;
+
+        double distanceToSite = sqrt(pow((robotPose.x - x_site),2) + pow((robotPose.y - y_site),2));
+
+
+        int distanceToTime(distance);
+}
+
+double Pose::distanceToTime(double distance){
+
+    double time = distance/velocity;
+
+    return time;
+
 }
 
 

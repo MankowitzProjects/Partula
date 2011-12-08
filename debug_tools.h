@@ -10,7 +10,7 @@ using namespace std;
 
 #define DEBUG_MODE                      0
 #define DEBUG_MODE_LOW                  0
-#define DEBUG_MODE_MOTOR                0
+#define DEBUG_MODE_MOTOR                1
 #define DEBUG_MODE_EVENT                0
 #define DEBUG_MODE_SENSOR_CONTROLLER    0
 #define DEBUG_MODE_SERVO_CONTROLLER     0
