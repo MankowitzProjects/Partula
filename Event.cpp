@@ -212,7 +212,6 @@ EVENT Event::GenLightSensorUnderEvent(const INPUT &input)
     }
 }
 
-
 void Event::handleInput(const INPUT &input)
 {
     //cout<<"Handling Input"<<endl;
@@ -220,7 +219,7 @@ void Event::handleInput(const INPUT &input)
 
     if(currentEvent != previousEvent)
     {
-    cout<<"Current Event: "<<currentEvent<<endl;
-    previousEvent = currentEvent;
+        cout<<"Current Event: "<<currentEvent<<endl;
+        previousEvent = currentEvent;
     }
 }

@@ -8,6 +8,7 @@
 #include "Handle.h"
 #include "SensorController.h"
 #include "Localization.h"
+#include "Frequency.h"
 
 extern EVENT currentEvent;
 extern SensorController g_sensorCtrl;
@@ -64,7 +65,6 @@ void Handle::triggerSwitch()
     //Start a thread to check the frequency
     pthread_t thr;
     pthread_create(&thr, NULL, fr_check,(void*)&frequencyParam);
-
 }
 
 //****************************************************SCANNINGTHREAD****************************************
@@ -73,11 +73,11 @@ void Handle::triggerSwitch()
 void* Handle::scanArea(void* param)
 {
     cout<<"Entered Scan Area"<<endl;
-    
+
     cout<<"Center the sonar"<<endl;
-    
+
     g_servoController.setPos(130);
-    
+
     ActTurnLeft(0);
     //leftDirectionDistance = irMainValueBottom;
     bool foundFlag=false;
@@ -85,7 +85,7 @@ void* Handle::scanArea(void* param)
 
     double irMainValueTop = 0;
     double irMainValueBottom=  0;
-    
+
     double irTopPrevious;
     double irBottomPrevious;
 
@@ -94,7 +94,7 @@ void* Handle::scanArea(void* param)
 
         irMainValueTop = g_sensorCtrl.getSensorValue(INDEX_SENSOR_IR_TOP);
         irMainValueBottom = g_sensorCtrl.getSensorValue(INDEX_SENSOR_IR_BOTTOM);
-        
+
         if(irMainValueTop!=irTopPrevious){
         cout<<"IR Top Value: "<<irMainValueTop<<endl;
         irTopPrevious = irMainValueTop;
@@ -103,7 +103,7 @@ void* Handle::scanArea(void* param)
         cout<<"IR Bottom Value: "<<irMainValueBottom<<endl;
         irBottomPrevious = irMainValueBottom;
         }
-        
+
         if(irMainValueTop<90 && irMainValueBottom>90)
         {
             cout<<"Stopped due to gap in first loop"<<endl;
@@ -128,7 +128,6 @@ void* Handle::scanArea(void* param)
         //rightDirectionDistance = irMainValueBottom;
         while(foundFlag==false)
         {
-
             irMainValueTop = g_sensorCtrl.getSensorValue(INDEX_SENSOR_IR_TOP);
             irMainValueBottom = g_sensorCtrl.getSensorValue(INDEX_SENSOR_IR_BOTTOM);
 
@@ -144,78 +143,29 @@ void* Handle::scanArea(void* param)
             {
                 cout<<"Stopped due to edge in second loop"<<endl;
                 ActStop();
-
             }
-
         }
-
-
-
     }
 
     ActMoveForward(0);
 
     pthread_exit(NULL);
-
 }
 
+#define DIV_FREQUENCY_HALF 0.2
+#define FREQUENCY_
 
 //Checks the frequency when the robot has reached the trigger
 void* Handle::fr_check(void* param)
 {
+    // wait for 2 seconds, until the robot get the frequency
+    wait(2000);
 
+    float frequency = FreqGetFreqency();
 
-    int up,down,counter;
-
-
-    //*****************************
-    timeval starttime;
-    int check_frequency;
-    double frequency = 0;
-    int LightValue=0;
-    //*****************************
-    // while(lightFound==false){};
-    //lightFound=false;
-    g_servoController.setPos(130);
-
-    printf(" Check frequency\n");
-    check_frequency=1;
-    gettimeofday(&starttime,NULL);
-
-    up=0;
-    timeval currenttime;
-    timeval strttime;
-    gettimeofday(&currenttime,NULL);
-
-    while (( ((currenttime.tv_sec * 1000000) + (currenttime.tv_usec)) - ((starttime.tv_sec * 1000000) + (starttime.tv_usec))  ) < 4000000)
-    {
-
-        //TODO Get raw light value readings.
-
-        if (LightValue>400&&(up==0))
-        {
-            //  printf("Up detected");
-            up=1;
-        }
-        else if (LightValue<100&&(up==1))
-        {
-            counter++;
-            //printf("Down detected");
-            up=0;
-        }
-        gettimeofday(&currenttime,NULL);
-    }
-
-    //Need to divide frequency by 2
-
-    frequency = (double)counter/4;
-    //printf("\n\n\n\nThe counter is \n%d\n\n\n\n",counter);
-    //printf("\n\n\n\nThe frequency is \n%f\n\n\n\n",frequency);
-    cout<<"The frequency is "<<frequency<<endl;
+    cout<<"The frequency is " << frequency << endl;
 
     //Once the robot knows the frequency, it can identify the site
-
-
 
     if(frequency>0 && frequency <1)
     {
@@ -247,16 +197,11 @@ void* Handle::fr_check(void* param)
         g_localization.identifySite(FREQUENCY_8);
         frequencyMovement(FREQUENCY_8);
     }
+
     currentEvent = EVENT_TRIGGER_ACTIVATED;
-    robotStatus=STATUS_ROBOT_EXPLORING;
-
-    check_frequency=0;
-    frequency=0;
-
-
+    robotStatus  = STATUS_ROBOT_EXPLORING;
 
     pthread_exit(NULL);
-
 }
 
 
