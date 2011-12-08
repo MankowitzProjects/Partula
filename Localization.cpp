@@ -25,7 +25,7 @@ Localization::~Localization()
 }
 
 //Identifies the current site and updates the robots position
-void Localization::identifySite(FREQUENCY frequency)
+void Localization::updateSiteStatus(SITE site)
 {
     switch(site)
     {

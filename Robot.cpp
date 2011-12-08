@@ -40,12 +40,6 @@ bool Robot::hasHitBumper()
 void Robot::run(void)
 {
 
-<<<<<<< HEAD
-   
-    
-=======
-
->>>>>>> 471ece58a830ab088daf0b5b86011d823b70eb01
     Handle handle;
     Event event;
     robotStatus  = STATUS_ROBOT_SONAR_SCANNING;
@@ -128,11 +122,12 @@ void Robot::init(void)
         return;
     }
 
-    //initSites();
+    initSites();
 
     g_motorCtrl.init();
     g_sensorCtrl.init();
     g_servoCtrl.init();
+    
 
     isInit = true;
 }

@@ -67,7 +67,7 @@ Switch.o: Switch.cpp Switch.h
 Event.o: Event.cpp Event.h SensorController.o Frequency.o
 	g++ -c Event.cpp -o "./obj/lin/Event.o"
 
-Localization.o: Localization.cpp Localization.h Pose.o ServoController.o SensorController.o Action.o
+Localization.o: Localization.cpp Localization.h Pose.o ServoController.o SensorController.o Action.o Site.o
 	g++ -c Localization.cpp -o "./obj/lin/Localization.o"
 
 Frequency.o: Frequency.cpp Frequency.h

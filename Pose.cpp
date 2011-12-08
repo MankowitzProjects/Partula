@@ -1,6 +1,7 @@
 #include "Pose.h"
 
 MOVEMENT_STATUS g_movement;
+extern Site sites[NUM_SITE];
 
 Pose pose(0,0,0);
 double velocity;

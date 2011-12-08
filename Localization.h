@@ -12,6 +12,7 @@
 #include "SensorController.h"
 #include "Action.h"
 #include <fstream>
+#include "Site.h"
 
 class Localization {
 
@@ -19,7 +20,7 @@ public:
     Localization();
     ~Localization();
 
-    void identifySite(FREQUENCY frequency);
+    void updateSiteStatus(SITE site);
 
     void initializePosition(double x, double y, double theta);
 

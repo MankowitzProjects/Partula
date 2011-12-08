@@ -5,6 +5,7 @@
 #include <math.h>
 #include "conf.h"
 #include "math_ext.h"
+#include "Site.h"
 
 //Direction and time given to localization
 typedef struct
