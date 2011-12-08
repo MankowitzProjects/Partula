@@ -53,9 +53,10 @@ void Pose::updateAngle(){
 DirTime Pose::shiftToGoal(SITE id_site)
 {
     //get goal coordinates
-    //goal_y=sites[id_site].readypoint.y;
+    goal_y=sites[id_site].readyPoint.y;
 
-    //goal_x=sites[id_site].readypoint.x;
+    goal_x=sites[id_site].readyPoint.x;
+    
     goal_y=0;
     goal_x =0;
     //relative position of goal to robot

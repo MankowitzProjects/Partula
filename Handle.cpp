@@ -174,32 +174,32 @@ void* Handle::fr_check(void* param)
 
     if(frequency>0 && frequency <1)
     {
-        g_localization.identifySite(FREQUENCY_HALF);
+        
         frequencyMovement(FREQUENCY_HALF);
     }
     else if(frequency >=0.8 && frequency <1.5)
     {
-        g_localization.identifySite(FREQUENCY_1);
+        
         frequencyMovement(FREQUENCY_1);
     }
     else if(frequency >=1.5 && frequency <3.5)
     {
-        g_localization.identifySite(FREQUENCY_2);
+        
         frequencyMovement(FREQUENCY_2);
     }
     else if(frequency >= 3.5 && frequency <5.5)
     {
-        g_localization.identifySite(FREQUENCY_4);
+        
         frequencyMovement(FREQUENCY_4);
     }
     else if(frequency >=5.5 && frequency <7.5)
     {
-        g_localization.identifySite(FREQUENCY_6);
+        
         frequencyMovement(FREQUENCY_6);
     }
     else if(frequency >=7.5 && frequency <12)
     {
-        g_localization.identifySite(FREQUENCY_8);
+        
         frequencyMovement(FREQUENCY_8);
     }
 

@@ -26,39 +26,34 @@ Localization::~Localization()
 //Identifies the current site and updates the robots position
 void Localization::identifySite(FREQUENCY frequency)
 {
-    switch(frequency)
+    switch(site)
     {
-    case FREQUENCY_HALF:
+    case SITE_1:
     {
         pose.setPose(1,1,2);
         break;
     }
-    case FREQUENCY_1:
+    case SITE_2:
     {
         pose.setPose(1,2,2);
         break;
     }
-    case FREQUENCY_2:
+    case SITE_3:
     {
         pose.setPose(1,3,2);
         break;
     }
-    case FREQUENCY_4:
+    case SITE_4:
     {
         pose.setPose(1,4,2);
         break;
     }
-    case FREQUENCY_6:
+    case SITE_5:
     {
         pose.setPose(1,5,2);
         break;
     }
-    case FREQUENCY_8:
-    {
-        pose.setPose(1,6,2);
-        break;
-    }
-
+  
     default:
 
     {
