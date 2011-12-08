@@ -127,25 +127,22 @@ void ActHitBumperRight(unsigned long milisec)
     __start_thrd_motor(p_thrd_hitBumperRight, milisec);
 }
 
-
 void moveForward(void)
 {
     g_movement = MOVING_FORWARD;
-    g_motorCtrl.setAccLeft(VALUE_MOTOR_ACC_NORMAL);
-    g_motorCtrl.setVelLeft(VALUE_MOTOR_VEL_NORMAL);
 
-    g_motorCtrl.setAccRight(-VALUE_MOTOR_ACC_NORMAL);
-    g_motorCtrl.setVelRight(-VALUE_MOTOR_VEL_NORMAL);
+    g_motorCtrl.setAcc(VALUE_MOTOR_ACC_NORMAL);
+    g_motorCtrl.setVel(VALUE_MOTOR_VEL_NORMAL);
+
 }
 
 void moveBackward(void)
 {
     g_movement = MOVING_BACKWARD;
-    g_motorCtrl.setAccLeft(-VALUE_MOTOR_ACC_NORMAL);
-    g_motorCtrl.setVelLeft(-VALUE_MOTOR_VEL_NORMAL);
 
-    g_motorCtrl.setAccRight(VALUE_MOTOR_ACC_NORMAL);
-    g_motorCtrl.setVelRight(VALUE_MOTOR_VEL_NORMAL);
+    g_motorCtrl.setAcc(-VALUE_MOTOR_ACC_NORMAL);
+    g_motorCtrl.setVel(-VALUE_MOTOR_VEL_NORMAL);
+
 }
 
 void turnLeft(void)
@@ -154,8 +151,10 @@ void turnLeft(void)
     g_motorCtrl.setVelLeft(-VALUE_MOTOR_VEL_NORMAL);
     g_motorCtrl.setAccLeft(-VALUE_MOTOR_ACC_NORMAL);
 
-    g_motorCtrl.setVelRight(-VALUE_MOTOR_VEL_NORMAL);
-    g_motorCtrl.setAccRight(-VALUE_MOTOR_ACC_NORMAL);
+
+    g_motorCtrl.setVelRight(VALUE_MOTOR_VEL_NORMAL);
+    g_motorCtrl.setAccRight(VALUE_MOTOR_ACC_NORMAL);
+
 }
 
 void turnRight(void)
@@ -164,8 +163,8 @@ void turnRight(void)
     g_motorCtrl.setVelLeft(VALUE_MOTOR_VEL_NORMAL);
     g_motorCtrl.setAccLeft(VALUE_MOTOR_ACC_NORMAL);
 
-    g_motorCtrl.setVelRight(VALUE_MOTOR_VEL_NORMAL);
-    g_motorCtrl.setAccRight(VALUE_MOTOR_ACC_NORMAL);
+    g_motorCtrl.setVelRight(-VALUE_MOTOR_VEL_NORMAL);
+    g_motorCtrl.setAccRight(-VALUE_MOTOR_ACC_NORMAL);
 }
 
 void stop(void)

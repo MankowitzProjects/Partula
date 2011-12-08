@@ -48,7 +48,7 @@ void Robot::run(void)
 
     //Initialise servo
     //g_servoCtrl.init();
-    g_servoCtrl.setPos(130);
+    g_servoCtrl.setPos(VALUE_SERVO_POS_MID);
 
     //Set the initial position
     g_localization.initializePosition(190,120,0);

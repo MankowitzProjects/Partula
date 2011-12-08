@@ -79,7 +79,7 @@ EVENT Event::genBumperEvent(const INPUT &input)
     if (STATE_ON == input.value)
     {
 #if (DEBUG_MODE)
-        //cout << "genBumperEvent - " << GetPositionChar(input.pos) << "bumper HIT!\n" << endl;
+        cout << "genBumperEvent - " << GetPositionChar(input.pos) << "bumper HIT!\n" << endl;
 #endif
 
         switch (input.pos)
@@ -162,11 +162,10 @@ EVENT Event::genLightSensorEvent(const INPUT &input)
         return GenLightSensorUnderEvent(input);
     }
     default:
-        {
-            //printf("genLightSensorEvent: light sensor %d, unkown position: %s.\n", input.index, GetPositionChar(input.pos));
-            break;
-        }
-
+    {
+        printf("genLightSensorEvent: light sensor %d, unkown position: %s.\n", input.index, GetPositionChar(input.pos));
+        break;
+    }
     }
 
     return EVENT_NULL;
@@ -268,7 +267,6 @@ EVENT Event::genLightSensorFrontEvent(const INPUT &input)
 EVENT Event::GenLightSensorUnderEvent(const INPUT &input)
 {
     int valueAvrg = g_sensorCtrl.getSensorValueAvrg(input.index);
-
     int value = g_sensorCtrl.getSensorValue(input.index);
     // if the value range is in the black paper and black tape
     if (bIsBlackTape(value)) //|| bIsBlackPaper(valueAvrg))
@@ -294,7 +292,6 @@ void Event::handleInput(const INPUT &input)
 
     if (currentEvent != previousEvent)
     {
-
         // cout<<"Current Event: "<<currentEvent<<endl;
         previousEvent = currentEvent;
 
