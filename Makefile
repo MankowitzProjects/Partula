@@ -1,4 +1,5 @@
 PROG ?= Partula
+
 OBJS = main.o Robot.o Action.o SensorController.o MotorController.o Site.o Frequency.o\
        Motor.o Sensor.o Switch.o Handle.o Event.o Pose.o Localization.o ServoController.o ServoMotor.o\
 
@@ -44,6 +45,7 @@ Handle.o: Handle.cpp Action.o Localization.o ServoController.o Pose.o Frequency.
 Pose.o: Pose.cpp Pose.h
 	g++ -c Pose.cpp -o "./obj/lin/Pose.o"
 
+
 Robot.o: Robot.cpp Robot.h SensorController.o MotorController.o Handle.o Event.o Pose.o Localization.o Site.o Frequency.o
 	g++ -c Robot.cpp -o "./obj/lin/Robot.o"
 
@@ -74,6 +76,7 @@ Frequency.o: Frequency.cpp Frequency.h
 Site.o: Site.cpp Site.h wayPoint.h
 	g++ -c Site.cpp -o "./obj/lin/Site.o"
 
+
 clean:
 	rm "./obj/lin/main.o" \
 		"./obj/lin/Robot.o" \
@@ -91,5 +94,3 @@ clean:
 		"./obj/lin/ServoMotor.o"\
 		"./obj/lin/Site.o"\
 		"./obj/lin/Frequency.o"\
-
-		

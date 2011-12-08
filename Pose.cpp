@@ -11,8 +11,8 @@ Pose::Pose(double x,double y, double theta)
     robotPose.x=x;
     robotPose.y=y;
     robotPose.theta=theta;
-    velocity = 1.0;
-    ang_velocity = 2.0;
+    velocity = 0.22;
+    ang_velocity = 0.3;
 }
 
 Pose::~Pose()
@@ -53,6 +53,7 @@ void Pose::updateAngle(){
 DirTime Pose::shiftToGoal(SITE id_site)
 {
     //get goal coordinates
+
     goal_y=sites[id_site].readyPoint.y;
 
     goal_x=sites[id_site].readyPoint.x;

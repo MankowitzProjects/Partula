@@ -14,7 +14,9 @@ EVENT previousEvent = EVENT_NULL;
 Event g_eventCenter;
 extern SensorController g_sensorCtrl;
 
-int g_lightValuePeak;
+int g_lightValuePeakLeft;
+int g_lightValuePeakMiddle;
+int g_lightValuePeakRight;
 
 Event::Event()
 {
@@ -33,17 +35,17 @@ EVENT Event::checkEventType(const INPUT &input)
     switch (input.type)
     {
     case TYPE_INPUT_SWITCH:
-        {
-            return genSwitchEvent(input);
-        }
+    {
+        return genSwitchEvent(input);
+    }
     case TYPE_INPUT_SENSOR:
-        {
-            return genSensorEvent(input);
-        }
+    {
+        return genSensorEvent(input);
+    }
     default:
-        {
-            break;
-        }
+    {
+        break;
+    }
     }
 
     return EVENT_NULL;
@@ -54,17 +56,19 @@ EVENT Event::genSwitchEvent(const INPUT &input)
     switch (input.subType)
     {
     case TYPE_SWITCH_BUMPER:
-        {
-            return genBumperEvent(input);
-        }
+    {
+        return genBumperEvent(input);
+    }
     case TYPE_SWITCH_WHISKER:
-        {
-            return EVENT_NULL;
-        }
+    {
+        return EVENT_NULL;
+    }
     default:
+
         {
            // printf("genSwitchEvent - switch %d with unknown type: %d\n", input.index, input.subType);
         }
+
     }
 
     return EVENT_NULL;
@@ -81,26 +85,27 @@ EVENT Event::genBumperEvent(const INPUT &input)
         switch (input.pos)
         {
         case POSITION_FRONT:
-            {
-                cout<<"Position Front"<<endl;
-                return EVENT_HIT_FRONT;
-            }
+        {
+            cout<<"Position Front"<<endl;
+            return EVENT_HIT_FRONT;
+        }
         case POSITION_LEFT:
-            {
-                cout<<"Position Left"<<endl;
-                return EVENT_HIT_FRONT_LEFT;
-            }
+        {
+            cout<<"Position Left"<<endl;
+            return EVENT_HIT_FRONT_LEFT;
+        }
 
         case POSITION_RIGHT:
-            {
-                cout<<"Position right"<<endl;
-                return EVENT_HIT_FRONT_RIGHT;
-            }
+        {
+            cout<<"Position right"<<endl;
+            return EVENT_HIT_FRONT_RIGHT;
+        }
         default:
             {
                 //printf("genBumperEvent: unknown bumper HIT!\n");
                 break;
             }
+
         }
     }
 
@@ -113,23 +118,24 @@ EVENT Event::genSensorEvent(const INPUT &input)
     switch (input.subType)
     {
     case TYPE_SENSOR_IR:
-        {
-            return genIREvent(input);
-        }
+    {
+        return genIREvent(input);
+    }
     case TYPE_SENSOR_LIGHT:
-        {
-            return genLightSensorEvent(input);
-        }
+    {
+        return genLightSensorEvent(input);
+    }
     case TYPE_SENSOR_SONAR:
-        {
-            // cout << << endl;
-            break;
-        }
+    {
+        // cout << << endl;
+        break;
+    }
     default:
         {
             //printf("genSensorEvent: unknown sensor type: %d\n", input.subType);
             break;
         }
+
     }
 
     return EVENT_NULL;
@@ -144,20 +150,23 @@ EVENT Event::genLightSensorEvent(const INPUT &input)
 {
     switch (input.pos)
     {
-    case POSITION_FRONT:
-        {
-            return genLightSensorFrontEvent(input);
-        }
+    case POSITION_MIDDLE:
+    case POSITION_LEFT:
+    case POSITION_RIGHT:
+    {
+        return genLightSensorFrontEvent(input);
+    }
     case POSITION_UNDER:
-        {
-            // test the value against the known value
-            return GenLightSensorUnderEvent(input);
-        }
+    {
+        // test the value against the known value
+        return GenLightSensorUnderEvent(input);
+    }
     default:
         {
             //printf("genLightSensorEvent: light sensor %d, unkown position: %s.\n", input.index, GetPositionChar(input.pos));
             break;
         }
+
     }
 
     return EVENT_NULL;
@@ -166,23 +175,86 @@ EVENT Event::genLightSensorEvent(const INPUT &input)
 
 EVENT Event::genLightSensorFrontEvent(const INPUT &input)
 {
+    /*
     if (input.value < VALUE_MIN_LED_LIGHT)
     {
         return EVENT_NULL;
     }
+    */
 
     int valuePre = GetSensorValuePre(input.index);
 
+    #if DEBUG_SENSOR_LIGHT_FRONT
+    cout << "genLightSensorFrontEvent - value:     " << input.value << endl;
+    cout << "genLightSensorFrontEvent - value pre: " << valuePre << endl;
+    #endif
+
+    // update the peak value
     if (input.value >= valuePre)
     {
-        g_lightValuePeak = input.value;
+        if (POSITION_LEFT == input.pos)
+        {
+            g_lightValuePeakLeft = input.value;
+        }
+        else if (input.pos ==  POSITION_MIDDLE)
+        {
+            g_lightValuePeakMiddle = input.value;
+        }
+        else if (input.pos == POSITION_RIGHT)
+        {
+            g_lightValuePeakRight = input.value;
+        }
+        else
+        {
+            ;
+        }
     }
+
+    // the trend is going down
     else if (input.value < valuePre)
     {
-        if (g_lightValuePeak == valuePre)
+        switch (input.pos)
         {
-            FreqTick();
-            g_lightValuePeak = 0;
+        case POSITION_LEFT:
+        {
+            // previous is the peak
+            if (g_lightValuePeakLeft == valuePre)
+            {
+                FreqTickLeft();
+
+                // reset the peak
+                g_lightValuePeakLeft = 0;
+            }
+            break;
+        }
+        case POSITION_MIDDLE:
+        {
+            // previous is the peak
+            if (g_lightValuePeakMiddle == valuePre)
+            {
+                FreqTickMiddle();
+
+                // reset the peak
+                g_lightValuePeakMiddle = 0;
+            }
+            break;
+        }
+        case POSITION_RIGHT:
+        {
+            // previous is the peak
+            if (g_lightValuePeakRight == valuePre)
+            {
+                FreqTickRight();
+
+                // reset the peak
+                g_lightValuePeakRight = 0;
+            }
+            break;
+        }
+        default:
+        {
+            break;
+        }
         }
     }
     else
@@ -196,10 +268,13 @@ EVENT Event::genLightSensorFrontEvent(const INPUT &input)
 EVENT Event::GenLightSensorUnderEvent(const INPUT &input)
 {
     int valueAvrg = g_sensorCtrl.getSensorValueAvrg(input.index);
-    
+
+    int value = g_sensorCtrl.getSensorValue(input.index);
     // if the value range is in the black paper and black tape
-    if (bIsBlackTape(valueAvrg) )
+    if (bIsBlackTape(value)) //|| bIsBlackPaper(valueAvrg))
     {
+        //cout<<"Average Value: "<<value<<endl;
+        //cout<<"Got to BLACK TAPE EVENT with sensor value: "<<g_sensorCtrl.getSensorValue(input.index)<<endl;
         return EVENT_DETECT_BLACK;
     }
     else if (bIsGround(valueAvrg))
@@ -220,7 +295,8 @@ void Event::handleInput(const INPUT &input)
     if(currentEvent != previousEvent)
     {
 
-        cout<<"Current Event: "<<currentEvent<<endl;
+        //cout<<"Current Event: "<<currentEvent<<endl;
         previousEvent = currentEvent;
+
     }
 }

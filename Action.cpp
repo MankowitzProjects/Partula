@@ -8,6 +8,7 @@ extern EVENT currentEvent;
 extern Pose pose;
 extern MOVEMENT_STATUS g_movement;
 
+
 pthread_t g_thrd_motor;
 bool      b_thrd_motor_created = false;
 
@@ -15,11 +16,7 @@ pthread_t g_thrd_scan;
 
 unsigned long g_motor_time;
 
-void moveForward(void);
-void moveBackward(void);
-void turnLeft(void);
-void turnRight(void);
-void stop(void);
+
 
 void *p_thrd_moveForward(void *para);
 void *p_thrd_moveBackward(void *para);

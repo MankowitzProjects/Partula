@@ -1,28 +1,32 @@
 #ifndef DEBUG_TOOLS_H_INCLUDED
 #define DEBUG_TOOLS_H_INCLUDED
 
+#include <iostream>
+
 using namespace std;
 
 // change it to 0 if run on robot!!!
-#define DEBUG_MODE_PC                   1
+#define DEBUG_MODE_PC                   0
 
-#define DEBUG_MODE                      1
+#define DEBUG_MODE                      0
 #define DEBUG_MODE_LOW                  0
 #define DEBUG_MODE_MOTOR                0
 #define DEBUG_MODE_EVENT                0
 #define DEBUG_MODE_SENSOR_CONTROLLER    0
-#define DEBUG_SENSOR                    1
+#define DEBUG_SENSOR                    0
 #define DEBUG_MODE_STEP_INSTRUCTION     1
+#define DEBUG_SENSOR_LIGHT_FRONT        0
+#define DEBUG_MODE_FREQUENCY            1
 
 static inline void prt(const char *msg)
 {
-    printf("%s", msg);
+    cout << msg;
 }
 
 #if (DEBUG_MODE)
 static inline void prt_debug(const char *msg)
 {
-    printf("%s", msg);
+    cout << msg;
 }
 #else
     #define prt_debug(n)

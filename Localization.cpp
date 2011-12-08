@@ -7,6 +7,7 @@
 
 #include "Localization.h"
 
+
 Localization g_localization;
 extern Pose pose;
 extern ServoController g_servoCtrl;
@@ -100,8 +101,11 @@ void Localization::updateParticles()
 void* Localization::sonarScan(void* param)
 {
     cout<<"Entered Sonar Scanning Mode..."<<endl;
-    robotStatus=STATUS_ROBOT_EXPLORING;
+    robotStatus=STATUS_ROBOT_SONAR_SCANNING;
 
+    int firstServoMinPosition = -1;
+    int lastServoMinPosition =-1;
+    int finalServoMinPosition = 0;
     int servoPosition = -1;
     int minSonarValue = 1000;
     double minSonarPosition = -1.0;
@@ -117,30 +121,68 @@ void* Localization::sonarScan(void* param)
     for (int i=0; i<220; i=i+5)
     {
 
-      g_servoCtrl.setPos(i);
-      //Get the current servo position
-      g_servoCtrl.getPos();
+        g_servoCtrl.setPos(i);
+        //Get the current servo position
+        currentPosition = g_servoCtrl.getPos();
 
-      //Set the current sonar value
-      sonarValue = g_sensorCtrl.getSensorValue(INDEX_SENSOR_SONAR);
-      //CPhidgetAdvancedServo_getPosition (servo, 0, &currentPosition);
-      if(sonarValue<minSonarValue){
+        //Set the current sonar value
+        sonarValue = g_sensorCtrl.getSensorValue(INDEX_SENSOR_SONAR);
+        //CPhidgetAdvancedServo_getPosition (servo, 0, &currentPosition);
+
+        //Send the sonar data to a file
+        //readSensorData(sonarValue);
+
+        if(((sonarValue<minSonarValue+10) || (sonarValue==minSonarValue)) && (sonarValue>10))
+        {
 
 
-            minSonarValue = sonarValue;
 
-            cout<<"Sonar Value: "<<currentPosition;
-            minSonarPosition = currentPosition;
+            //If the values are actually smaller
+            if(sonarValue<minSonarValue){
+
+                cout<<"Resetting min position"<<endl;
+                firstServoMinPosition =currentPosition;
+
+                minSonarValue = sonarValue;
+
+                //cout<<"Sonar Value: "<<currentPosition;
+                minSonarPosition = currentPosition;
+                cout<<"Min sonar value: "<<minSonarValue<<endl;
+                cout<<"Min sonar Pos: "<<minSonarPosition<<endl;
+
+            }
+
+            if(sonarValue<minSonarValue+20 && sonarValue>minSonarValue-20){
+
+                cout<<"LAST POSITION CHANGED"<<endl;
+                lastServoMinPosition = currentPosition;
+
+            }
+
+
         }
+
+
         wait(200);
+        cout<<"Sonar Position: "<<currentPosition<<endl;
+        cout<<"Sonar Value: "<<g_sensorCtrl.getSensorValue(INDEX_SENSOR_SONAR)<<endl;
 
     }
+
+
+    cout<<"Initial Min Position: "<<firstServoMinPosition<<endl;
+    cout<<"Final Min Position: "<<lastServoMinPosition<<endl;
+
+    finalServoMinPosition = (lastServoMinPosition+firstServoMinPosition)/2;
+    minSonarPosition = finalServoMinPosition;
 
     g_servoCtrl.setPos(130);
 
     servoOffset = 120 - minSonarPosition;
 
     cout<<"Servo offset: "<<servoOffset;
+    cout<<"Min Sonar value"<<minSonarValue<<endl;
+    cout<<"Min Sonar position"<<minSonarPosition<<endl;
     //0.81 is the number of degrees that the servo turns after each step as the range
     //is from 0 to 220. Dividing 180 degrees by the number of steps yields the number
     //of degrees per servo step
@@ -154,6 +196,7 @@ void* Localization::sonarScan(void* param)
         turnMilisecs = degreeTurn*16;
 
         cout<<"Number of degrees is "<<degreeTurn<<"and number of milisecs is "<<turnMilisecs<<endl;
+
         ActTurnLeft(turnMilisecs);
 
     }
@@ -166,17 +209,48 @@ void* Localization::sonarScan(void* param)
         turnMilisecs = degreeTurn*(-15);
 
         cout<<"Number of degrees is "<<degreeTurn<<"and number of milisecs is"<<turnMilisecs<<endl;
+
         ActTurnRight(turnMilisecs);
 
       }
       //Move towards the new obstacle
       //ActMoveForward(0);
-      //moveForward();
 
 
+    robotStatus = STATUS_ROBOT_EXPLORING;
     pthread_exit(NULL);
 
 }
+
+void Localization::readSensorData(int sensorValue){
+
+	      ofstream sonarReadings;
+	      sonarReadings.open("Sensor.txt", fstream::app);
+
+
+
+
+
+
+	      sonarReadings << "\nLocalization Sensor reading\n";
+ 	      for (int i=0;i<220;i=i+5)
+ 	      {
+            g_servoCtrl.setPos(i);
+            wait(200);
+            sonarReadings << sensorValue;
+            sonarReadings <<", ";
+	      }
+	      sonarReadings <<"\n";
+	      sonarReadings.close();
+	      //moveServo(220);
+
+	      //wait(3000);
+
+	      g_servoCtrl.setPos(130);
+
+	      wait(1000);
+
+      }
 
 
 

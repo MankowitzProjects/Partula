@@ -7,8 +7,8 @@ extern Event g_eventCenter;
 int VALUE_BLACK_PAPER_MIN  = 480;
 int VALUE_BLACK_PAPER_MAX  = 580;
 
-int VALUE_BLACK_TAPE_MIN  =  90;
-int VALUE_BLACK_TAPE_MAX  =  150;
+int VALUE_BLACK_TAPE_MIN  =  60;
+int VALUE_BLACK_TAPE_MAX  =  120;
 
 int VALUE_GROUND_MIN    = 200;
 int VALUE_GROUND_MAX     =   260;

@@ -11,6 +11,7 @@
 #include "ServoController.h"
 #include "SensorController.h"
 #include "Action.h"
+#include <fstream>
 
 class Localization {
 
@@ -29,6 +30,8 @@ public:
     void updateParticles();
 
     static void* sonarScan(void* param);
+
+    static void readSensorData(int sensorValue);
     //Pose pose(0,0,0);
 
 private:

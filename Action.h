@@ -19,6 +19,10 @@ void hitBumper(long unsigned waitTime);
 
 void frequencyMovement(FREQUENCY frequency);
 
-
+void moveForward(void);
+void moveBackward(void);
+void turnLeft(void);
+void turnRight(void);
+void stop(void);
 
 #endif // ACTION_H_INCLUDED

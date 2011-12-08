@@ -5,7 +5,7 @@
 #include <stdlib.h>
 
 #define nanosecToMillisec(nano) (nano/1000000)
-#define FREQUENCY_DEFAULT_SAMPLE_RATE 5
+#define FREQUENCY_DEFAULT_SAMPLE_RATE 3
 
 using namespace std;
 
@@ -68,7 +68,13 @@ private:
     struct timespec *tm_array;
 };
 
-void  FreqTick(void);
-float FreqGetFreqency(void);
+void FreqTickLeft(void);
+float FreqGetFrequencyLeft(void);
+void FreqTickMiddle(void);
+float FreqGetFrequencyMiddle(void);
+void FreqTickRight(void);
+float FreqGetFrequencyRight(void);
+float FreqGetFrequency(void);
+
 
 #endif // FREQUENCY_H_INCLUDED

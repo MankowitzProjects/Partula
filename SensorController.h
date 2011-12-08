@@ -161,7 +161,7 @@ extern int VALUE_GROUND_MAX ;
 
 inline bool bIsInRange(int value, int valueMin, int valueMax)
 {
-    return ((valueMin < value) && (value < valueMax));
+    return ((valueMin < value) && (value < valueMax) && (value>20));
 }
 
 inline bool bIsBlackPaper(int value)
