@@ -7,6 +7,8 @@
 
 #ifndef LOCALIZATION_H
 #define	LOCALIZATION_H
+
+#include "debug_tools.h"
 #include "Pose.h"
 #include "ServoController.h"
 #include "SensorController.h"
@@ -20,7 +22,7 @@ public:
     Localization();
     ~Localization();
 
-    void updateSiteStatus(SITE site);
+    void updateSiteStatus();
 
     void initializePosition(double x, double y, double theta);
 

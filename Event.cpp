@@ -292,10 +292,10 @@ void Event::handleInput(const INPUT &input)
     //cout<<"Handling Input"<<endl;
     currentEvent = checkEventType(input);
 
-    if(currentEvent != previousEvent)
+    if (currentEvent != previousEvent)
     {
 
-        //cout<<"Current Event: "<<currentEvent<<endl;
+        // cout<<"Current Event: "<<currentEvent<<endl;
         previousEvent = currentEvent;
 
     }

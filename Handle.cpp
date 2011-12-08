@@ -41,16 +41,19 @@ void Handle::docking()
 {
     //Set the robot status to docking
     robotStatus = STATUS_ROBOT_DOCKING;
-
+    ActStop();
+    cout<<"docking - Detected sensor value: "<<g_sensorCtrl.getSensorValue(INDEX_SENSOR_LIGHT_UNDER)<<endl;
     //Black tape has been detected
     //1. PerformShape Detection
-    cout<<"Black Tape Detected"<<endl;
-    cout<<"Robot is docking"<<endl;
+    cout<<"docking - Black Tape Detected"<<endl;
+    cout<<"docking - Robot is docking"<<endl;
     //navigSpeed=50.00;
-    cout<<"Thread cancelled"<<endl;
+    cout<<"docking - scanning Thread started"<<endl;
+
     int scanParam=0;
     pthread_t scanningThread;
-    pthread_create(&scanningThread, NULL, &scanArea,(void*)&scanParam);
+    int rc = pthread_create(&scanningThread, NULL, &scanArea,(void*)&scanParam);
+    cout << "docking - create" << rc << endl;
 }
 
 void Handle::localization()
@@ -79,7 +82,7 @@ void* Handle::scanArea(void* param)
     
     g_servoCtrl.setPos(130);
     
-    ActTurnLeft(5000);
+    turnLeft();
 
     //leftDirectionDistance = irMainValueBottom;
     bool foundFlag=false;
@@ -111,12 +114,16 @@ void* Handle::scanArea(void* param)
             cout<<"Stopped due to gap in first loop"<<endl;
             ActStop();
             foundFlag=true;
+            break;
         }
-        else if(irMainValueTop<90 && irMainValueBottom<90)
+
+        // it is the edge
+        else if((irMainValueTop < 90) && (irMainValueBottom < 90))
         {
             cout<<"Stopped due to edge in first loop"<<endl;
             ActStop();
             edgeDetected=true;
+            break;
 
         }
     }
@@ -125,7 +132,7 @@ void* Handle::scanArea(void* param)
 
     if(foundFlag==false)
     {
-        ActTurnRight(5000);
+        turnRight();
 
         //rightDirectionDistance = irMainValueBottom;
         while(foundFlag==false)
@@ -139,19 +146,25 @@ void* Handle::scanArea(void* param)
                 ActStop();
                 ActTurnRight(300);
                 foundFlag=true;
+                break;
 
             }
-            else if(irMainValueTop<90 && irMainValueBottom<90)
+
+            else if (   (irMainValueTop    < 90)
+                     && (irMainValueBottom < 90))
             {
                 cout<<"Stopped due to edge in second loop"<<endl;
                 ActStop();
+                
+                //Hasn't found an edge
+                //Move forward and scan
+                break;
             }
         }
     }
     cout<<"Reached Here"<<endl;
     //Go forward to center
-    g_motorCtrl.setAcc(100.00);
-    g_motorCtrl.setVel(100.00);
+    moveForward();
 
     pthread_exit(NULL);
 }
@@ -170,8 +183,9 @@ void* Handle::fr_check(void* param)
 
     cout<<"The frequency is " << frequency << endl;
 
-    //Update the site status, then do frequency movements
-    g_localization.updateSiteStatus(SITE_1);
+    //Update the site status, and set the robots position to the site position
+    //then do frequency movements
+    g_localization.updateSiteStatus();
 
     if(frequency>0 && frequency <1)
     {

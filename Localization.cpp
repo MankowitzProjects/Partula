@@ -13,6 +13,7 @@ extern Pose pose;
 extern ServoController g_servoCtrl;
 extern SensorController g_sensorCtrl;
 extern STATUS_ROBOT robotStatus;
+extern Site sites[NUM_SITE];
 
 Localization::Localization()
 {
@@ -25,42 +26,59 @@ Localization::~Localization()
 }
 
 //Identifies the current site and updates the robots position
-void Localization::updateSiteStatus(SITE site)
+void Localization::updateSiteStatus()
 {
-    switch(site)
+    
+    
+    int siteIndex = 1;
+    
+    while(sites[siteIndex].bVisited ==true)
     {
-    case SITE_1:
-    {
-        pose.setPose(1,1,2);
-        break;
+        siteIndex++;
+        
     }
-    case SITE_2:
+    
+    
+    
+    switch(siteIndex)
     {
-        pose.setPose(1,2,2);
-        break;
-    }
-    case SITE_3:
-    {
-        pose.setPose(1,3,2);
-        break;
-    }
-    case SITE_4:
-    {
-        pose.setPose(1,4,2);
-        break;
-    }
-    case SITE_5:
-    {
-        pose.setPose(1,5,2);
-        break;
-    }
-  
-    default:
+        case SITE_1:
+        {
+            pose.setPose(142,220,M_PI/2);
+            sites[siteIndex].bVisited=true;
+            break;
+        }
+        case SITE_2:
+        {
+            pose.setPose(245,150,(-3*M_PI/4));
+            sites[siteIndex].bVisited=true;
+            break;
+        }
+        case SITE_3:
+        {
+            pose.setPose(0,184,0);
+            sites[siteIndex].bVisited=true;
+            break;
+        }
+        case SITE_4:
+        {
+            pose.setPose(0,0,-M_PI/4);
+            sites[siteIndex].bVisited=true;
+            break;
+        }
+        case SITE_5:
+        {
+            pose.setPose(190,84,M_PI/2);
+            sites[siteIndex].bVisited=true;
+            break;
+        }
 
-    {
+        default:
 
-        break;
-    }
+        {
+
+            break;
+        }
     }
 }
 
@@ -75,7 +93,62 @@ void Localization::initializePosition(double x, double y, double theta)
 //Determine the resource site locations based on the current position
 void Localization::EstimateResourceSiteLocations()
 {
-
+    
+    DirTime directionTime;
+    SITE currentSite;
+    
+    int siteIndex = 1;
+    while(sites[NUM_SITE].bVisited==true)
+    {
+        siteIndex++;
+    }
+    
+    switch(siteIndex){
+        case 1:
+        {
+          currentSite = SITE_1;
+            break;
+        }
+        case 2:
+        {
+             currentSite = SITE_2;
+            break;
+        }
+        case 3:
+        {
+             currentSite = SITE_3;
+            break;
+        }
+        case 4:
+        {
+             currentSite = SITE_4;
+            break;
+        }
+        case 5:
+        {
+             currentSite = SITE_5;
+             break;
+        }
+        default:
+        {
+            
+            break;
+        }
+        
+        
+        
+    }
+    
+    directionTime = pose.shiftToGoal(currentSite);
+    
+    if(directionTime.direction==TURNING_LEFT)
+    {
+        ActTurnLeft(directionTime.time);
+    }
+    else if(directionTime.direction==TURNING_RIGHT){
+        
+        ActTurnRight(directionTime.time);
+    }
 
 
 }
@@ -132,46 +205,50 @@ void* Localization::sonarScan(void* param)
         //Send the sonar data to a file
         //readSensorData(sonarValue);
 
-        if(((sonarValue<minSonarValue+10) || (sonarValue==minSonarValue)) && (sonarValue>10))
+        if (   (   (sonarValue <  minSonarValue+10)
+                   || (sonarValue == minSonarValue))
+                && (sonarValue>10))
         {
-
-
-
             //If the values are actually smaller
-            if(sonarValue<minSonarValue){
+            if (sonarValue < minSonarValue)
+            {
+#if DEBUG_MODE_SONAR_SCAN
+                cout<<"sonarScan - Resetting min position"<<endl;
+#endif
 
-                cout<<"Resetting min position"<<endl;
                 firstServoMinPosition =currentPosition;
 
                 minSonarValue = sonarValue;
 
                 //cout<<"Sonar Value: "<<currentPosition;
                 minSonarPosition = currentPosition;
+
+#if DEBUG_MODE_SONAR_SCAN
                 cout<<"Min sonar value: "<<minSonarValue<<endl;
                 cout<<"Min sonar Pos: "<<minSonarPosition<<endl;
-
+#endif
             }
 
-            if(sonarValue<minSonarValue+20 && sonarValue>minSonarValue-20){
-
+            if(sonarValue<minSonarValue+20 && sonarValue>minSonarValue-20)
+            {
                 cout<<"LAST POSITION CHANGED"<<endl;
                 lastServoMinPosition = currentPosition;
-
             }
-
-
         }
 
-
         wait(200);
+
+#if DEBUG_MODE_SONAR_SCAN
         cout<<"Sonar Position: "<<currentPosition<<endl;
         cout<<"Sonar Value: "<<g_sensorCtrl.getSensorValue(INDEX_SENSOR_SONAR)<<endl;
-
+#endif
     }
 
 
+#if DEBUG_MODE_SONAR_SCAN
     cout<<"Initial Min Position: "<<firstServoMinPosition<<endl;
-    cout<<"Final Min Position: "<<lastServoMinPosition<<endl;
+    cout<<"Final Min Position  : "<<lastServoMinPosition<<endl;
+#endif
 
     finalServoMinPosition = (lastServoMinPosition+firstServoMinPosition)/2;
     minSonarPosition = finalServoMinPosition;
@@ -180,77 +257,80 @@ void* Localization::sonarScan(void* param)
 
     servoOffset = 120 - minSonarPosition;
 
+#if DEBUG_MODE_SONAR_SCAN
     cout<<"Servo offset: "<<servoOffset;
     cout<<"Min Sonar value"<<minSonarValue<<endl;
     cout<<"Min Sonar position"<<minSonarPosition<<endl;
+#endif
+
     //0.81 is the number of degrees that the servo turns after each step as the range
     //is from 0 to 220. Dividing 180 degrees by the number of steps yields the number
     //of degrees per servo step
     degreeTurn = servoOffset*0.81;
 
-
     if(servoOffset>0)
     {
+#if DEBUG_MODE_SONAR_SCAN
         cout<<"servo offset greater than 0"<<endl;
+#endif
         //How long the car must turn clockwise (in milisecs) to reach the current servo position.
         turnMilisecs = degreeTurn*16;
 
+#if DEBUG_MODE_SONAR_SCAN
         cout<<"Number of degrees is "<<degreeTurn<<"and number of milisecs is "<<turnMilisecs<<endl;
+#endif
 
         ActTurnLeft(turnMilisecs);
 
     }
     else if(servoOffset<0)
     {
+#if DEBUG_MODE_SONAR_SCAN
         cout<<"servo offset less than 0"<<endl;
-
+#endif
 
         //Note the turnMilisecs are unequal as the car requires slightly more time to turn clockwise
         turnMilisecs = degreeTurn*(-15);
 
+#if DEBUG_MODE_SONAR_SCAN
         cout<<"Number of degrees is "<<degreeTurn<<"and number of milisecs is"<<turnMilisecs<<endl;
+#endif
 
         ActTurnRight(turnMilisecs);
 
-      }
-      //Move towards the new obstacle
-      //ActMoveForward(0);
-
+    }
+    //Move towards the new obstacle
+    //ActMoveForward(0);
 
     robotStatus = STATUS_ROBOT_EXPLORING;
     pthread_exit(NULL);
-
 }
 
-void Localization::readSensorData(int sensorValue){
+void Localization::readSensorData(int sensorValue)
+{
 
-	      ofstream sonarReadings;
-	      sonarReadings.open("Sensor.txt", fstream::app);
+    ofstream sonarReadings;
+    sonarReadings.open("Sensor.txt", fstream::app);
 
+    sonarReadings << "\nLocalization Sensor reading\n";
+    for (int i=0; i<220; i=i+5)
+    {
+        g_servoCtrl.setPos(i);
+        wait(200);
+        sonarReadings << sensorValue;
+        sonarReadings <<", ";
+    }
+    sonarReadings <<"\n";
+    sonarReadings.close();
+    //moveServo(220);
 
+    //wait(3000);
 
+    g_servoCtrl.setPos(130);
 
+    wait(1000);
 
-
-	      sonarReadings << "\nLocalization Sensor reading\n";
- 	      for (int i=0;i<220;i=i+5)
- 	      {
-            g_servoCtrl.setPos(i);
-            wait(200);
-            sonarReadings << sensorValue;
-            sonarReadings <<", ";
-	      }
-	      sonarReadings <<"\n";
-	      sonarReadings.close();
-	      //moveServo(220);
-
-	      //wait(3000);
-
-	      g_servoCtrl.setPos(130);
-
-	      wait(1000);
-
-      }
+}
 
 
 

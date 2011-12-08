@@ -190,41 +190,45 @@ void initSites(void)
     }
 
     // add information
-    sites[1].readyPoint.x = 53;
-    sites[1].readyPoint.y = 24;
-    sites[1].dotLeft.x = 0;
-    sites[1].dotLeft.y = 24;
-    sites[1].dotMid.x = 0;
-    sites[1].dotMid.y = 0;
-    sites[1].dotRight.x = 53;
-    sites[1].dotRight.y = 0;
+     sites[1].readyPoint.x = 115;
+    sites[1].readyPoint.y = 190;
+    sites[1].dotLeft.x = 160;
+    sites[1].dotLeft.y = 202;
+    sites[1].dotMid.x = 142;
+    sites[1].dotMid.y = 220;
+    sites[1].dotRight.x = 94;
+    sites[1].dotRight.y = 220;
     
-    sites[2].readyPoint.x = 50;
-    sites[2].readyPoint.y = 189;
-    sites[2].dotLeft.x = 20;
-    sites[2].dotLeft.y = 239;
-    sites[2].dotMid.x = 0;
-    sites[2].dotMid.y = 184;
-    sites[2].dotRight.x = 12;
-    sites[2].dotRight.y = 129;
+    sites[2].readyPoint.x = 221;
+    sites[2].readyPoint.y = 181;
+    sites[2].dotLeft.x = 186;
+    sites[2].dotLeft.y = 150;
+    sites[2].dotMid.x = 245;
+    sites[2].dotMid.y = 150;
+    sites[2].dotRight.x = 245;
+    sites[2].dotRight.y = 208;
     
-    sites[3].readyPoint.x = 115;
-    sites[3].readyPoint.y = 190;
-    sites[3].dotLeft.x = 160;
-    sites[3].dotLeft.y = 202;
-    sites[3].dotMid.x = 142;
-    sites[3].dotMid.y = 220;
-    sites[3].dotRight.x = 94;
-    sites[3].dotRight.y = 220;
+    sites[3].readyPoint.x = 50;
+    sites[3].readyPoint.y = 189;
+    sites[3].dotLeft.x = 20;
+    sites[3].dotLeft.y = 239;
+    sites[3].dotMid.x = 0;
+    sites[3].dotMid.y = 184;
+    sites[3].dotRight.x = 12;
+    sites[3].dotRight.y = 129;
     
-    sites[4].readyPoint.x = 221;
-    sites[4].readyPoint.y = 181;
-    sites[4].dotLeft.x = 186;
-    sites[4].dotLeft.y = 150;
+    
+    sites[4].readyPoint.x = 53;
+    sites[4].readyPoint.y = 24;
+    sites[4].dotLeft.x = 0;
+    sites[4].dotLeft.y = 24;
     sites[4].dotMid.x = 0;
     sites[4].dotMid.y = 0;
-    sites[4].dotRight.x = 245;
-    sites[4].dotRight.y = 208;
+    sites[4].dotRight.x = 53;
+    sites[4].dotRight.y = 0;
+    
+   
+   
     
     sites[5].readyPoint.x = 172;
     sites[5].readyPoint.y = 43;

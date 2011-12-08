@@ -55,8 +55,10 @@ void __start_thrd_motor(void *func(void *), unsigned long milisec)
     {
         printf("** ERROR: __start_thrd_motor, code is %d\n", rc);
     }
-
-    b_thrd_motor_created = true;
+    else
+    {
+        b_thrd_motor_created = true;
+    }
 }
 
 void ActStop(void)
@@ -129,32 +131,38 @@ void ActHitBumperRight(unsigned long milisec)
 void moveForward(void)
 {
     g_movement = MOVING_FORWARD;
-    g_motorCtrl.setAcc(VALUE_MOTOR_ACC_NORMAL);
-    g_motorCtrl.setVel(VALUE_MOTOR_VEL_NORMAL);
+    g_motorCtrl.setAccLeft(VALUE_MOTOR_ACC_NORMAL);
+    g_motorCtrl.setVelLeft(VALUE_MOTOR_VEL_NORMAL);
+    
+    g_motorCtrl.setAccRight(VALUE_MOTOR_ACC_NORMAL);
+    g_motorCtrl.setVelRight(-VALUE_MOTOR_VEL_NORMAL);
 }
 
 void moveBackward(void)
 {
     g_movement = MOVING_BACKWARD;
-    g_motorCtrl.setAcc(-VALUE_MOTOR_ACC_NORMAL);
-    g_motorCtrl.setVel(-VALUE_MOTOR_VEL_NORMAL);
+    g_motorCtrl.setAccLeft(VALUE_MOTOR_ACC_NORMAL);
+    g_motorCtrl.setVelLeft(-VALUE_MOTOR_VEL_NORMAL);
+    
+    g_motorCtrl.setAccRight(VALUE_MOTOR_ACC_NORMAL);
+    g_motorCtrl.setVelRight(VALUE_MOTOR_VEL_NORMAL);
 }
 
 void turnLeft(void)
 {
     g_movement = TURNING_LEFT;
-    g_motorCtrl.setVelLeft(VALUE_MOTOR_VEL_NORMAL);
+    g_motorCtrl.setVelLeft(-VALUE_MOTOR_VEL_NORMAL);
     g_motorCtrl.setAccLeft(VALUE_MOTOR_ACC_NORMAL);
 
     g_motorCtrl.setVelRight(-VALUE_MOTOR_VEL_NORMAL);
-    g_motorCtrl.setAccRight(-VALUE_MOTOR_ACC_NORMAL);
+    g_motorCtrl.setAccRight(VALUE_MOTOR_ACC_NORMAL);
 }
 
 void turnRight(void)
 {
     g_movement = TURNING_RIGHT;
-    g_motorCtrl.setVelLeft(-VALUE_MOTOR_VEL_NORMAL);
-    g_motorCtrl.setAccLeft(-VALUE_MOTOR_ACC_NORMAL);
+    g_motorCtrl.setVelLeft(VALUE_MOTOR_VEL_NORMAL);
+    g_motorCtrl.setAccLeft(VALUE_MOTOR_ACC_NORMAL);
 
     g_motorCtrl.setVelRight(VALUE_MOTOR_VEL_NORMAL);
     g_motorCtrl.setAccRight(VALUE_MOTOR_ACC_NORMAL);
@@ -259,6 +267,9 @@ void* p_thrd_hitBumperFront(void *para)
     //Set the timestamp for updating the position
     double time = *((unsigned long *)para);
 
+    pose.updatePosition();
+    pose.updateAngle();
+    
     pose.setTimestamp();
     moveBackward();
     wait(*((unsigned long *)para));
@@ -282,6 +293,8 @@ void* p_thrd_hitBumperLeft(void *para)
     //Set the timestamp for updating the position
     double time = *((unsigned long *)para);
     pose.updatePosition();
+    pose.updateAngle();
+    
     pose.setTimestamp();
     moveBackward();
     wait(*((unsigned long *)para));
@@ -304,7 +317,9 @@ void* p_thrd_hitBumperRight(void *para)
 {
     //Set the timestamp for updating the position
     double time = *((unsigned long *)para);
-
+    pose.updatePosition();
+    pose.updateAngle();
+    
     pose.setTimestamp();
     moveBackward();
     wait(*((unsigned long *)para));

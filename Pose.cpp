@@ -12,8 +12,8 @@ Pose::Pose(double x,double y, double theta)
     robotPose.x=x;
     robotPose.y=y;
     robotPose.theta=theta;
-    velocity = 0.22;
-    ang_velocity = 0.3;
+    velocity = 25;
+    ang_velocity = 0.8;
 }
 
 Pose::~Pose()
