@@ -365,7 +365,9 @@ void Localization::sonarScan(void)
         cout<<"Number of degrees is "<<degreeTurn<<"and number of milisecs is "<<turnMilisecs<<endl;
 #endif
 
-        ActTurnLeft(turnMilisecs);
+        //ActTurnLeft(turnMilisecs);
+        turnLeft();
+        wait(turnMilisecs);
 
     }
     else if(servoOffset<0)
@@ -381,7 +383,9 @@ void Localization::sonarScan(void)
         cout<<"Number of degrees is "<<degreeTurn<<"and number of milisecs is"<<turnMilisecs<<endl;
 #endif
 
-        ActTurnRight(turnMilisecs);
+        //ActTurnRight(turnMilisecs);
+        turnRight();
+        wait(turnMilisecs);
     }
 
     //Move towards the new obstacle

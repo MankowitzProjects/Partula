@@ -394,6 +394,7 @@ void frequencyMovement(FREQUENCY frequency)
         pose.updatePosition();
 
         stop();
+        wait(1000);
 
         pose.setTimestamp();
         moveBackward();
@@ -441,6 +442,7 @@ void frequencyMovement(FREQUENCY frequency)
         pose.updatePosition();
 
         stop();
+        wait(1000);
 
         pose.setTimestamp();
         moveForward();

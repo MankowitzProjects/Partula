@@ -68,7 +68,7 @@ void Robot::run(void)
     //pthread_t sonarThread;
     //pthread_create(&sonarThread, NULL, g_localization.sonarScan,(void*)&sonarStatus);
     
-    //g_localization.sonarScan(NULL);
+    //g_localization.sonarScan();
 
     //while(robotStatus==STATUS_ROBOT_SONAR_SCANNING){
 
