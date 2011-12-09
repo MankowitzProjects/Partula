@@ -3,7 +3,7 @@
 MOVEMENT_STATUS g_movement;
 extern Site sites[NUM_SITE];
 
-Pose pose(0,0,0);
+extern Pose pose;
 double velocity;
 double ang_velocity;
 
@@ -51,7 +51,7 @@ void Pose::updateOdometry()
 
     starttime.tv_sec=endtime.tv_sec;
     starttime.tv_usec=endtime.tv_usec;
-    cout<<"New Position: (x,y,angle): "<<"("<<robotPose.x<<", "<<robotPose.y<<robotPose.theta<<")"<<endl;
+    cout<<"New Position: (x,y,angle): "<<"("<<robotPose.x<<", "<<robotPose.y<<", "<<robotPose.theta<<")"<<endl;
 
 }
 
@@ -72,14 +72,14 @@ DirTime Pose::shiftToGoal(SITE id_site)
 
     cout<<"Angle: "<<angle<<endl;
     angle=normRad(angle);
+    cout<<"NormRad: "<<angle<<endl;
 
-
-    ret_val.time=angle/ang_velocity*1000;
+    ret_val.time=abs((angle/ang_velocity)*1000);
     if (angle>0){
-        ret_val.direction=TURNING_LEFT;
+        ret_val.direction=TURNING_RIGHT;
     }
     else{
-        ret_val.direction=TURNING_RIGHT;
+        ret_val.direction=TURNING_LEFT;
     }
 return ret_val;
 

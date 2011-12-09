@@ -174,7 +174,7 @@ void calFeatures(Feature &feature, const SITE_MEASUREMENT &measure)
     feature.rad += thetaOne;
 }
 
-
+#include "conf.h"
 
 /** \brief initialize the sites
  *
@@ -190,53 +190,58 @@ void initSites(void)
     }
 
     // add information
-     sites[1].readyPoint.x = 115;
-    sites[1].readyPoint.y = 190;
-    sites[1].dotLeft.x = 160;
-    sites[1].dotLeft.y = 202;
-    sites[1].dotMid.x = 142;
-    sites[1].dotMid.y = 220;
-    sites[1].dotRight.x = 94;
-    sites[1].dotRight.y = 220;
-    
-    sites[2].readyPoint.x = 221;
-    sites[2].readyPoint.y = 181;
-    sites[2].dotLeft.x = 186;
-    sites[2].dotLeft.y = 150;
-    sites[2].dotMid.x = 245;
-    sites[2].dotMid.y = 150;
-    sites[2].dotRight.x = 245;
-    sites[2].dotRight.y = 208;
-    
-    sites[3].readyPoint.x = 50;
-    sites[3].readyPoint.y = 189;
-    sites[3].dotLeft.x = 20;
-    sites[3].dotLeft.y = 239;
-    sites[3].dotMid.x = 0;
-    sites[3].dotMid.y = 184;
-    sites[3].dotRight.x = 12;
-    sites[3].dotRight.y = 129;
+    sites[SITE_1].readyPoint.x = 115;
+    sites[SITE_1].readyPoint.y = 190;
+    sites[SITE_1].dotLeft.x = 160;
+    sites[SITE_1].dotLeft.y = 202;
+    sites[SITE_1].dotMid.x = 142;
+    sites[SITE_1].dotMid.y = 220;
+    sites[SITE_1].dotRight.x = 94;
+    sites[SITE_1].dotRight.y = 220;
     
     
-    sites[4].readyPoint.x = 53;
-    sites[4].readyPoint.y = 24;
-    sites[4].dotLeft.x = 0;
-    sites[4].dotLeft.y = 24;
-    sites[4].dotMid.x = 0;
-    sites[4].dotMid.y = 0;
-    sites[4].dotRight.x = 53;
-    sites[4].dotRight.y = 0;
+    sites[SITE_2].readyPoint.x = 50;
+    sites[SITE_2].readyPoint.y = 189;
+    sites[SITE_2].dotLeft.x = 20;
+    sites[SITE_2].dotLeft.y = 229;
+    sites[SITE_2].dotMid.x = 0;
+    sites[SITE_2].dotMid.y = 184;
+    sites[SITE_2].dotRight.x = 12;
+    sites[SITE_2].dotRight.y = 129;
+    
+    sites[SITE_3].readyPoint.x = 53;
+    sites[SITE_3].readyPoint.y = 24;
+    sites[SITE_3].dotLeft.x = 0;
+    sites[SITE_3].dotLeft.y = 23;
+    sites[SITE_3].dotMid.x = 0;
+    sites[SITE_3].dotMid.y = 0;
+    sites[SITE_3].dotRight.x = 53;
+    sites[SITE_3].dotRight.y = 0;
     
    
    
     
-    sites[5].readyPoint.x = 172;
-    sites[5].readyPoint.y = 43;
-    sites[5].dotLeft.x = 260;
-    sites[5].dotLeft.y = 49;
-    sites[5].dotMid.x = 190;
-    sites[5].dotMid.y = 84;
-    sites[5].dotRight.x = 136;
-    sites[5].dotRight.y = 63;
+    sites[SITE_4].readyPoint.x = 172;
+    sites[SITE_4].readyPoint.y = 43;
+    sites[SITE_4].dotLeft.x = 260;
+    sites[SITE_4].dotLeft.y = 49;
+    sites[SITE_4].dotMid.x = 190;
+    sites[SITE_4].dotMid.y = 84;
+    sites[SITE_4].dotRight.x = 136;
+    sites[SITE_4].dotRight.y = 63;
 
+    
+    sites[SITE_5].readyPoint.x = 221;
+    sites[SITE_5].readyPoint.y = 181;
+    sites[SITE_5].dotLeft.x = 186;
+    sites[SITE_5].dotLeft.y = 150;
+    sites[SITE_5].dotMid.x = 245;
+    sites[SITE_5].dotMid.y = 150;
+    sites[SITE_5].dotRight.x = 245;
+    sites[SITE_5].dotRight.y = 208;
+    
+    
+    
+    
+   
 }

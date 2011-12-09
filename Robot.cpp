@@ -17,7 +17,7 @@ STATUS_ROBOT robotStatus;
 extern EVENT currentEvent;
 extern Localization g_localization;
 extern MOVEMENT_STATUS g_movement;
-extern Pose pose;
+Pose pose(0,0,0);
 
 Robot::Robot(void)
 {
@@ -39,6 +39,23 @@ bool Robot::hasHitBumper()
 
 #include "Frequency.h"
 
+
+
+void * updatingOdometry(void * param){
+   int prev_status; 
+   int current_status;
+   
+   while(1){
+   
+       current_status=g_movement;
+   if (current_status!=prev_status){ 
+       pose.updateOdometry();
+   }
+   prev_status=current_status;
+}
+    
+}
+
 void Robot::run(void)
 {
 
@@ -48,6 +65,7 @@ void Robot::run(void)
     robotStatus = STATUS_ROBOT_EXPLORING;
     currentEvent = EVENT_NULL;
 
+    
     //Initialise servo
     //g_servoCtrl.init();
     g_servoCtrl.setPos(VALUE_SERVO_POS_MID);
@@ -63,6 +81,9 @@ void Robot::run(void)
     //turnRight();
 
 #if 1
+    int param=1;
+    pthread_t odometryThread;
+    pthread_create(&odometryThread, NULL, updatingOdometry,(void*)&param);
 
     //int sonarStatus = 0;
     //pthread_t sonarThread;
@@ -75,7 +96,7 @@ void Robot::run(void)
     //}
     
     cout<<"Finished scan, moving forward"<<endl;
-
+    pose.setTimestamp();
     ActMoveForward(6000);
     trainSensors();
 
@@ -215,4 +236,3 @@ void Robot::trainSensors()
     getchar();*/
 
 }
-

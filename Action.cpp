@@ -180,7 +180,7 @@ void* p_thrd_moveForward(void *para)
     {
         wait(*((unsigned long *)para));
         //Update the position based on the time
-        pose.updatePosition();
+       
 
         stop();
     }
@@ -204,7 +204,7 @@ void* p_thrd_moveBackward(void *para)
         wait(*((unsigned long *)para));
 
         //Update the position based on the time
-        pose.updatePosition();
+       
         stop();
     }
 
@@ -224,7 +224,7 @@ void* p_thrd_turnLeft(void *para)
     {
         wait(*((unsigned long *)para));
         //Update the angle based on the time
-        pose.updateAngle();
+        
 
         stop();
     }
@@ -246,7 +246,7 @@ void* p_thrd_turnRight(void *para)
         wait(*((unsigned long *)para));
 
         //Update the angle based on the time
-        pose.updateAngle();
+        
         stop();
     }
 
@@ -260,18 +260,18 @@ void* p_thrd_hitBumperFront(void *para)
     //Set the timestamp for updating the position
     double time = *((unsigned long *)para);
 
-    pose.updatePosition();
-    pose.updateAngle();
+   
+    
 
     pose.setTimestamp();
     moveBackward();
     wait(*((unsigned long *)para));
-    pose.updatePosition();
+   
 
     pose.setTimestamp();
     turnLeft();
     wait(*((unsigned long *)para));
-    pose.updateAngle();
+    
 
     pose.setTimestamp();
     moveForward();
@@ -285,18 +285,18 @@ void* p_thrd_hitBumperLeft(void *para)
 {
     //Set the timestamp for updating the position
     double time = *((unsigned long *)para);
-    pose.updatePosition();
-    pose.updateAngle();
+   
+    
 
     pose.setTimestamp();
     moveBackward();
     wait(*((unsigned long *)para));
-    pose.updatePosition();
+   
 
     pose.setTimestamp();
     turnRight();
     wait(*((unsigned long *)para));
-    pose.updateAngle();
+    
 
     pose.setTimestamp();
     moveForward();
@@ -310,18 +310,18 @@ void* p_thrd_hitBumperRight(void *para)
 {
     //Set the timestamp for updating the position
     double time = *((unsigned long *)para);
-    pose.updatePosition();
-    pose.updateAngle();
+   
+    
 
     pose.setTimestamp();
     moveBackward();
     wait(*((unsigned long *)para));
-    pose.updatePosition();
+   
 
     pose.setTimestamp();
     turnLeft();
     wait(*((unsigned long *)para));
-    pose.updateAngle();
+    
 
     pose.setTimestamp();
     moveForward();
@@ -362,12 +362,9 @@ void frequencyMovement(FREQUENCY frequency)
 
         moveBackward();
         wait(1000);
-        pose.updatePosition();
 
-        pose.setTimestamp();
         turnLeft( );
         wait(5600);
-        pose.updateAngle();
         stop();
         break;
     }
@@ -376,12 +373,10 @@ void frequencyMovement(FREQUENCY frequency)
         pose.setTimestamp();
         moveBackward();
         wait(1000);
-        pose.updatePosition();
 
         pose.setTimestamp();
         turnRight();
         wait(5600);
-        pose.updateAngle();
 
         stop();
         break;
@@ -391,7 +386,6 @@ void frequencyMovement(FREQUENCY frequency)
 
         moveBackward();
         wait(1000);
-        pose.updatePosition();
 
         stop();
         wait(1000);
@@ -399,7 +393,6 @@ void frequencyMovement(FREQUENCY frequency)
         pose.setTimestamp();
         moveBackward();
         wait(1000);
-        pose.updatePosition();
 
         stop();
         break;
@@ -409,12 +402,10 @@ void frequencyMovement(FREQUENCY frequency)
 
         moveBackward();
         wait(1000);
-        pose.updatePosition();
 
         pose.setTimestamp();
         turnLeft( );
         wait(2600);
-        pose.updateAngle();
 
         stop();
         break;
@@ -424,12 +415,10 @@ void frequencyMovement(FREQUENCY frequency)
 
         moveBackward( );
         wait(2000);
-        pose.updatePosition();
 
-        pose.setTimestamp();
         turnRight();
         wait(2600);
-        pose.updateAngle();
+
 
         stop();
         break;
@@ -439,15 +428,14 @@ void frequencyMovement(FREQUENCY frequency)
 
         moveBackward();
         wait(2000);
-        pose.updatePosition();
+    
 
         stop();
         wait(1000);
 
-        pose.setTimestamp();
         moveForward();
         wait(1000);
-        pose.updatePosition();
+    
 
         stop();
         break;

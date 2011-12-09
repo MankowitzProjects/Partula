@@ -29,7 +29,7 @@ Localization::~Localization()
 
 }
 
-int siteIndex = 1;
+SITE siteIndex = SITE_1;
 
 //Identifies the current site and updates the robots position
 void Localization::updateSiteStatus()
@@ -38,32 +38,38 @@ void Localization::updateSiteStatus()
     {
         case SITE_1:
         {
+            cout<<"The site has been set"<<endl;
             pose.setPose(142,220,M_PI/2);
             sites[siteIndex].bVisited=true;
+            siteIndex = SITE_2;
             break;
         }
         case SITE_2:
         {
-            pose.setPose(245,150,(-3*M_PI/4));
+            pose.setPose(0,184,0);
             sites[siteIndex].bVisited=true;
+            siteIndex = SITE_3;
             break;
         }
         case SITE_3:
         {
-            pose.setPose(0,184,0);
+            pose.setPose(0,184,-M_PI/2);
             sites[siteIndex].bVisited=true;
+            siteIndex = SITE_4;
             break;
         }
         case SITE_4:
         {
             pose.setPose(0,0,-M_PI/4);
             sites[siteIndex].bVisited=true;
+            siteIndex = SITE_5;
             break;
         }
         case SITE_5:
         {
             pose.setPose(190,84,M_PI/2);
             sites[siteIndex].bVisited=true;
+            siteIndex = SITE_5;
             break;
         }
 
@@ -74,8 +80,6 @@ void Localization::updateSiteStatus()
             break;
         }
     }
-
-    siteIndex++;
 }
 
 //Set the initial position of the robot
@@ -92,44 +96,8 @@ void Localization::turnToFaceResourceSite()
     DirTime directionTime;
     SITE currentSite;
 
-    int siteIndex = 1;
-
-    while(sites[siteIndex].bVisited == true)
-    {
-        siteIndex++;
-    }
-
-    switch(siteIndex){
-        case 1:
-        {
-          currentSite = SITE_1;
-            break;
-        }
-        case 2:
-        {
-             currentSite = SITE_2;
-            break;
-        }
-        case 3:
-        {
-             currentSite = SITE_3;
-            break;
-        }
-        case 4:
-        {
-             currentSite = SITE_4;
-            break;
-        }
-        case 5:
-        {
-             currentSite = SITE_5;
-             break;
-        }
-        default:
-        {
-            break;
-        }
-    }
+    currentSite = siteIndex;
+    cout<<"Site (x, y): ("<< sites[currentSite].readyPoint.x<<", "<<sites[currentSite].readyPoint.y<<")"<<endl;
 
     cout<<"Next site is: "<<currentSite<<endl;
     //Get the time that is needed to turn towards the next resource site
@@ -154,7 +122,6 @@ void Localization::turnToFaceResourceSite()
     //Calculate the distance to the resource site
     timeToTravelToResourceSite = pose.distanceToResourceSite(currentSite);
     cout<<"Time to travel to resource site: "<<timeToTravelToResourceSite<<endl;
-
 }
 
 extern MOVEMENT_STATUS g_movement;
@@ -179,7 +146,7 @@ void Localization::takeMeasurements()
        // pthread_t sonarThread;
         //pthread_create(&sonarThread, NULL, sonarScan,(void*)&sonarStatus);
         
-        sonarScan();
+        //
     //}
 
 
@@ -252,8 +219,11 @@ void Localization::moveToResourceSite(){
 
 //ActMoveForward(distanceToSite/velocity);
     moveForward();
-    wait(distanceToSite/velocity);
+    //wait(distanceToSite/velocity);
+    wait(3000);
     stop();
+    sonarScan();
+    moveForward();
 }
 
 void Localization::sonarScan(void)

@@ -11,7 +11,7 @@
 typedef struct
 {
     int direction;
-    unsigned long time;
+    int time;
 } DirTime;
 
 //Robot's pose
