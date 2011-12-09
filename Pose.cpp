@@ -29,31 +29,29 @@ void Pose::setTimestamp()
 
 }
 
-void Pose::updatePosition()
+void Pose::updateOdometry()
 {
     gettimeofday(&endtime,NULL);
     distance=velocity*(((endtime.tv_sec * 1000000) + (endtime.tv_usec)) - ((starttime.tv_sec * 1000000) + (starttime.tv_usec)))/1000000.0;
-    
-    /*cout<<"Distance: "<<distance<<endl;
-    long int milli = (((endtime.tv_sec * 1000000) + (endtime.tv_usec)) - ((starttime.tv_sec * 1000000) + (starttime.tv_usec)))/1000000;
-    cout<<"Milliseconds: "<<milli<<endl;
-    cout<<"Theta Angle: "<<robotPose.theta<<endl;
-    */
+    if ((MOVING_FORWARD==g_movement)||(MOVING_BACKWARD==g_movement)){
     robotPose.x+=g_movement*distance*cos(robotPose.theta);
     robotPose.y+=g_movement*distance*sin(robotPose.theta);
-    cout<<"New Position: (x,y): "<<"("<<robotPose.x<<", "<<robotPose.y<<")"<<endl;
-}
-
-void Pose::updateAngle(){
-    gettimeofday(&endtime,NULL);
-    if (TURNING_LEFT==g_movement){
+    }
+    else if (TURNING_LEFT==g_movement){
         robotPose.theta+=ang_velocity*(((endtime.tv_sec * 1000000) + (endtime.tv_usec)) - ((starttime.tv_sec * 1000000) + (starttime.tv_usec)))/1000000.0;
+        robotPose.theta=normRad(robotPose.theta);
     }
     else if(TURNING_RIGHT==g_movement){
         robotPose.theta-=ang_velocity*(((endtime.tv_sec * 1000000) + (endtime.tv_usec)) - ((starttime.tv_sec * 1000000) + (starttime.tv_usec)))/1000000.0;
+        robotPose.theta=normRad(robotPose.theta);
     }
-    robotPose.theta=normRad(robotPose.theta);
-   cout<<"New Angle: (theta): "<<"("<<robotPose.theta<<")"<<endl;
+    else if(STOPPED==g_movement){
+
+    }
+
+    starttime.tv_sec=endtime.tv_sec;
+    starttime.utv_sec=endtime.tv_usec;
+    cout<<"New Position: (x,y,angle): "<<"("<<robotPose.x<<", "<<robotPose.y<<robotPose.theta<<")"<<endl;
 
 }
 
@@ -71,11 +69,11 @@ DirTime Pose::shiftToGoal(SITE id_site)
     //find angle
     angle=atan2(goal_y-robotPose.y,goal_x-robotPose.x);
     angle-=robotPose.theta;
-    
+
     cout<<"Angle: "<<angle<<endl;
     angle=normRad(angle);
 
-    
+
     ret_val.time=angle/ang_velocity*1000;
     if (angle>0){
         ret_val.direction=TURNING_LEFT;
@@ -96,7 +94,7 @@ void Pose::setPose(double x,double y, double theta )
     robotPose.x=x;
     robotPose.y=y;
     robotPose.theta=theta;
-    
+
     cout<<"New Position: (x,y): "<<"("<<robotPose.x<<", "<<robotPose.y<<")"<<endl;
 }
 
