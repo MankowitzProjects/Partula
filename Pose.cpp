@@ -12,8 +12,8 @@ Pose::Pose(double x,double y, double theta)
     robotPose.x=x;
     robotPose.y=y;
     robotPose.theta=theta;
-    velocity = 25;
-    ang_velocity = 0.8;
+    velocity = 15.5;
+    ang_velocity = 0.775;
 }
 
 Pose::~Pose()
@@ -35,7 +35,7 @@ void Pose::updatePosition()
     distance=(velocity*((endtime.tv_sec * 1000000) + (endtime.tv_usec)) - ((starttime.tv_sec * 1000000) + (starttime.tv_usec))/1000000);
     cout<<"Distance: "<<distance<<endl;
     cout<<"Theta Angle: "<<robotPose.theta<<endl;
-    
+
     robotPose.x+=g_movement*distance*cos(robotPose.theta);
     robotPose.y+=g_movement*distance*sin(robotPose.theta);
     cout<<"New Position: (x,y): "<<"("<<robotPose.x<<", "<<robotPose.y<<")"<<endl;
@@ -50,8 +50,7 @@ void Pose::updateAngle(){
         robotPose.theta-=(ang_velocity*((endtime.tv_sec * 1000000) + (endtime.tv_usec)) - ((starttime.tv_sec * 1000000) + (starttime.tv_usec)))/1000000;
     }
     robotPose.theta=normRad(robotPose.theta);
-   cout<<"New Angle: (theta): "<<"("<<robotPose.theta<<")"<<endl;
-
+    cout<<"updateAngle - New Angle: (theta): "<<"("<<robotPose.theta<<")"<<endl;
 }
 
 DirTime Pose::shiftToGoal(SITE id_site)
@@ -62,23 +61,28 @@ DirTime Pose::shiftToGoal(SITE id_site)
 
     goal_x=sites[id_site].readyPoint.x;
 
-    goal_y=0;
-    goal_x =0;
+    goal_y = 0;
+    goal_x = 0;
     //relative position of goal to robot
     //find angle
-    angle=atan2(goal_y-robotPose.y,goal_x-robotPose.x);
-    angle-=robotPose.theta;
-    angle=normRad(angle);
-    ret_val.time=robotPose.theta/ang_velocity;
-    if (angle>0){
-        ret_val.direction=TURNING_LEFT;
-    }
-    else{
-        ret_val.direction=TURNING_RIGHT;
-    }
-return ret_val;
+    angle  = atan2(goal_y - robotPose.y, goal_x - robotPose.x);
+    angle -= robotPose.theta;
+    angle  = normRad(angle);
 
+    ret_val.time = robotPose.theta / ang_velocity;
+
+    if (angle>0)
+    {
+        ret_val.direction = TURNING_LEFT;
+    }
+    else
+    {
+        ret_val.direction = TURNING_RIGHT;
+    }
+
+    return ret_val;
 }
+
 RobotPose Pose::getPose()
 {
     return robotPose;
@@ -93,13 +97,12 @@ void Pose::setPose(double x,double y, double theta )
 
 int Pose::distanceToResourceSite(SITE site){
 
-        double x_site = sites[site].readyPoint.x;
-        double y_site = sites[site].readyPoint.y;
+    double x_site = sites[site].readyPoint.x;
+    double y_site = sites[site].readyPoint.y;
 
-        double distanceToSite = sqrt(pow((robotPose.x - x_site),2) + pow((robotPose.y - y_site),2));
+    double distanceToSite = sqrt(pow((robotPose.x - x_site),2) + pow((robotPose.y - y_site),2));
 
-
-        int distanceToTime(distance);
+    int distanceToTime(distance);
 }
 
 double Pose::distanceToTime(double distance){
@@ -107,7 +110,6 @@ double Pose::distanceToTime(double distance){
     double time = distance/velocity;
 
     return time;
-
 }
 
 

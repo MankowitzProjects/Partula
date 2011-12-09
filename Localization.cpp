@@ -29,21 +29,11 @@ Localization::~Localization()
 
 }
 
+int siteIndex = 1;
+
 //Identifies the current site and updates the robots position
 void Localization::updateSiteStatus()
 {
-
-
-    int siteIndex = 1;
-
-    while(sites[siteIndex].bVisited ==true)
-    {
-        siteIndex++;
-
-    }
-
-
-
     switch(siteIndex)
     {
         case SITE_1:
@@ -84,6 +74,8 @@ void Localization::updateSiteStatus()
             break;
         }
     }
+
+    siteIndex++;
 }
 
 //Set the initial position of the robot
@@ -97,12 +89,12 @@ void Localization::initializePosition(double x, double y, double theta)
 //Determine the resource site locations based on the current position
 void Localization::turnToFaceResourceSite()
 {
-
     DirTime directionTime;
     SITE currentSite;
 
     int siteIndex = 1;
-    while(sites[NUM_SITE].bVisited==true)
+
+    while(sites[siteIndex].bVisited == true)
     {
         siteIndex++;
     }
@@ -135,50 +127,61 @@ void Localization::turnToFaceResourceSite()
         }
         default:
         {
-
             break;
         }
-
-
-
     }
 
-
+    cout<<"Next site is: "<<currentSite<<endl;
     //Get the time that is needed to turn towards the next resource site
     directionTime = pose.shiftToGoal(currentSite);
-
-    if(directionTime.direction==TURNING_LEFT)
+    cout<<"Direction is : "<<directionTime.direction<<endl;
+    cout<<"Time is: "<<directionTime.time<<endl;
+    if (directionTime.direction == TURNING_LEFT)
     {
         ActTurnLeft(directionTime.time);
     }
-    else if(directionTime.direction==TURNING_RIGHT){
-
+    else if(directionTime.direction == TURNING_RIGHT)
+    {
         ActTurnRight(directionTime.time);
     }
 
     //Calculate the distance to the resource site
     timeToTravelToResourceSite = pose.distanceToResourceSite(currentSite);
+    cout<<"Time to travel to resource site: "<<timeToTravelToResourceSite<<endl;
 
 }
+
+extern MOVEMENT_STATUS g_movement;
 
 //Take a measurement of the nearby obstacles
 void Localization::takeMeasurements()
 {
-    robotStatus = STATUS_ROBOT_TAKING_MEASUREMENTS;
-    int sonarStatus = 0;
+    //if (!bMeasureJobStarted)
+    //{
+     //   bMeasureJobStarted = true;
 
-    pthread_t sonarThread;
-    pthread_create(&sonarThread, NULL, sonarScan,(void*)&sonarStatus);
+     while(g_movement!=STOPPED){
+//cout <<"NOT STOPPED"<<endl;
+     }
+
+     cout << "STOPPED" << endl;
+
+        robotStatus = STATUS_ROBOT_TAKING_MEASUREMENTS;
+
+        int sonarStatus = 0;
+
+        pthread_t sonarThread;
+        pthread_create(&sonarThread, NULL, sonarScan,(void*)&sonarStatus);
+    //}
 
 
 }
 
 void Localization::updateParticle()
 {
-
     while (robotStatus==STATUS_ROBOT_TAKING_MEASUREMENTS)
     {
-
+    cout<<"TAKING MEASUREMENTS"<<endl;
     }
 
     //sonarMeasurement
@@ -248,7 +251,7 @@ ActMoveForward(distanceToSite/velocity);
 void* Localization::sonarScan(void* param)
 {
     cout<<"Entered Sonar Scanning Mode..."<<endl;
-    robotStatus=STATUS_ROBOT_SONAR_SCANNING;
+    //robotStatus = STATUS_ROBOT_SONAR_SCANNING;
 
     int firstServoMinPosition = -1;
     int lastServoMinPosition =-1;
@@ -371,13 +374,12 @@ void* Localization::sonarScan(void* param)
 #endif
 
         ActTurnRight(turnMilisecs);
-
     }
+
     //Move towards the new obstacle
     //ActMoveForward(0);
     sonarMeasurement = minSonarValue;
     sonarMeasurementPosition = minSonarPosition;
-
 
     robotStatus = STATUS_ROBOT_EXPLORING;
     pthread_exit(NULL);

@@ -58,11 +58,7 @@ void Robot::run(void)
     //g_servoCtrl.setPos(130);
     cout<<"Robot::run"<<endl;
 
-
-
     //moveBackward();
-
-
     //moveForward();
     //turnRight();
 
@@ -103,21 +99,28 @@ void Robot::run(void)
                 cout<<"Handling localization"<<endl;
                 handle.localization();
             }
-            else if(currentEvent==EVENT_LOCALIZING && g_movement==STOPPED){
-
+            else if(   (currentEvent == EVENT_LOCALIZING)
+                    && (g_movement   == STOPPED))
+            {
                 handle.reScan();
-
+            }
+            else
+            {
+                ;
             }
         }
-        else if(robotStatus==STATUS_ROBOT_DOCKING)
+        else if (robotStatus == STATUS_ROBOT_DOCKING)
         {
-            if (hasHitBumper() && robotStatus!=STATUS_ROBOT_DETECTING_FREQUENCY)
+            if (    hasHitBumper()
+                && (robotStatus != STATUS_ROBOT_DETECTING_FREQUENCY))
             {
-                cout<<"Handling trigger switch"<<endl;
                 handle.triggerSwitch();
             }
         }
-        
+        else
+        {
+            ;
+        }
     }
 
 #endif
@@ -158,13 +161,13 @@ void Robot::trainSensors()
     int lightSensor =0;
     int numberSamples=0;
     int lightTotal = 0;
-            
+
     while(numberSamples<100)
     {
         lightSensor = g_sensorCtrl.getSensorValue(INDEX_SENSOR_LIGHT_UNDER);
-        
+
         if(lightSensor>100){
-            
+
             cout<<"Accepted light value: "<<lightSensor<<endl;
             lightTotal = lightTotal + lightSensor;
             numberSamples++;

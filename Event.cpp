@@ -87,18 +87,18 @@ EVENT Event::genBumperEvent(const INPUT &input)
         {
         case POSITION_FRONT:
         {
-            cout<<"Position Front"<<endl;
+            cout<<"genBumperEvent - Position Front"<<endl;
             return EVENT_HIT_FRONT;
         }
         case POSITION_LEFT:
         {
-            cout<<"Position Left"<<endl;
+            cout<<"genBumperEvent - Position Left"<<endl;
             return EVENT_HIT_FRONT_LEFT;
         }
 
         case POSITION_RIGHT:
         {
-            cout<<"Position right"<<endl;
+            cout<<"genBumperEvent - Position right"<<endl;
             return EVENT_HIT_FRONT_RIGHT;
         }
         default:

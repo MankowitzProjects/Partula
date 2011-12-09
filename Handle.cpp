@@ -60,6 +60,9 @@ void Handle::localization()
 {
     currentEvent = EVENT_LOCALIZING;
 
+    //g_localization.bJobDone = false
+
+
     g_localization.turnToFaceResourceSite();
 
     g_localization.takeMeasurements();
@@ -73,9 +76,13 @@ void Handle::localization()
 
 void Handle::triggerSwitch()
 {
-
     robotStatus = STATUS_ROBOT_DETECTING_FREQUENCY;
     int frequencyParam=0;
+
+    // after the bumper hit, the robot should stop to receive the frequency
+
+    cout << "triggerSwitch" << endl;
+
     //Start a thread to check the frequency
     pthread_t thr;
     pthread_create(&thr, NULL, fr_check,(void*)&frequencyParam);
@@ -139,7 +146,8 @@ void Handle::reScan(){
 void* Handle::scanArea(void* param)
 {
     // change the status to find the trigger
-    robotStatus = STATUS_ROBOT_FINDING_TRIGGER;
+    // we should NOT change it now
+    // robotStatus = STATUS_ROBOT_FINDING_TRIGGER;
     cout<<"scanArea: Entered Scan Area"<<endl;
     cout<<"scanArea: Center the sonar"<<endl;
     g_servoCtrl.setPos(VALUE_SERVO_POS_MID);
@@ -210,6 +218,7 @@ void* Handle::scanArea(void* param)
     {
         cout<<"Turning right"<<endl;
         turnRight();
+        wait(300);
 
         //rightDirectionDistance = irMainValueBottom;
         while(!(foundFlag))
@@ -221,10 +230,11 @@ void* Handle::scanArea(void* param)
             {
                 cout<<"Stopped due to gap in second loop"<<endl;
                 ActStop();
-                ActTurnRight(300);
+                turnRight();
+                wait(300);
+                ActStop();
                 foundFlag=true;
                 break;
-
             }
             else if (   (irMainValueTop    < 90)
                      && (irMainValueBottom < 90))
@@ -354,12 +364,13 @@ void* Handle::scanArea(void* param)
 //Checks the frequency when the robot has reached the trigger
 void* Handle::fr_check(void* param)
 {
+    ActStop();
+
     // wait for 2 seconds, until the robot get the frequency
     wait(4500);
 
     // get the sensible value from the front sensors
     float frequency = FreqGetFrequency();
-
 
     cout<<"The frequency is " << frequency << endl;
 
@@ -367,17 +378,15 @@ void* Handle::fr_check(void* param)
     //then do frequency movements
     if(frequency>0 && frequency<10)
     {
-     g_localization.updateSiteStatus();
+        g_localization.updateSiteStatus();
     }
 
     if (frequency>0 && frequency <1)
     {
-
         frequencyMovement(FREQUENCY_HALF);
     }
     else if(frequency >=0.8 && frequency <1.5)
     {
-
         frequencyMovement(FREQUENCY_1);
     }
     else if(frequency >=1.5 && frequency <3.5)
