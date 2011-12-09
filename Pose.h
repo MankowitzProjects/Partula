@@ -34,8 +34,7 @@ class Pose{
         Pose(double x,double y, double theta );
         ~Pose();
         void setTimestamp();
-        void updatePosition();
-        void updateAngle();
+        void updateOdometry();
         DirTime shiftToGoal(SITE id_site);
         RobotPose getPose();
         void setPose(double x,double y, double theta );
