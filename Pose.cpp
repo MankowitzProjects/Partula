@@ -32,10 +32,13 @@ void Pose::setTimestamp()
 void Pose::updatePosition()
 {
     gettimeofday(&endtime,NULL);
-    distance=(velocity*((endtime.tv_sec * 1000000) + (endtime.tv_usec)) - ((starttime.tv_sec * 1000000) + (starttime.tv_usec))/1000000);
-    cout<<"Distance: "<<distance<<endl;
-    cout<<"Theta Angle: "<<robotPose.theta<<endl;
+    distance=velocity*(((endtime.tv_sec * 1000000) + (endtime.tv_usec)) - ((starttime.tv_sec * 1000000) + (starttime.tv_usec)))/1000000.0;
     
+    /*cout<<"Distance: "<<distance<<endl;
+    long int milli = (((endtime.tv_sec * 1000000) + (endtime.tv_usec)) - ((starttime.tv_sec * 1000000) + (starttime.tv_usec)))/1000000;
+    cout<<"Milliseconds: "<<milli<<endl;
+    cout<<"Theta Angle: "<<robotPose.theta<<endl;
+    */
     robotPose.x+=g_movement*distance*cos(robotPose.theta);
     robotPose.y+=g_movement*distance*sin(robotPose.theta);
     cout<<"New Position: (x,y): "<<"("<<robotPose.x<<", "<<robotPose.y<<")"<<endl;
@@ -44,10 +47,10 @@ void Pose::updatePosition()
 void Pose::updateAngle(){
     gettimeofday(&endtime,NULL);
     if (TURNING_LEFT==g_movement){
-        robotPose.theta+=(ang_velocity*((endtime.tv_sec * 1000000) + (endtime.tv_usec)) - ((starttime.tv_sec * 1000000) + (starttime.tv_usec)))/1000000;
+        robotPose.theta+=ang_velocity*(((endtime.tv_sec * 1000000) + (endtime.tv_usec)) - ((starttime.tv_sec * 1000000) + (starttime.tv_usec)))/1000000.0;
     }
     else if(TURNING_RIGHT==g_movement){
-        robotPose.theta-=(ang_velocity*((endtime.tv_sec * 1000000) + (endtime.tv_usec)) - ((starttime.tv_sec * 1000000) + (starttime.tv_usec)))/1000000;
+        robotPose.theta-=ang_velocity*(((endtime.tv_sec * 1000000) + (endtime.tv_usec)) - ((starttime.tv_sec * 1000000) + (starttime.tv_usec)))/1000000.0;
     }
     robotPose.theta=normRad(robotPose.theta);
    cout<<"New Angle: (theta): "<<"("<<robotPose.theta<<")"<<endl;

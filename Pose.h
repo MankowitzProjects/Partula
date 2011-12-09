@@ -17,7 +17,8 @@ typedef struct
 //Robot's pose
 
 typedef struct{
-double x,y,theta;
+int x,y;
+double theta;
 }RobotPose;
 
 extern double velocity;
@@ -28,7 +29,7 @@ class Pose{
         RobotPose robotPose;
         timeval starttime;
         timeval endtime;
-        double distance;
+        long int distance;
 
         Pose(double x,double y, double theta );
         ~Pose();
