@@ -84,8 +84,9 @@ void Handle::triggerSwitch()
     cout << "triggerSwitch" << endl;
 
     //Start a thread to check the frequency
-    pthread_t thr;
-    pthread_create(&thr, NULL, fr_check,(void*)&frequencyParam);
+    //pthread_t thr;
+    //pthread_create(&thr, NULL, fr_check,(void*)&frequencyParam);
+    fr_check();
 }
 
 
@@ -218,7 +219,7 @@ void* Handle::scanArea(void* param)
     {
         cout<<"Turning right"<<endl;
         turnRight();
-        wait(300);
+        wait(1000);
 
         //rightDirectionDistance = irMainValueBottom;
         while(!(foundFlag))
@@ -362,7 +363,7 @@ void* Handle::scanArea(void* param)
 #define FREQUENCY_
 
 //Checks the frequency when the robot has reached the trigger
-void* Handle::fr_check(void* param)
+void Handle::fr_check(void)
 {
     ActStop();
 
@@ -410,11 +411,20 @@ void* Handle::fr_check(void* param)
         frequencyMovement(FREQUENCY_8);
     }
 
-
+    if(frequency<0.2)
+    {
+        robotStatus = STATUS_ROBOT_EXPLORING;
+        //currentEvent = EVENT_DETECT_BLACK;
+        moveBackward();
+        wait(3000);
+        stop();
+        moveForward();
+    }else{
     currentEvent = EVENT_TRIGGER_ACTIVATED;
     robotStatus  = STATUS_ROBOT_EXPLORING;
-
-    pthread_exit(NULL);
+    }
+    
+    //pthread_exit(NULL);
 }
 
 

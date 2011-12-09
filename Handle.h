@@ -30,7 +30,7 @@ public:
     void triggerSwitch();
     void reScan();
 
-    static void* fr_check(void * param);
+    void fr_check(void);
     static void* scanArea(void* param);
 
     //Frequency frequency(3);

@@ -32,7 +32,7 @@ public:
 
     void updateParticle();
 
-    static void* sonarScan(void* param);
+    void sonarScan(void);
 
     static void readSensorData(int sensorValue);
 

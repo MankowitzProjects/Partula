@@ -138,11 +138,17 @@ void Localization::turnToFaceResourceSite()
     cout<<"Time is: "<<directionTime.time<<endl;
     if (directionTime.direction == TURNING_LEFT)
     {
-        ActTurnLeft(directionTime.time);
+        //ActTurnLeft();
+        turnLeft();
+        wait(directionTime.time);
+        stop();
     }
     else if(directionTime.direction == TURNING_RIGHT)
     {
-        ActTurnRight(directionTime.time);
+        //ActTurnRight(directionTime.time);
+        turnRight();
+        wait(directionTime.time);
+        stop();
     }
 
     //Calculate the distance to the resource site
@@ -160,18 +166,20 @@ void Localization::takeMeasurements()
     //{
      //   bMeasureJobStarted = true;
 
-     while(g_movement!=STOPPED){
+     //while(g_movement!=STOPPED){
 //cout <<"NOT STOPPED"<<endl;
-     }
+    // }
 
-     cout << "STOPPED" << endl;
+     cout << "STARTING TO TAKE MEASUREMENTS" << endl;
 
-        robotStatus = STATUS_ROBOT_TAKING_MEASUREMENTS;
+        //robotStatus = STATUS_ROBOT_TAKING_MEASUREMENTS;
 
-        int sonarStatus = 0;
+        //int sonarStatus = 0;
 
-        pthread_t sonarThread;
-        pthread_create(&sonarThread, NULL, sonarScan,(void*)&sonarStatus);
+       // pthread_t sonarThread;
+        //pthread_create(&sonarThread, NULL, sonarScan,(void*)&sonarStatus);
+        
+        sonarScan();
     //}
 
 
@@ -179,11 +187,9 @@ void Localization::takeMeasurements()
 
 void Localization::updateParticle()
 {
-    while (robotStatus==STATUS_ROBOT_TAKING_MEASUREMENTS)
-    {
-    cout<<"TAKING MEASUREMENTS"<<endl;
-    }
+   
 
+    cout<<"TAKING MEASUREMENTS"<<endl;
     //sonarMeasurement
     //sonarMeasurementPosition
 
@@ -244,11 +250,13 @@ void Localization::updateParticle()
 //Move the robot towards the resource site
 void Localization::moveToResourceSite(){
 
-ActMoveForward(distanceToSite/velocity);
-
+//ActMoveForward(distanceToSite/velocity);
+    moveForward();
+    wait(distanceToSite/velocity);
+    stop();
 }
 
-void* Localization::sonarScan(void* param)
+void Localization::sonarScan(void)
 {
     cout<<"Entered Sonar Scanning Mode..."<<endl;
     //robotStatus = STATUS_ROBOT_SONAR_SCANNING;
@@ -382,7 +390,7 @@ void* Localization::sonarScan(void* param)
     sonarMeasurementPosition = minSonarPosition;
 
     robotStatus = STATUS_ROBOT_EXPLORING;
-    pthread_exit(NULL);
+    //pthread_exit(NULL);
 }
 
 void Localization::readSensorData(int sensorValue)

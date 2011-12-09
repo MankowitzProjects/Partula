@@ -67,11 +67,13 @@ void Robot::run(void)
     //int sonarStatus = 0;
     //pthread_t sonarThread;
     //pthread_create(&sonarThread, NULL, g_localization.sonarScan,(void*)&sonarStatus);
-
+    
+    //g_localization.sonarScan(NULL);
 
     //while(robotStatus==STATUS_ROBOT_SONAR_SCANNING){
 
     //}
+    
     cout<<"Finished scan, moving forward"<<endl;
 
     ActMoveForward(6000);
@@ -116,6 +118,7 @@ void Robot::run(void)
             {
                 handle.triggerSwitch();
             }
+            
         }
         else
         {

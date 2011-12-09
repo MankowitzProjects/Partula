@@ -71,8 +71,12 @@ DirTime Pose::shiftToGoal(SITE id_site)
     //find angle
     angle=atan2(goal_y-robotPose.y,goal_x-robotPose.x);
     angle-=robotPose.theta;
+    
+    cout<<"Angle: "<<angle<<endl;
     angle=normRad(angle);
-    ret_val.time=robotPose.theta/ang_velocity;
+
+    
+    ret_val.time=angle/ang_velocity*1000;
     if (angle>0){
         ret_val.direction=TURNING_LEFT;
     }
@@ -92,6 +96,8 @@ void Pose::setPose(double x,double y, double theta )
     robotPose.x=x;
     robotPose.y=y;
     robotPose.theta=theta;
+    
+    cout<<"New Position: (x,y): "<<"("<<robotPose.x<<", "<<robotPose.y<<")"<<endl;
 }
 
 int Pose::distanceToResourceSite(SITE site){
@@ -101,13 +107,13 @@ int Pose::distanceToResourceSite(SITE site){
 
         double distanceToSite = sqrt(pow((robotPose.x - x_site),2) + pow((robotPose.y - y_site),2));
 
-
-        int distanceToTime(distance);
+        cout<<"Distance to site: "<<distanceToSite<<endl;
+        return distanceToTime(distanceToSite);
 }
 
 double Pose::distanceToTime(double distance){
 
-    double time = distance/velocity;
+    double time = distance/velocity*1000;
 
     return time;
 

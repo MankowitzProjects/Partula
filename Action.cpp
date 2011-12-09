@@ -17,7 +17,6 @@ pthread_t g_thrd_scan;
 unsigned long g_motor_time;
 
 
-
 void *p_thrd_moveForward(void *para);
 void *p_thrd_moveBackward(void *para);
 void *p_thrd_turnLeft(void *para);
@@ -163,6 +162,7 @@ void turnRight(void)
 
 void stop(void)
 {
+    g_movement = STOPPED;
     prt_debug("MotorStop\n");
     g_motorCtrl.stop();
 }
@@ -373,7 +373,7 @@ void frequencyMovement(FREQUENCY frequency)
     }
     case FREQUENCY_1:
     {
-
+        pose.setTimestamp();
         moveBackward();
         wait(1000);
         pose.updatePosition();
