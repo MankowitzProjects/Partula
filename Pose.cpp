@@ -50,7 +50,7 @@ void Pose::updateOdometry()
     }
 
     starttime.tv_sec=endtime.tv_sec;
-    starttime.utv_sec=endtime.tv_usec;
+    starttime.tv_usec=endtime.tv_usec;
     cout<<"New Position: (x,y,angle): "<<"("<<robotPose.x<<", "<<robotPose.y<<robotPose.theta<<")"<<endl;
 
 }
