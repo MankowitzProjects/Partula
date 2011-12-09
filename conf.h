@@ -98,7 +98,6 @@ static inline const char *GetSensorTypeChar(TYPE_SENSOR type)
 
 typedef enum
 {
-
     SITE_NULL = -1,
     SITE_1,
     SITE_2,

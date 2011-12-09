@@ -10,7 +10,7 @@ using namespace std;
 
 #define DEBUG_MODE                      0
 #define DEBUG_MODE_LOW                  0
-#define DEBUG_MODE_MOTOR                1
+#define DEBUG_MODE_MOTOR                0
 #define DEBUG_MODE_EVENT                0
 #define DEBUG_MODE_SENSOR_CONTROLLER    0
 #define DEBUG_MODE_SERVO_CONTROLLER     0
@@ -19,7 +19,8 @@ using namespace std;
 #define DEBUG_SENSOR_LIGHT_FRONT        0
 #define DEBUG_MODE_FREQUENCY            0
 #define DEBUG_MODE_LOCALIZATION         0
-#define DEBUG_MODE_SONAR_SCAN           0
+#define DEBUG_MODE_SONAR_SCAN           1
+#define DEBUG_MODE_SENSOR_IR            0
 
 static inline void prt(const char *msg)
 {

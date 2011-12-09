@@ -7,6 +7,7 @@
 
 #include "Event.h"
 #include "Frequency.h"
+#include "debug_tools.h"
 
 EVENT currentEvent;
 EVENT previousEvent = EVENT_NULL;
@@ -86,18 +87,18 @@ EVENT Event::genBumperEvent(const INPUT &input)
         {
         case POSITION_FRONT:
         {
-            cout<<"Position Front"<<endl;
+            cout<<"genBumperEvent - Position Front"<<endl;
             return EVENT_HIT_FRONT;
         }
         case POSITION_LEFT:
         {
-            cout<<"Position Left"<<endl;
+            cout<<"genBumperEvent - Position Left"<<endl;
             return EVENT_HIT_FRONT_LEFT;
         }
 
         case POSITION_RIGHT:
         {
-            cout<<"Position right"<<endl;
+            cout<<"genBumperEvent - Position right"<<endl;
             return EVENT_HIT_FRONT_RIGHT;
         }
         default:
@@ -143,6 +144,9 @@ EVENT Event::genSensorEvent(const INPUT &input)
 
 EVENT Event::genIREvent(const INPUT &input)
 {
+    #if DEBUG_MODE_SENSOR_IR
+    cout << "genIREvent - " << GetPositionChar(input.pos) << " IR sensor: " << input.value << endl;
+    #endif
     return EVENT_NULL;
 }
 
@@ -294,6 +298,5 @@ void Event::handleInput(const INPUT &input)
     {
         // cout<<"Current Event: "<<currentEvent<<endl;
         previousEvent = currentEvent;
-
     }
 }
