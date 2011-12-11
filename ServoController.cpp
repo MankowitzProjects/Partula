@@ -32,6 +32,23 @@ void ServoController::setPos(double pos)
     CPhidgetAdvancedServo_setPosition(srvCtrlHandle, 0, pos);
 }
 
+
+/** \brief use wait function to set the servo to exactly the position
+ *
+ * \param pos const double
+ * \return void
+ *
+ */
+void ServoController::setPosWait(const double pos)
+{
+    setPos(pos);
+
+    while (pos != getPos())
+    {
+        wait(20);
+    }
+}
+
 int
 #if defined(_MSC_VER) && (_MSC_VER >= 1200 )
 __stdcall

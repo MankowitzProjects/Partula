@@ -42,18 +42,18 @@ bool Robot::hasHitBumper()
 
 
 void * updatingOdometry(void * param){
-   int prev_status; 
+   int prev_status;
    int current_status;
-   
+
    while(1){
-   
+
        current_status=g_movement;
-   if (current_status!=prev_status){ 
+   if (current_status!=prev_status){
        pose.updateOdometry();
    }
    prev_status=current_status;
 }
-    
+
 }
 
 void Robot::run(void)
@@ -65,7 +65,7 @@ void Robot::run(void)
     robotStatus = STATUS_ROBOT_EXPLORING;
     currentEvent = EVENT_NULL;
 
-    
+
     //Initialise servo
     //g_servoCtrl.init();
     g_servoCtrl.setPos(VALUE_SERVO_POS_MID);
@@ -139,7 +139,7 @@ void Robot::run(void)
             {
                 handle.triggerSwitch();
             }
-            
+
         }
         else
         {
@@ -148,7 +148,6 @@ void Robot::run(void)
     }
 
 #endif
-
 
     printf("Robot::run - DONE~!\n");
 }

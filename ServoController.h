@@ -13,7 +13,9 @@ public:
     void fin(void);
 
     double getPos(void);
-    void setPos(double pos);
+    void   setPos(double pos);
+
+    void   setPosWait(double pos);
 
 private:
     CPhidgetAdvancedServoHandle srvCtrlHandle;

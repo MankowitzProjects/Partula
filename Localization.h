@@ -50,5 +50,7 @@ private:
 
 };
 
+void sonarScan(void);
+
 #endif	/* LOCALIZATION_H */
 

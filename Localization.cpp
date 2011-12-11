@@ -102,12 +102,12 @@ void Localization::turnToFaceResourceSite()
     cout<<"Next site is: "<<currentSite<<endl;
     //Get the time that is needed to turn towards the next resource site
     directionTime = pose.shiftToGoal(currentSite);
-    
+
     if (siteIndex == SITE_3)
     {
         //directionTime.direction = TURNING_RIGHT;
     }
-    
+
     cout<<"Direction is : "<<directionTime.direction<<endl;
     cout<<"Time is: "<<directionTime.time<<endl;
     if (directionTime.direction == TURNING_LEFT)
@@ -151,7 +151,7 @@ void Localization::takeMeasurements()
 
        // pthread_t sonarThread;
         //pthread_create(&sonarThread, NULL, sonarScan,(void*)&sonarStatus);
-        
+
         //
     //}
 
@@ -160,7 +160,7 @@ void Localization::takeMeasurements()
 
 void Localization::updateParticle()
 {
-   
+
 
     cout<<"TAKING MEASUREMENTS"<<endl;
     //sonarMeasurement
@@ -235,12 +235,182 @@ void Localization::moveToResourceSite(){
     {
         wait(3000);
     }
-        
+
     stop();
     sonarScan();
     moveForward();
 }
 
+
+void scanSites(int sensorIndex);
+
+void sonarScan(void)
+{
+    scanSites(INDEX_SENSOR_SONAR);
+}
+
+void irScan(void)
+{
+    scanSites(INDEX_SENSOR_IR_TOP);
+}
+
+void scanSites(int sensorIndex)
+{
+    double scanStep = 0.5;  /**< the step for servo to move each time */
+    double curPos   = VALUE_SERVO_POS_MIN;  /**< current position of the servo motor */
+
+    int curValue = 0;     /**< the current value from the sensor */
+    int preValue = 0;     /**< the previous value from the sensor */
+
+    double leftPos  = 0.0;  /**< the position of the left edge */
+    double gapPos   = 0.0;  /**< the position of the gap */
+    double rightPos = 0.0;  /**< the position of the right edge */
+
+    int leftValue   = 0;    /**< the value from the left edge */
+    int centreValue = 0;    /**< the value from the centre */
+    int rightValue  = 0;    /**< the value from the right edge */
+
+    bool bFoundLeftEdge  = false;   /**< the left edge is found */
+    bool bFoundGap       = false;   /**< the gap is found */
+    bool bFoundRightEdge = false;   /**< the right edge if found */
+
+    int  continuityCounter = 0;
+    int  totalCounter      = 0;
+
+    // prepare the servo, set it to the very left end
+    // Use sonar to scan 180
+
+    // there will be total VALUE_SERVO_POS_MAX/scanStep values received
+    //
+
+    for (curPos = VALUE_SERVO_POS_MIN; curPos < VALUE_SERVO_POS_MAX; curPos += scanStep)
+    {
+        // using the waited set position function, the servo will be in the desired position
+        g_servoCtrl.setPosWait(curPos);
+
+        // get the value from sonar
+        curValue = GetSensorValue(sensorIndex);
+        preValue = GetSensorValuePre(sensorIndex);
+
+        // we will only scan the site exposed within our 180 degree scanning range
+
+        // we are only interested in the first left edge
+        // down trend
+        if ((preValue - curValue) > 50)
+        {
+            // if the left edge is not found
+            if (!bFoundLeftEdge)
+            {
+                // set left edge as found
+                bFoundLeftEdge  = true;
+                bFoundGap       = false;
+                bFoundRightEdge = false;
+
+                // record the left edge value and position
+                leftValue = curValue;
+                leftPos   = curPos;
+
+                // reset the total counter
+                totalCounter = 0;
+            }
+            // if both the left and right edges are found
+            else
+            {
+                // another
+                if (bFoundRightEdge)
+                {
+                    // but it is too short, which is a gap
+                    if (continuityCounter < 3)
+                    {
+                        // set the right edge as not found
+                        bFoundRightEdge = false;
+
+                        // set the values for gap
+                        bFoundGap   = true;
+                        gapPos      = curPos;
+                        centreValue = curValue;
+
+                        // accumulate the total counter
+                        totalCounter += continuityCounter;
+                    }
+                    else
+                    {
+                        // if the first detection is long enough
+                        if (totalCounter > 50)
+                        {
+                            // keep the result
+                            break;
+                        }
+                        // not long enough
+                        else
+                        {
+                            // set everything to zero
+                            bFoundLeftEdge  = false;
+                            bFoundGap       = false;
+                            bFoundRightEdge = false;
+
+                            totalCounter      = 0;
+                        }
+                    }
+                }
+            }
+
+            continuityCounter = 0;
+        }
+        // up trend
+        else if ((curValue - preValue) > 50)
+        {
+            // only if the left edge is detected
+            if (bFoundLeftEdge)
+            {
+                // set right edge as found
+                bFoundRightEdge = true;
+
+                rightValue = preValue;
+                rightPos   = curPos - scanStep;
+
+                totalCounter += continuityCounter;
+
+                if (   (bFoundGap)          // if the gap and right edge are both found
+                    && (totalCounter > 50)) // and the site has a length longer than 50 steps
+                {
+                    break;
+                }
+            }
+
+            // reset the continuity counter
+            continuityCounter = 0;
+        }
+        else
+        {
+            // if the difference between previous value and current value is smaller than the threshold
+            if (abs(curValue - preValue) < 20)
+            {
+                // increase the continuous counter
+                continuityCounter++;
+
+                // if only can find the left and right edge
+                if (   (bFoundRightEdge)        // the right edge is found
+                    && (continuityCounter > 10) // the gap is lager than 10
+                    && (totalCounter > 50))     // and the site is long enough
+                {
+                    break;
+                }
+            }
+        }
+    }
+
+    cout << "Left : " << bFoundLeftEdge  << " pos: " << leftPos  << " value: " << leftValue << endl;
+    cout << "Gap  : " << bFoundGap       << " pos: " << gapPos   << " value: " << centreValue << endl;
+    cout << "Right: " << bFoundRightEdge << " pos: " << rightPos << " value: " << rightValue << endl;
+
+    // find a site
+
+    // calculate the "centre"
+
+    // record the site
+
+}
 
 void Localization::sonarScan(void)
 {
@@ -248,9 +418,9 @@ void Localization::sonarScan(void)
     //robotStatus = STATUS_ROBOT_SONAR_SCANNING;
 
     int firstServoMinPosition = -1;
-    int lastServoMinPosition =-1;
+    int lastServoMinPosition  = -1;
     int minSonarValue = 1000;
-    
+
     double currentPosition;
     double sonarValue;
     //The distance the servo has moved from the center position
@@ -260,25 +430,25 @@ void Localization::sonarScan(void)
     double radianTurn=0.0;
     unsigned long turnMilisecs=0;
     //Find the nearest obstacle
-    
+
     g_servoCtrl.setPos(0);
     wait(2000);
-    
+
     //Get the current servo position
     currentPosition = g_servoCtrl.getPos();
-    
+
     double sonarValuePre = g_sensorCtrl.getSensorValue(INDEX_SENSOR_SONAR);
-    
+
     double sonarValueTest = 0.0;
-    
+
     int leftPosition = 0;
     bool bLeftFound = false;
     int rightPosition = 0;
     bool bRightFound = false;
-    
+
     int rightEdgeCounter = 0;
     int leftEdgeCounter  = 0;
-    
+
     int finalPosition = 125;
 
     for (int i = 5; i < 220; i = i+5)
@@ -290,7 +460,7 @@ void Localization::sonarScan(void)
         //Set the current sonar value
         sonarValue = g_sensorCtrl.getSensorValue(INDEX_SENSOR_SONAR);
         //CPhidgetAdvancedServo_getPosition (servo, 0, &currentPosition);
-        
+
         // first the left edge
         if ((sonarValuePre - sonarValue) > 25)
         {
@@ -298,11 +468,11 @@ void Localization::sonarScan(void)
             {
                 sonarValueTest = sonarValuePre;
             }
-            
+
             leftEdgeCounter++;
-            
+
             leftPosition = currentPosition;
-            
+
             // continued for 3 times, consider it as the left edge
             if (leftEdgeCounter >= 1)
             {
@@ -312,7 +482,7 @@ void Localization::sonarScan(void)
                 bLeftFound = true;
             }
         }
-        
+
         // only if the left edge is found
         if (bLeftFound)
         {
@@ -323,7 +493,7 @@ void Localization::sonarScan(void)
                 rightPosition = currentPosition;
 
                 rightEdgeCounter++;
-                
+
                 if (rightEdgeCounter >= 1)
                 {
                         // recall the values of 3 steps ago
@@ -335,7 +505,7 @@ void Localization::sonarScan(void)
 
             }
         }
-        
+
         sonarValuePre = sonarValue;
 
         wait(200);
@@ -345,7 +515,7 @@ void Localization::sonarScan(void)
         cout<<"Sonar Value: " <<g_sensorCtrl.getSensorValue(INDEX_SENSOR_SONAR)<<endl;
 #endif
     }
-    
+
     if (bRightFound)
     {
         finalPosition = leftPosition + ((rightPosition - leftPosition) / 2);
@@ -362,7 +532,7 @@ void Localization::sonarScan(void)
             finalPosition = 20;
         }
     }
-    
+
     cout << "sonarScan - the final position: " << finalPosition <<  endl;
 
 #if DEBUG_MODE_SONAR_SCAN
@@ -380,12 +550,12 @@ void Localization::sonarScan(void)
     //is from 0 to 220. Dividing 180 degrees by the number of steps yields the number
     //of degrees per servo step
     radianTurn = servoOffset*0.0142;
-    
+
     cout << "sonarScan - the turning offset" << servoOffset << endl;
     cout << "sonarScan - the radian need to turn" << radianTurn << endl;
 
     turnMilisecs = abs(radianTurn/ang_velocity);
-    
+
     if(servoOffset < 0)
     {
         //How long the car must turn clockwise (in milisecs) to reach the current servo position.
@@ -397,14 +567,14 @@ void Localization::sonarScan(void)
         //Note the turnMilisecs are unequal as the car requires slightly more time to turn clockwise
         turnRight();
     }
-    
+
     cout<<"Number of radian is: "<<radianTurn<<" , and number of milisecs is: "<<turnMilisecs<<endl;
-        
+
     wait(turnMilisecs);
-    
+
     //Move towards the new obstacle
     //ActMoveForward(0);
-    
+
     // need to set some value
     sonarMeasurement = minSonarValue;
 
