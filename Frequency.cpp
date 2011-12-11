@@ -80,6 +80,12 @@ float FreqGetFrequency(void)
     return freq;
 }
 
+/** \brief get current frequency
+ *
+ * \param void
+ * \return float
+ *
+ */
 float Frequency::getFrequency(void)
 {
     float  f_sec = 0.0;
@@ -95,6 +101,12 @@ float Frequency::getFrequency(void)
     return (sampleRate / f_sec);
 }
 
+/** \brief tick, then the class will be signaled, and it can then calculate the time difference
+ *
+ * \param void
+ * \return void
+ *
+ */
 void Frequency::tick(void)
 {
     // get current time
@@ -110,6 +122,12 @@ void Frequency::tick(void)
     tm_lst = tm_cur;
 }
 
+/** \brief set a new sampling rate
+ *
+ * \param sampleRate unsigned int
+ * \return void
+ *
+ */
 void Frequency::setSampleRate(unsigned int sampleRate)
 {
     this->sampleRate = sampleRate;
@@ -131,11 +149,21 @@ void Frequency::setSampleRate(unsigned int sampleRate)
     curPos = 0;
 }
 
+/** \brief the default constructor
+ *
+ * \param void
+ *
+ */
 Frequency::Frequency(void)
 {
     Frequency(FREQUENCY_DEFAULT_SAMPLE_RATE);
 }
 
+/** \brief the default constructor
+ *
+ * \param sampleRate unsigned int   the sampling rate
+ *
+ */
 Frequency::Frequency(unsigned int sampleRate)
 {
     // curPos     = 0; // been set to 0 in setSampleRate
@@ -149,6 +177,11 @@ Frequency::Frequency(unsigned int sampleRate)
     setSampleRate(sampleRate);
 }
 
+/** \brief the default destructor
+ *
+ * \param void
+ *
+ */
 Frequency::~Frequency(void)
 {
     if (0 != tm_array)
