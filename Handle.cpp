@@ -52,8 +52,14 @@ void Handle::docking()
 
     int scanParam=0;
     pthread_t scanningThread;
-    int rc = pthread_create(&scanningThread, NULL, &scanArea,(void*)&scanParam);
-    cout << "docking - create" << rc << endl;
+    //int rc = pthread_create(&scanningThread, NULL, &scanArea,(void*)&scanParam);
+    bool foundFlag=false;
+    while(!foundFlag){
+    foundFlag = scanArea(foundFlag);
+    }
+    
+   // cout << "docking - create" << rc << endl;
+    cout << "docking - create" << endl;
 }
 
 void Handle::localization()
@@ -132,8 +138,12 @@ void Handle::reScan(){
 
     int scanParam=0;
     pthread_t scanningThread;
-    int rc = pthread_create(&scanningThread, NULL, &scanArea,(void*)&scanParam);
-    cout << "reScanning - create" << rc << endl;
+    
+    //int rc = pthread_create(&scanningThread, NULL, &scanArea,(void*)&scanParam);
+    
+    //scanArea();
+    //cout << "reScanning - create" << rc << endl;
+    cout << "reScanning - create" << endl;
 
 }
 //****************************************************SCANNINGTHREAD****************************************
@@ -144,7 +154,7 @@ void Handle::reScan(){
  * \return void*
  *
  */
-void* Handle::scanArea(void* param)
+bool Handle::scanArea(bool foundFlag)
 {
     // change the status to find the trigger
     // we should NOT change it now
@@ -164,7 +174,6 @@ void* Handle::scanArea(void* param)
 
 #if 1
     //leftDirectionDistance = irMainValueBottom;
-    bool foundFlag    = false;
     bool edgeDetected = false;
 
     double irMainValueTop    = 0;
@@ -182,26 +191,32 @@ void* Handle::scanArea(void* param)
 
         if (irMainValueTop != irTopPrevious)
         {
-            //cout<<"IR Top Value: "<<irMainValueTop<<endl;
+            cout<<"IR Top Value: "<<irMainValueTop<<endl;
             irTopPrevious = irMainValueTop;
         }
 
         if (irMainValueBottom != irBottomPrevious){
-            //cout<<"IR Bottom Value: "<<irMainValueBottom<<endl;
+            cout<<"IR Bottom Value: "<<irMainValueBottom<<endl;
             irBottomPrevious = irMainValueBottom;
         }
 
         // if it is the gap
-        if (abs(irMainValueBottom - irMainValueTop) > 120)
+        if ((irMainValueBottom>90 && irMainValueTop<90))
         {
+            cout<<"IR Top Value: "<<irMainValueTop<<endl;
+            cout<<"IR Bottom Value: "<<irMainValueBottom<<endl;
+            
             cout<<"Stopped due to gap in first loop"<<endl;
             ActStop();
             foundFlag=true;
             break;
         }
         // it is the edge
-        else if ((irMainValueTop < 90) && (irMainValueBottom < 90))
+        else if ((irMainValueBottom < 90))
         {
+            cout<<"IR Top Value: "<<irMainValueTop<<endl;
+            cout<<"IR Bottom Value: "<<irMainValueBottom<<endl;
+            
             cout<<"Stopped due to edge in first loop"<<endl;
             ActStop();
             edgeDetected=true;
@@ -227,19 +242,24 @@ void* Handle::scanArea(void* param)
             irMainValueTop = g_sensorCtrl.getSensorValue(INDEX_SENSOR_IR_TOP);
             irMainValueBottom = g_sensorCtrl.getSensorValue(INDEX_SENSOR_IR_BOTTOM);
 
-            if(abs(irMainValueBottom - irMainValueTop)>120)
+            if((irMainValueBottom>90 && irMainValueTop<90))
             {
+                cout<<"IR Top Value: "<<irMainValueTop<<endl;
+                cout<<"IR Bottom Value: "<<irMainValueBottom<<endl;
+                
                 cout<<"Stopped due to gap in second loop"<<endl;
                 ActStop();
-                turnRight();
-                wait(300);
-                ActStop();
+                //turnRight();
+                // wait(300);
+                //ActStop();
                 foundFlag=true;
                 break;
             }
-            else if (   (irMainValueTop    < 90)
-                     && (irMainValueBottom < 90))
+            else if ((irMainValueBottom < 90))
             {
+                cout<<"IR Top Value: "<<irMainValueTop<<endl;
+                cout<<"IR Bottom Value: "<<irMainValueBottom<<endl;
+                
                 cout<<"Stopped due to edge in second loop"<<endl;
                 foundFlag=false;
                 ActStop();
@@ -248,9 +268,18 @@ void* Handle::scanArea(void* param)
             }
         }
     }
+    
+    if(foundFlag){
     cout<<"Reached Here"<<endl;
     //Go forward to center
     moveForward();
+    }else{
+        //moveBackward();
+        //wait(1500);
+        //stop();
+    }
+    
+    return foundFlag;
 
 #else
     bool bFoundGap       = false;
@@ -356,7 +385,8 @@ void* Handle::scanArea(void* param)
 
 #endif
 
-    pthread_exit(NULL);
+    
+    //pthread_exit(NULL);
 }
 
 #define DIV_FREQUENCY_HALF 0.2

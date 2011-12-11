@@ -91,9 +91,9 @@ void Robot::run(void)
     
     g_localization.sonarScan();
 
-    while(1){
+    //while(1){
 
-    }
+    //}
     
     cout<<"Finished scan, moving forward"<<endl;
     pose.setTimestamp();
@@ -192,7 +192,7 @@ void Robot::trainSensors()
 
         if(lightSensor>100){
 
-            cout<<"Accepted light value: "<<lightSensor<<endl;
+            //cout<<"Accepted light value: "<<lightSensor<<endl;
             lightTotal = lightTotal + lightSensor;
             numberSamples++;
         }

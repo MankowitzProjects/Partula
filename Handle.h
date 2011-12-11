@@ -31,7 +31,7 @@ public:
     void reScan();
 
     void fr_check(void);
-    static void* scanArea(void* param);
+    bool scanArea(bool foundFlag);
 
     //Frequency frequency(3);
 private:
