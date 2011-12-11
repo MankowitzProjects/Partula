@@ -89,11 +89,11 @@ void Robot::run(void)
     //pthread_t sonarThread;
     //pthread_create(&sonarThread, NULL, g_localization.sonarScan,(void*)&sonarStatus);
     
-    //g_localization.sonarScan();
+    g_localization.sonarScan();
 
-    //while(robotStatus==STATUS_ROBOT_SONAR_SCANNING){
+    while(1){
 
-    //}
+    }
     
     cout<<"Finished scan, moving forward"<<endl;
     pose.setTimestamp();

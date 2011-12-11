@@ -182,12 +182,12 @@ void* Handle::scanArea(void* param)
 
         if (irMainValueTop != irTopPrevious)
         {
-            cout<<"IR Top Value: "<<irMainValueTop<<endl;
+            //cout<<"IR Top Value: "<<irMainValueTop<<endl;
             irTopPrevious = irMainValueTop;
         }
 
         if (irMainValueBottom != irBottomPrevious){
-            cout<<"IR Bottom Value: "<<irMainValueBottom<<endl;
+            //cout<<"IR Bottom Value: "<<irMainValueBottom<<endl;
             irBottomPrevious = irMainValueBottom;
         }
 
@@ -362,6 +362,8 @@ void* Handle::scanArea(void* param)
 #define DIV_FREQUENCY_HALF 0.2
 #define FREQUENCY_
 
+extern SITE siteIndex;
+
 //Checks the frequency when the robot has reached the trigger
 void Handle::fr_check(void)
 {
@@ -417,8 +419,17 @@ void Handle::fr_check(void)
         //currentEvent = EVENT_DETECT_BLACK;
         moveBackward();
         wait(3000);
+        
         stop();
+        if(siteIndex==SITE_2){
+                turnRight();
+                wait(2000);
+            stop();
+        }
+        
         moveForward();
+
+        
     }else{
     currentEvent = EVENT_TRIGGER_ACTIVATED;
     robotStatus  = STATUS_ROBOT_EXPLORING;

@@ -269,7 +269,7 @@ void* p_thrd_hitBumperFront(void *para)
    
 
     pose.setTimestamp();
-    turnLeft();
+    turnRight();
     wait(*((unsigned long *)para));
     
 
@@ -286,7 +286,7 @@ void* p_thrd_hitBumperLeft(void *para)
     //Set the timestamp for updating the position
     double time = *((unsigned long *)para);
    
-    
+    cout<<"Hit left bumper. Turning right"<<endl;
 
     pose.setTimestamp();
     moveBackward();
@@ -312,7 +312,7 @@ void* p_thrd_hitBumperRight(void *para)
     double time = *((unsigned long *)para);
    
     
-
+    cout<<"Hit Right bumper. Turning Left"<<endl;
     pose.setTimestamp();
     moveBackward();
     wait(*((unsigned long *)para));

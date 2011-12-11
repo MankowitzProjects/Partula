@@ -58,9 +58,9 @@ using namespace std;
 #define INDEX_SENSOR_IR_TOP         6
 
 // Switches
-#define INDEX_SWITCH_BUMPER_LEFT    4
+#define INDEX_SWITCH_BUMPER_LEFT    6
 #define INDEX_SWITCH_BUMPER_FRONT   5
-#define INDEX_SWITCH_BUMPER_RIGHT   6
+#define INDEX_SWITCH_BUMPER_RIGHT   4
 
 typedef enum
 {
