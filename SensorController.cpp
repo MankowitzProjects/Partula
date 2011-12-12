@@ -302,8 +302,8 @@ void SensorController::regHandlers(void)
     {
         CPhidgetInterfaceKit_setSensorChangeTrigger(sensorCtrlHandle, i, 6);  //we'll just use 10 for fun
     }
-    
-    CPhidgetInterfaceKit_setSensorChangeTrigger(sensorCtrlHandle, INDEX_SENSOR_SONAR, 4);
+
+    CPhidgetInterfaceKit_setSensorChangeTrigger(sensorCtrlHandle, INDEX_SENSOR_SONAR, 1);
 
     printf("Toggling Ratiometric....\n");
     CPhidgetInterfaceKit_setRatiometric(sensorCtrlHandle, 0);
