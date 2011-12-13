@@ -553,7 +553,21 @@ bool scanSite(int sensorIndex)
                 // the left edge was found
                 else
                 {
-                    preLeftPos = leftPos;
+                    // should we update the left edge to new one? currently no
+                    cout << "--left edge" << endl;
+
+                    // set left edge as found
+                    bFoundLeftEdge  = true;
+                    bFoundGap       = false;
+                    bFoundRightEdge = false;
+
+                    // record the left edge value and position
+                    leftValue  = curValue;
+                    leftPos    = curPos;
+                    closeValue = curValue;
+
+                    // reset the total counter
+                    totalCounter = 0;
                 }
             }
 
