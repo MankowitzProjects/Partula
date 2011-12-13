@@ -19,6 +19,7 @@ extern EVENT currentEvent;
 extern Localization g_localization;
 extern MOVEMENT_STATUS g_movement;
 EVENT event;
+extern MOVEMENT_STATUS g_prev_movement;
 Pose pose(0,0,0);
 
 Robot::Robot(void)
@@ -44,17 +45,14 @@ bool Robot::hasHitBumper()
 
 
 void * updatingOdometry(void * param){
-   int prev_status;
-   int current_status;
-
+   
    while(1){
-
-       current_status=g_movement;
-       if (current_status!=prev_status){
-           pose.updateOdometry();
-       }
-       prev_status=current_status;
+   
+   if (g_movement!=g_prev_movement){ 
+       pose.updateOdometry();
    }
+}
+    
 }
 
 void Robot::run(void)
@@ -71,7 +69,7 @@ void Robot::run(void)
     g_servoCtrl.setPos(VALUE_SERVO_POS_MID);
 
     //Set the initial position
-    g_localization.initializePosition(190,120,0);
+    g_localization.initializePosition(0,0,0);
 
     //g_servoCtrl.setPos(130);
     cout<<"Robot::run"<<endl;
@@ -104,8 +102,9 @@ void Robot::run(void)
 
     
 
-#if 0
+#if 1
     int param=1;
+    int i=1;
     pthread_t odometryThread;
     pthread_create(&odometryThread, NULL, updatingOdometry,(void*)&param);
 
@@ -120,7 +119,6 @@ void Robot::run(void)
     //}
     
     cout<<"Finished scan, moving forward"<<endl;
-    pose.setTimestamp();
     ActMoveForward(6000);
     trainSensors();
 

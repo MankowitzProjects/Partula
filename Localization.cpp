@@ -135,26 +135,10 @@ extern MOVEMENT_STATUS g_movement;
 //Take a measurement of the nearby obstacles
 void Localization::takeMeasurements()
 {
-    //if (!bMeasureJobStarted)
-    //{
-     //   bMeasureJobStarted = true;
-
-     //while(g_movement!=STOPPED){
-//cout <<"NOT STOPPED"<<endl;
-    // }
 
      cout << "STARTING TO TAKE MEASUREMENTS" << endl;
-
-        //robotStatus = STATUS_ROBOT_TAKING_MEASUREMENTS;
-
-        //int sonarStatus = 0;
-
-       // pthread_t sonarThread;
-        //pthread_create(&sonarThread, NULL, sonarScan,(void*)&sonarStatus);
-
-        //
-    //}
-
+     
+     sonarScan();
 
 }
 
@@ -169,14 +153,14 @@ void Localization::updateParticle()
     //pose.getPose
 
     //Get sonar distance in cm
-    double sonarDistance = (sonarMeasurement/255)*645;
+    double sonarDistanceToSite = (sonarMeasurement/255)*645;
 
     predictedDistanceToResourceSite = timeToTravelToResourceSite*velocity;
 
     //Take the maximum of the two distances
     if((sonarDistanceToSite>predictedDistanceToResourceSite) && sonarDistanceToSite<400)
     {
-    predictedDistanceToResourceSite = sonarDistance;
+    predictedDistanceToResourceSite = sonarDistanceToSite;
 
     }
     else if ((predictedDistanceToResourceSite>sonarDistanceToSite) && (predictedDistanceToResourceSite<400)){
@@ -196,28 +180,28 @@ void Localization::updateParticle()
 
     }
 
+    //Determine the direction in which the robot must turn
+    double servoOffset = 125 - sonarMeasurementPosition;
+    
     //Take the angular values
-    double sonarAngle = sonarMeasurementPosition*(M_PI/220);
-    double currenBearing = pose.getPose().theta;
-
-
-    /*if(abs(sonarAngle-currenBearing)>(M_PI/4)){
-
-        angleToSite = 0;
+    double sonarAngle = servoOffset*(M_PI/220);
+    
+    //Convert the degrees to a time
+    double turnMilisecs = sonarAngle/ang_velocity;
+    
+    
+    if(servoOffset>0){
+        
+        turnLeft();
+        wait(turnMilisecs);
+        stop();
 
     }else{
-        angleToSite = (sonarAngle)/4;
-
-    }*/
-
-
-
-    //If sonar value is very different from our predicted value, use sonar value.
-
-
-    //
-
-
+        turnRight();
+        wait(turnMilisecs);
+        stop();
+    }
+    
 }
 
 //Move the robot towards the resource site
@@ -230,14 +214,20 @@ void Localization::moveToResourceSite(){
     if (siteIndex == SITE_3)
     {
         wait(4000);
+        timeToTravelToResourceSite -=4000;
     }
     else
     {
         wait(3000);
+        timeToTravelToResourceSite -=3000;
     }
 
     stop();
-    sonarScan();
+    
+    takeMeasurements();
+    
+    updateParticle();
+    
     moveForward();
 }
 
@@ -611,174 +601,11 @@ void scanSites(int sensorIndex)
 
 void Localization::sonarScan(void)
 {
-    cout<<"Entered Sonar Scanning Mode..."<<endl;
-    //robotStatus = STATUS_ROBOT_SONAR_SCANNING;
-
-    int firstServoMinPosition = -1;
-    int lastServoMinPosition  = -1;
-    int minSonarValue = 1000;
-
-    double currentPosition;
-    double sonarValue;
-    //The distance the servo has moved from the center position
-    double servoOffset = 0.0;
-
-    //The number of degrees that the robot needs to turn
-    double radianTurn=0.0;
-    unsigned long turnMilisecs=0;
-    //Find the nearest obstacle
-
-    g_servoCtrl.setPos(0);
-    wait(2000);
-
-    //Get the current servo position
-    currentPosition = g_servoCtrl.getPos();
-
-    double sonarValuePre = g_sensorCtrl.getSensorValue(INDEX_SENSOR_SONAR);
-
-    double sonarValueTest = 0.0;
-
-    int leftPosition = 0;
-    bool bLeftFound = false;
-    int rightPosition = 0;
-    bool bRightFound = false;
-
-    int rightEdgeCounter = 0;
-    int leftEdgeCounter  = 0;
-
-    int finalPosition = 125;
-
-    for (int i = 5; i < 220; i = i+5)
+    bool bFoundSite = scanSites(INDEX_SENSOR_SONAR );
+    if (bFoundSite)
     {
-        g_servoCtrl.setPos(i);
-        //Get the current servo position
-        currentPosition = g_servoCtrl.getPos();
-
-        //Set the current sonar value
-        sonarValue = g_sensorCtrl.getSensorValue(INDEX_SENSOR_SONAR);
-        //CPhidgetAdvancedServo_getPosition (servo, 0, &currentPosition);
-
-        // first the left edge
-        if ((sonarValuePre - sonarValue) > 25)
-        {
-            if (leftEdgeCounter == 0)
-            {
-                sonarValueTest = sonarValuePre;
-            }
-
-            leftEdgeCounter++;
-
-            leftPosition = currentPosition;
-
-            // continued for 3 times, consider it as the left edge
-            if (leftEdgeCounter >= 1)
-            {
-                // recall the values of 3 steps ago
-                leftPosition -= leftEdgeCounter*5;
-                cout << "sonarScan - found left edge: " << leftPosition <<  endl;
-                bLeftFound = true;
-            }
-        }
-
-        // only if the left edge is found
-        if (bLeftFound)
-        {
-            // find the right edge
-            if ((sonarValue - sonarValuePre) > 25)
-            {
-                // set right position
-                rightPosition = currentPosition;
-
-                rightEdgeCounter++;
-
-                if (rightEdgeCounter >= 1)
-                {
-                        // recall the values of 3 steps ago
-                        rightPosition -= rightEdgeCounter*5;
-                        cout << "sonarScan - found right edge: " << leftPosition <<  endl;
-                        bRightFound = true;
-                        break;
-                }
-
-            }
-        }
-
-        sonarValuePre = sonarValue;
-
-        wait(200);
-
-#if DEBUG_MODE_SONAR_SCAN
-        cout<<"Sonar Position: "<<currentPosition<<endl;
-        cout<<"Sonar Value: " <<g_sensorCtrl.getSensorValue(INDEX_SENSOR_SONAR)<<endl;
-#endif
+        
     }
-
-    if (bRightFound)
-    {
-        finalPosition = leftPosition + ((rightPosition - leftPosition) / 2);
-    }
-    else
-    {
-        if (bLeftFound)
-        {
-            finalPosition = leftPosition + 60;
-        }
-        else
-        {
-            cout << "sonarScan - found nothing, set a fixed turning position: 50" << endl;
-            finalPosition = 20;
-        }
-    }
-
-    cout << "sonarScan - the final position: " << finalPosition <<  endl;
-
-#if DEBUG_MODE_SONAR_SCAN
-    cout<<"Initial Min Position: "<<firstServoMinPosition<<endl;
-    cout<<"Final Min Position  : "<<lastServoMinPosition<<endl;
-#endif
-
-    // set it to the centre
-    g_servoCtrl.setPos(VALUE_SERVO_POS_MID);
-
-    servoOffset = finalPosition - VALUE_SERVO_POS_MID;
-
-
-    //0.0142 is the number of degrees that the servo turns after each step as the range
-    //is from 0 to 220. Dividing 180 degrees by the number of steps yields the number
-    //of degrees per servo step
-    radianTurn = servoOffset*0.0142;
-
-    cout << "sonarScan - the turning offset" << servoOffset << endl;
-    cout << "sonarScan - the radian need to turn" << radianTurn << endl;
-
-    turnMilisecs = abs(radianTurn/ang_velocity);
-
-    if(servoOffset < 0)
-    {
-        //How long the car must turn clockwise (in milisecs) to reach the current servo position.
-
-        turnLeft();
-    }
-    else
-    {
-        //Note the turnMilisecs are unequal as the car requires slightly more time to turn clockwise
-        turnRight();
-    }
-
-    cout<<"Number of radian is: "<<radianTurn<<" , and number of milisecs is: "<<turnMilisecs<<endl;
-
-    wait(turnMilisecs);
-
-    //Move towards the new obstacle
-    //ActMoveForward(0);
-
-    // need to set some value
-    sonarMeasurement = minSonarValue;
-
-    sonarMeasurementPosition = finalPosition;
-
-    robotStatus = STATUS_ROBOT_EXPLORING;
-    //pthread_exit(NULL);
 }
 
 
