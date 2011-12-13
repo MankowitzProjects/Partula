@@ -741,6 +741,11 @@ bool bSonarScan(int sensorIndex)
 
     g_gapPosition = gapPos;
 
+    centreValue = (leftValue + rightValue) * 0.5;
+
+    cvrtReadings2SiteMeasurement(g_scanMeasurements, leftPos, gapPos, rightPos, leftValue, centreValue, rightValue);
+    calFeatures(g_siteFeature, g_scanMeasurements);
+
     cout << "Left : pos: " << leftPos  << " value: " << leftValue << endl;
     cout << "Gap  : pos: " << gapPos   << " value: " << centreValue << endl;
     cout << "Right: pos: " << rightPos << " value: " << rightValue << endl;
