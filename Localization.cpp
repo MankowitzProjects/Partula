@@ -256,11 +256,13 @@ void irScan(void)
 
 void scanSites(int sensorIndex)
 {
-    double scanStep = 0.5;  /**< the step for servo to move each time */
+    double scanStep = 1.0;  /**< the step for servo to move each time */
     double curPos   = VALUE_SERVO_POS_MIN;  /**< current position of the servo motor */
 
     int curValue = 0;     /**< the current value from the sensor */
     int preValue = 0;     /**< the previous value from the sensor */
+    
+    int lstValue = 0;     /** the last value */
 
     double leftPos  = 0.0;  /**< the position of the left edge */
     double gapPos   = 0.0;  /**< the position of the gap */
@@ -282,6 +284,8 @@ void scanSites(int sensorIndex)
 
     // there will be total VALUE_SERVO_POS_MAX/scanStep values received
     //
+    ofstream sonarReadings;
+    sonarReadings.open("SensorSO.txt", fstream::app);
 
     for (curPos = VALUE_SERVO_POS_MIN; curPos < VALUE_SERVO_POS_MAX; curPos += scanStep)
     {
@@ -290,17 +294,45 @@ void scanSites(int sensorIndex)
 
         // get the value from sonar
         curValue = GetSensorValue(sensorIndex);
-        preValue = GetSensorValuePre(sensorIndex);
+        // preValue = GetSensorValuePre(sensorIndex);
+        preValue = lstValue;
+        
+        if (lstValue == curValue)
+        {
+            //continue;
+        }
+        
+        lstValue = curValue;
+        
+        if (preValue > curValue)
+        {
+            //cout << "---Down trend---" << endl;
+        }
+        
+        if (curValue > preValue)
+        {
+            //cout << "---Up trend---" << endl;
+        }
+        /*
+        cout << "--curPos  : " << curPos << endl;
+        cout << "--curValue: " << curValue << endl;
+        cout << "  preValue: " << preValue << endl;
+         */
+        
+        cout << curPos << ", " << curValue << endl;
+        sonarReadings << curPos << "," << curValue << endl;
+        
 
         // we will only scan the site exposed within our 180 degree scanning range
 
         // we are only interested in the first left edge
         // down trend
-        if ((preValue - curValue) > 50)
+        if ((preValue - curValue) > 30)
         {
             // if the left edge is not found
             if (!bFoundLeftEdge)
             {
+                // cout << "left edge" << endl;
                 // set left edge as found
                 bFoundLeftEdge  = true;
                 bFoundGap       = false;
@@ -325,6 +357,7 @@ void scanSites(int sensorIndex)
                         // set the right edge as not found
                         bFoundRightEdge = false;
 
+                        // cout << "gap!" << endl;
                         // set the values for gap
                         bFoundGap   = true;
                         gapPos      = curPos;
@@ -358,11 +391,12 @@ void scanSites(int sensorIndex)
             continuityCounter = 0;
         }
         // up trend
-        else if ((curValue - preValue) > 50)
+        else if ((curValue - preValue) > 30)
         {
             // only if the left edge is detected
             if (bFoundLeftEdge)
             {
+                // cout << "right edge" << endl;
                 // set right edge as found
                 bFoundRightEdge = true;
 
@@ -384,7 +418,7 @@ void scanSites(int sensorIndex)
         else
         {
             // if the difference between previous value and current value is smaller than the threshold
-            if (abs(curValue - preValue) < 20)
+            if (abs(curValue - preValue) < 10)
             {
                 // increase the continuous counter
                 continuityCounter++;
@@ -399,6 +433,8 @@ void scanSites(int sensorIndex)
             }
         }
     }
+    
+    sonarReadings.close();
 
     cout << "Left : " << bFoundLeftEdge  << " pos: " << leftPos  << " value: " << leftValue << endl;
     cout << "Gap  : " << bFoundGap       << " pos: " << gapPos   << " value: " << centreValue << endl;

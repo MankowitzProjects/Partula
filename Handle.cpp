@@ -16,6 +16,7 @@ extern ServoController g_servoCtrl;
 extern STATUS_ROBOT robotStatus;
 extern Localization g_localization;
 extern MotorController g_motorCtrl;
+extern EVENT event;
 
 Handle::Handle()
 {
@@ -191,12 +192,12 @@ bool Handle::scanArea(bool foundFlag)
 
         if (irMainValueTop != irTopPrevious)
         {
-            cout<<"IR Top Value: "<<irMainValueTop<<endl;
+            //cout<<"IR Top Value: "<<irMainValueTop<<endl;
             irTopPrevious = irMainValueTop;
         }
 
         if (irMainValueBottom != irBottomPrevious){
-            cout<<"IR Bottom Value: "<<irMainValueBottom<<endl;
+            //cout<<"IR Bottom Value: "<<irMainValueBottom<<endl;
             irBottomPrevious = irMainValueBottom;
         }
 
@@ -447,6 +448,7 @@ void Handle::fr_check(void)
     {
         robotStatus = STATUS_ROBOT_EXPLORING;
         //currentEvent = EVENT_DETECT_BLACK;
+        //cout<<"Docking: The current event is: "<<currentEvent<<" and the event is: "<<event<<endl;
         moveBackward();
         wait(3000);
         
@@ -456,6 +458,22 @@ void Handle::fr_check(void)
                 wait(2000);
             stop();
         }
+        
+      /*  if(event==EVENT_HIT_FRONT_LEFT)
+        {
+            cout<<"Turning right: "<<event<<endl;
+            turnRight();
+            wait(1000);
+            stop();
+            
+        }
+        else if(event==EVENT_HIT_FRONT_RIGHT)
+        {
+            cout<<"Turning Left: "<<event<<endl;
+            turnLeft();
+            wait(1000);
+            stop();
+        }*/
         
         moveForward();
 

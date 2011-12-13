@@ -4,6 +4,7 @@
 #include "Pose.h"
 #include "Localization.h"
 #include "Action.h"
+#include "Frequency.h"
 
 #include "Site.h"
 
@@ -17,6 +18,7 @@ STATUS_ROBOT robotStatus;
 extern EVENT currentEvent;
 extern Localization g_localization;
 extern MOVEMENT_STATUS g_movement;
+EVENT event;
 Pose pose(0,0,0);
 
 Robot::Robot(void)
@@ -75,10 +77,31 @@ void Robot::run(void)
 
     //g_servoCtrl.setPos(130);
     cout<<"Robot::run"<<endl;
+    
+    //sonarScan();
 
     //moveBackward();
     //moveForward();
     //turnRight();
+    
+    /*
+     * Frequency testing*
+     * double frequency;
+    double freqPrev=-1;
+   while(1){
+        
+        frequency = FreqGetFrequency();
+        if(freqPrev!=frequency){
+        cout<<"The frequency is: "<<FreqGetFrequency()<<endl;
+        }
+        freqPrev = frequency;
+        
+        
+    }*/
+    
+    //Docking Testing
+
+    
 
 #if 1
     int param=1;
@@ -89,7 +112,7 @@ void Robot::run(void)
     //pthread_t sonarThread;
     //pthread_create(&sonarThread, NULL, g_localization.sonarScan,(void*)&sonarStatus);
     
-    g_localization.sonarScan();
+    //g_localization.sonarScan();
 
     //while(1){
 
@@ -137,6 +160,8 @@ void Robot::run(void)
             if (    hasHitBumper()
                 && (robotStatus != STATUS_ROBOT_DETECTING_FREQUENCY))
             {
+                //event = currentEvent;
+                //cout<<"Robot: The current event is: "<<currentEvent<<" and the event is: "<<event<<endl;
                 handle.triggerSwitch();
             }
 
@@ -202,9 +227,9 @@ void Robot::trainSensors()
     VALUE_BLACK_TAPE_MAX = lightTotal*0.6;
     VALUE_BLACK_TAPE_MIN = VALUE_BLACK_TAPE_MAX*0.4;
 
-    cout<<"The black max value is: "<<VALUE_BLACK_TAPE_MAX<<endl;
+    //cout<<"The black max value is: "<<VALUE_BLACK_TAPE_MAX<<endl;
 
-    cout<<"The black min value is: "<<VALUE_BLACK_TAPE_MIN<<endl;
+    //cout<<"The black min value is: "<<VALUE_BLACK_TAPE_MIN<<endl;
 
 
     /*int samples = 0;
