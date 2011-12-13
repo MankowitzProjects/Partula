@@ -244,10 +244,7 @@ void Localization::moveToResourceSite(){
 
 bool scanSite(int sensorIndex);
 
-bool sonarScanSite(void)
-{
-    return scanSite(INDEX_SENSOR_SONAR);
-}
+
 
 bool irScanSite(void)
 {
@@ -373,8 +370,6 @@ bool scanSite(int sensorIndex)
     double leftPos  = 0.0;      /**< the position of the left edge */
     double gapPos   = 0.0;      /**< the position of the gap */
     double rightPos = 0.0;      /**< the position of the right edge */
-
-    double preLeftPos = 0.0;
 
     double leftValue   = 0.0;   /**< the value from the left edge */
     double centreValue = 0.0;   /**< the value from the centre */
@@ -637,6 +632,111 @@ bool scanSite(int sensorIndex)
 
     cout << "scanSite - site NOT found." << endl;
     return false;
+}
+
+bool bSonarScan(int sensorIndex)
+{
+    double scanStep = 1.0;  /**< the step for servo to move each time */
+    double curPos   = VALUE_SERVO_POS_MIN;  /**< current position of the servo motor */
+
+    double curValue = 0.0;      /**< the current value from the sensor */
+    double preValue = 0.0;      /**< the previous value from the sensor */
+
+    double leftPos  = 0.0;      /**< the position of the left edge */
+    double gapPos   = 0.0;      /**< the position of the gap */
+    double rightPos = 0.0;      /**< the position of the right edge */
+
+    double leftPosPre  = 0.0;   /**< the position of the left edge */
+    double gapPosPre   = 0.0;   /**< the position of the gap */
+    double rightPosPre = 0.0;   /**< the position of the right edge */
+
+    double leftValue    = 0.0;   /**< the value from the left edge */
+    double leftValuePre = 0.0;   /**< the value from the left edge */
+    double centreValue  = 0.0;   /**< the value from the centre */
+    double rightValue   = 0.0;   /**< the value from the right edge */
+
+    int biggestPlane      = 0;
+    int continuityCounter = 0;
+
+    ofstream sonarReadings;
+    sonarReadings.open("SensorSO.txt", fstream::app);
+    sonarReadings << "--- TEST: Sonar ---";
+
+    curValue = GetSensorValue(sensorIndex);
+
+    // prepare the servo, set it to the very left end
+    // Use sonar to scan 180
+
+    // there will be total VALUE_SERVO_POS_MAX/scanStep values received
+
+    for (curPos = VALUE_SERVO_POS_MIN; curPos < VALUE_SERVO_POS_MAX; curPos += scanStep)
+    {
+        // using the waited set position function, the servo will be in the desired position
+        g_servoCtrl.setPosWait(curPos);
+
+        // get the value from sonar
+        preValue = curValue;
+        curValue = GetSensorValue(sensorIndex);
+
+        if (   (curValue > 150)
+            || (curValue < 3))
+        {
+            curValue = 500;
+        }
+
+        // log the readings
+        sonarReadings << curPos << ", " << curValue << endl;
+        // cout << curPos << ", " << curValue << endl;
+
+        // we will only scan the site exposed within our 180 degree scanning area
+        // we are only interested in the first left edge
+        // down trend
+
+        // if the difference between previous value and current value is smaller than the threshold
+        if (curValue == preValue)
+        {
+            // increase the continuity counter
+            continuityCounter++;
+        }
+        else
+        {
+            // if only can find the left and right edge
+            if (continuityCounter > biggestPlane)
+            {
+                //
+                leftPos   = leftPosPre;
+                leftValue = leftValuePre;
+
+                rightPos   = curPos;
+                rightValue = curValue;
+
+                biggestPlane = continuityCounter;
+            }
+
+            leftPosPre   = curPos;
+            leftValuePre = curValue;
+
+            continuityCounter = 0;
+        }
+    }
+
+    sonarReadings.close();
+
+    // for sonar scan, it is almost impossible to find the gap, use the median
+    gapPos = (leftPos + rightPos) * 0.5;
+
+    g_gapPosition = gapPos;
+
+    cout << "Left : pos: " << leftPos  << " value: " << leftValue << endl;
+    cout << "Gap  : pos: " << gapPos   << " value: " << centreValue << endl;
+    cout << "Right: pos: " << rightPos << " value: " << rightValue << endl;
+
+    return true;
+}
+
+bool sonarScanSite(void)
+{
+    return bSonarScan(INDEX_SENSOR_SONAR);
 }
 
 void Localization::sonarScan(void)
