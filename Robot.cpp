@@ -62,7 +62,6 @@ void Robot::run(void)
     robotStatus = STATUS_ROBOT_EXPLORING;
     currentEvent = EVENT_NULL;
 
-    
     //Initialise servo
     //g_servoCtrl.init();
     g_servoCtrl.setPos(VALUE_SERVO_POS_MID);
@@ -73,11 +72,14 @@ void Robot::run(void)
     //g_servoCtrl.setPos(130);
     cout<<"Robot::run"<<endl;
 
+    sonarScan();
+    irScan();
+
     //moveBackward();
     //moveForward();
     //turnRight();
 
-
+#if 1
     int param=1;
     int i=1;
     pthread_t odometryThread;
@@ -86,14 +88,13 @@ void Robot::run(void)
     //int sonarStatus = 0;
     //pthread_t sonarThread;
     //pthread_create(&sonarThread, NULL, g_localization.sonarScan,(void*)&sonarStatus);
-while(1){
-moveForward();
-wait(3000);
-stop();
-wait(5000);
-}
     
-#if 0
+    //g_localization.sonarScan();
+
+    //while(1){
+
+    //}
+    
     cout<<"Finished scan, moving forward"<<endl;
     ActMoveForward(6000);
     trainSensors();
@@ -137,7 +138,7 @@ wait(5000);
             {
                 handle.triggerSwitch();
             }
-            
+
         }
         else
         {
@@ -146,7 +147,6 @@ wait(5000);
     }
 
 #endif
-
 
     printf("Robot::run - DONE~!\n");
 }

@@ -32,6 +32,23 @@ void ServoController::setPos(double pos)
     CPhidgetAdvancedServo_setPosition(srvCtrlHandle, 0, pos);
 }
 
+
+/** \brief use wait function to set the servo to exactly the position
+ *
+ * \param pos const double
+ * \return void
+ *
+ */
+void ServoController::setPosWait(const double pos)
+{
+    setPos(pos);
+
+    while (pos != getPos())
+    {
+        wait(20);
+    }
+}
+
 int
 #if defined(_MSC_VER) && (_MSC_VER >= 1200 )
 __stdcall
@@ -124,6 +141,7 @@ void ServoController::regHandlers(void)
 	//open the servo for device connections
 	CPhidget_open((CPhidgetHandle)srvCtrlHandle, -1);
 
+    #if (0 == DEBUG_MODE_PC)
 	//get the program to wait for an servo device to be attached
 	printf("Waiting for Servo controller to be attached....\n");
 	if ((result = CPhidget_waitForAttachment((CPhidgetHandle)srvCtrlHandle, 10000)))
@@ -131,6 +149,7 @@ void ServoController::regHandlers(void)
 		CPhidget_getErrorDescription(result, &err);
 		printf("Problem waiting for attachment: %s\n", err);
 	}
+	#endif
 
 	//Display the properties of the attached servo device
 	servo_display_properties(srvCtrlHandle);
