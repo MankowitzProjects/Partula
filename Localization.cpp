@@ -238,13 +238,13 @@ void Localization::moveToResourceSite(){
 
     if (siteIndex == SITE_3)
     {
-        wait(4000);
-        timeToTravelToResourceSite -=4000;
+        wait((distanceToSite/velocity)*500);
+        timeToTravelToResourceSite -=((distanceToSite/velocity)*500);
     }
     else
     {
-        wait(3000);
-        timeToTravelToResourceSite -=3000;
+        wait((distanceToSite/velocity)*500);
+        timeToTravelToResourceSite -=((distanceToSite/velocity)*500);
     }
 
     stop();
