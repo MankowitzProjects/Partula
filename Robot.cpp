@@ -48,12 +48,11 @@ void * updatingOdometry(void * param){
    while(1){
 
        current_status=g_movement;
-   if (current_status!=prev_status){
-       pose.updateOdometry();
+       if (current_status!=prev_status){
+           pose.updateOdometry();
+       }
+       prev_status=current_status;
    }
-   prev_status=current_status;
-}
-
 }
 
 void Robot::run(void)
@@ -65,7 +64,6 @@ void Robot::run(void)
     robotStatus = STATUS_ROBOT_EXPLORING;
     currentEvent = EVENT_NULL;
 
-
     //Initialise servo
     //g_servoCtrl.init();
     g_servoCtrl.setPos(VALUE_SERVO_POS_MID);
@@ -76,11 +74,14 @@ void Robot::run(void)
     //g_servoCtrl.setPos(130);
     cout<<"Robot::run"<<endl;
 
+    sonarScan();
+    irScan();
+
     //moveBackward();
     //moveForward();
     //turnRight();
 
-#if 1
+#if 0
     int param=1;
     pthread_t odometryThread;
     pthread_create(&odometryThread, NULL, updatingOdometry,(void*)&param);
@@ -89,11 +90,11 @@ void Robot::run(void)
     //pthread_t sonarThread;
     //pthread_create(&sonarThread, NULL, g_localization.sonarScan,(void*)&sonarStatus);
     
-    g_localization.sonarScan();
+    //g_localization.sonarScan();
 
-    while(1){
+    //while(1){
 
-    }
+    //}
     
     cout<<"Finished scan, moving forward"<<endl;
     pose.setTimestamp();

@@ -51,6 +51,7 @@ private:
 };
 
 void sonarScan(void);
+void irScan(void);
 
 #endif	/* LOCALIZATION_H */
 
