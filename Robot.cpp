@@ -16,7 +16,7 @@ STATUS_ROBOT robotStatus;
 extern EVENT currentEvent;
 extern Localization g_localization;
 extern MOVEMENT_STATUS g_movement;
-EVENT event;
+EVENT g_event;
 extern MOVEMENT_STATUS g_prev_movement;
 Pose pose(0,0,0);
 
@@ -154,8 +154,8 @@ void Robot::run(void)
             if (    hasHitBumper()
                 && (robotStatus != STATUS_ROBOT_DETECTING_FREQUENCY))
             {
-                //event = currentEvent;
-                //cout<<"Robot: The current event is: "<<currentEvent<<" and the event is: "<<event<<endl;
+               g_event= currentEvent;
+                cout<<"Robot: The current event is: "<<currentEvent<<" and the event is: "<<g_event<<endl;
                 handle.triggerSwitch();
             }
 

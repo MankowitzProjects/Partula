@@ -42,7 +42,7 @@ void Localization::updateSiteStatus()
         case SITE_1:
         {
             cout<<"The site has been set"<<endl;
-            pose.setPose(220,142,30/180*M_PI);
+            pose.setPose(220,142,20/180*M_PI);
             sites[siteIndex].bVisited=true;
             siteIndex = SITE_2;
             break;
@@ -160,14 +160,14 @@ void Localization::updateParticle()
     //pose.getPose
 
     //Get sonar distance in cm
-    double sonarDistanceToSite = (sonarMeasurement/255)*645;
-
-    predictedDistanceToResourceSite = timeToTravelToResourceSite*velocity;
+    double sonarDistanceToSite = (g_scanMeasurements.rngMid);
+    
+    predictedDistanceToResourceSite = (timeToTravelToResourceSite/1000)*velocity;
 
     //Take the maximum of the two distances
     if((sonarDistanceToSite>predictedDistanceToResourceSite) && sonarDistanceToSite<400)
     {
-    predictedDistanceToResourceSite = sonarDistanceToSite;
+    distanceToSite = sonarDistanceToSite;
 
     }
     else if ((predictedDistanceToResourceSite>sonarDistanceToSite) && (predictedDistanceToResourceSite<400)){
@@ -194,19 +194,25 @@ void Localization::updateParticle()
     double sonarAngle = abs(servoOffset)*(M_PI/220);
     
     //Convert the degrees to a time
-    double turnMilisecs = sonarAngle/ang_velocity;
+    double turnMilisecs = sonarAngle/ang_velocity*1000;
     
     cout<<"The sonar distance to the site is: "<<sonarDistanceToSite<<endl;
     
-    cout<<"The sonar measurement position is : "<<g_gapPosition<<endl;
+    cout<<"The predicted distance to the resource site is: "<<predictedDistanceToResourceSite<<endl;
     
     cout<<"The final distance to the site is: "<<distanceToSite<<endl;
+    
+    cout<<"The sonar measurement position is : "<<g_gapPosition<<endl;
+    
+   
     
     cout<<"The servo offset is: "<<servoOffset<<endl;
     
     cout<<"The offset converted to an angle is : "<<sonarAngle<<endl;
     
     cout<<"The turn in milliseconds is: "<<turnMilisecs<<endl;
+    
+    
     
     if(servoOffset < 0){
         cout<<"CORRECTING ANGLE TO FACE SITE. TURNING LEFT"<<endl;

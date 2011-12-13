@@ -16,7 +16,7 @@ extern ServoController g_servoCtrl;
 extern STATUS_ROBOT robotStatus;
 extern Localization g_localization;
 extern MotorController g_motorCtrl;
-extern EVENT event;
+extern EVENT g_event;
 
 Handle::Handle()
 {
@@ -34,7 +34,7 @@ Handle::~Handle()
 //Handles collisions
 void Handle::collision()
 {
-    hitBumper(1000);
+    hitBumper(1800);
     currentEvent = EVENT_NULL;
 }
 
@@ -411,7 +411,7 @@ void Handle::fr_check(void)
         g_localization.updateSiteStatus();
     }
 
-    if (frequency>0 && frequency <1)
+    if (frequency>0 && frequency <0.8)
     {
         frequencyMovement(FREQUENCY_HALF);
     }
@@ -429,12 +429,12 @@ void Handle::fr_check(void)
 
         frequencyMovement(FREQUENCY_4);
     }
-    else if(frequency >=5.5 && frequency <7.5)
+    else if(frequency >=5.5 && frequency <7.0)
     {
 
         frequencyMovement(FREQUENCY_6);
     }
-    else if(frequency >=7.5 && frequency <12)
+    else if(frequency >=7.0 && frequency <12)
     {
 
         frequencyMovement(FREQUENCY_8);
@@ -449,27 +449,27 @@ void Handle::fr_check(void)
         wait(3000);
         
         stop();
-        if(siteIndex==SITE_2){
+       /* if(siteIndex==SITE_2){
                 turnRight();
                 wait(2000);
             stop();
-        }
+        }*/
         
-      /*  if(event==EVENT_HIT_FRONT_LEFT)
+        if(g_event==EVENT_HIT_FRONT_LEFT)
         {
-            cout<<"Turning right: "<<event<<endl;
+            cout<<"Turning right: "<<g_event<<endl;
             turnRight();
-            wait(1000);
+            wait(500);
             stop();
             
         }
-        else if(event==EVENT_HIT_FRONT_RIGHT)
+        else if(g_event==EVENT_HIT_FRONT_RIGHT)
         {
-            cout<<"Turning Left: "<<event<<endl;
+            cout<<"Turning Left: "<<g_event<<endl;
             turnLeft();
-            wait(1000);
+            wait(500);
             stop();
-        }*/
+        }
         
         moveForward();
 

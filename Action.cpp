@@ -364,7 +364,7 @@ void frequencyMovement(FREQUENCY frequency)
         wait(1000);
 
         turnLeft( );
-        wait(5600);
+        wait(7600);
         stop();
         break;
     }
@@ -376,7 +376,7 @@ void frequencyMovement(FREQUENCY frequency)
 
         pose.setTimestamp();
         turnRight();
-        wait(5600);
+        wait(7600);
 
         stop();
         break;
@@ -405,7 +405,7 @@ void frequencyMovement(FREQUENCY frequency)
 
         pose.setTimestamp();
         turnLeft( );
-        wait(2600);
+        wait(3800);
 
         stop();
         break;
@@ -417,7 +417,7 @@ void frequencyMovement(FREQUENCY frequency)
         wait(2000);
 
         turnRight();
-        wait(2600);
+        wait(3800);
 
 
         stop();
