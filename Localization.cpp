@@ -354,7 +354,6 @@ bool bIsSite(const double leftPos,
 
     double totalLength = feature.lenLeft + feature.lenRight;
 
-
     #if DEBUG_MODE_SCAN
     cout << "site lenLeft: " << feature.lenLeft << " lenRight: " << feature.lenRight << " radian: " << feature.rad << endl;
     #endif
@@ -369,11 +368,12 @@ bool bIsSite(const double leftPos,
     return false;
 }
 
+int scanNum = 0;
+
 bool scanSite(int sensorIndex)
 {
     double scanStep = 1.0;  /**< the step for servo to move each time */
     double curPos   = VALUE_SERVO_POS_MIN;  /**< current position of the servo motor */
-
 
     double curValue = 0.0;      /**< the current value from the sensor */
     double preValue = 0.0;      /**< the previous value from the sensor */
@@ -403,7 +403,7 @@ bool scanSite(int sensorIndex)
     ofstream sonarReadings;
     sonarReadings.open("SensorSO.txt", fstream::app);
 
-    sonarReadings << "--- TEST: ";
+    sonarReadings << "--- TEST NO." << scanNum++ << " : ";
 
     if (INDEX_SENSOR_IR_TOP == sensorIndex)
     {
@@ -431,7 +431,6 @@ bool scanSite(int sensorIndex)
 
     // there will be total VALUE_SERVO_POS_MAX/scanStep values received
 
-
     for (curPos = VALUE_SERVO_POS_MIN; curPos < VALUE_SERVO_POS_MAX; curPos += scanStep)
     {
         // using the waited set position function, the servo will be in the desired position
@@ -440,7 +439,6 @@ bool scanSite(int sensorIndex)
         // get the value from sonar
         preValue = curValue;
         curValue = GetSensorValue(sensorIndex);
-
 
         // if IR SENSOR
         if (INDEX_SENSOR_IR_TOP == sensorIndex)
@@ -477,13 +475,11 @@ bool scanSite(int sensorIndex)
         // we will only scan the site exposed within our 180 degree scanning area
         // we are only interested in the first left edge
         // down trend
-
         if ((preValue - curValue) > edgeDiff)
         {
             // if the left edge is not found
             if (!bFoundLeftEdge)
             {
-
                 cout << "--left edge" << endl;
 
                 // set left edge as found
@@ -510,9 +506,7 @@ bool scanSite(int sensorIndex)
                         // set the right edge as not found
                         bFoundRightEdge = false;
 
-
                         cout << "..gap" << endl;
-
                         // set the values for gap
                         bFoundGap   = true;
                         gapPos      = curPos;
@@ -572,16 +566,12 @@ bool scanSite(int sensorIndex)
             continuityCounter = 0;
         }
         // up trend
-
         else if ((curValue - preValue) > edgeDiff)
-
         {
             // only if the left edge is detected
             if (bFoundLeftEdge)
             {
-
                 cout << "++right edge" << endl;
-
                 // set right edge as found
                 bFoundRightEdge = true;
 
@@ -615,7 +605,6 @@ bool scanSite(int sensorIndex)
         else
         {
             // if the difference between previous value and current value is smaller than the threshold
-
             if (abs(curValue - preValue) < surfaceDiv)
             {
                 // increase the continuity counter
@@ -641,10 +630,6 @@ bool scanSite(int sensorIndex)
             }
         }
     }
-    
-    sonarReadings.close();
-
-    sonarReadings.close();
 
     // for sonar scan, it is almost impossible to find the gap, use the median
     if (INDEX_SENSOR_SONAR == sensorIndex)
@@ -658,15 +643,33 @@ bool scanSite(int sensorIndex)
     cout << "Gap  : " << bFoundGap       << " pos: " << gapPos   << " value: " << centreValue << endl;
     cout << "Right: " << bFoundRightEdge << " pos: " << rightPos << " value: " << rightValue << endl;
 
+    sonarReadings << "Left : " << bFoundLeftEdge  << " pos: " << leftPos  << " value: " << leftValue << endl;
+    sonarReadings << "Gap  : " << bFoundGap       << " pos: " << gapPos   << " value: " << centreValue << endl;
+    sonarReadings << "Right: " << bFoundRightEdge << " pos: " << rightPos << " value: " << rightValue << endl;
+
     // if the right edge is found
     if (bFoundRightEdge && bIsSite(leftPos, gapPos, rightPos, leftValue, centreValue, rightValue))
     {
-        cout << "scanSite - site found." << endl;
+        cout << "scanSite - site found. Info:" << endl;
         cvrtReadings2SiteMeasurement(g_scanMeasurements, leftPos, gapPos, rightPos, leftValue, centreValue, rightValue);
         calFeatures(g_siteFeature, g_scanMeasurements);
 
+        cout << "-------- SITE INFO --------" << endl;
+        cout << "Left Edge : " << g_siteFeature.lenLeft << endl;
+        cout << "Left Right: " << g_siteFeature.lenRight << endl;
+        cout << "Angle     : " << Rad2Ang(g_siteFeature.rad) << " = " << g_siteFeature.rad << endl;
+
+        sonarReadings << "-------- SITE INFO --------" << endl;
+        sonarReadings << "Left Edge : " << g_siteFeature.lenLeft << endl;
+        sonarReadings << "Left Right: " << g_siteFeature.lenRight << endl;
+        sonarReadings << "Angle     : " << Rad2Ang(g_siteFeature.rad) << " = " << g_siteFeature.rad << endl;
+
+        sonarReadings.close();
+
         return true;
     }
+
+    sonarReadings.close();
 
     cout << "scanSite - site NOT found." << endl;
     return false;
@@ -674,7 +677,7 @@ bool scanSite(int sensorIndex)
 
 bool bSonarScan(int sensorIndex)
 {
-    double scanStep = 1.0;  /**< the step for servo to move each time */
+    double scanStep = 1.0;      /**< the step for servo to move each time */
     double curPos   = VALUE_SERVO_POS_MIN;  /**< current position of the servo motor */
 
     double curValue = 0.0;      /**< the current value from the sensor */
@@ -735,7 +738,7 @@ bool bSonarScan(int sensorIndex)
             // if only can find the left and right edge
             if (continuityCounter > biggestPlane)
             {
-                //
+                // set the left position as last one recorded
                 leftPos   = leftPosPre;
                 leftValue = leftValuePre;
 
@@ -751,11 +754,11 @@ bool bSonarScan(int sensorIndex)
             continuityCounter = 0;
         }
     }
-    
+
     // if only can find the left and right edge
     if (continuityCounter > biggestPlane)
     {
-        //
+        // set the left position as last one recorded
         leftPos   = leftPosPre;
         leftValue = leftValuePre;
 
