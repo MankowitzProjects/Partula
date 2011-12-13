@@ -21,6 +21,7 @@ using namespace std;
 #define DEBUG_MODE_LOCALIZATION         0
 #define DEBUG_MODE_SONAR_SCAN           1
 #define DEBUG_MODE_SENSOR_IR            0
+#define DEBUG_MODE_SCAN                 1
 
 static inline void prt(const char *msg)
 {
