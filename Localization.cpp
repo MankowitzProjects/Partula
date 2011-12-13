@@ -49,7 +49,7 @@ void Localization::updateSiteStatus()
         }
         case SITE_2:
         {
-            pose.setPose(184,0,(-1)*Ang2Rad(110.0));
+            pose.setPose(184,0,(-1)*Ang2Rad(120.0));
             sites[siteIndex].bVisited=true;
             siteIndex = SITE_3;
             break;
@@ -234,13 +234,13 @@ void Localization::moveToResourceSite(){
     if (siteIndex == SITE_3)
     {
         cout<<"Time to travel to new site: "<<timeToTravelToResourceSite/2<<endl;
-        wait(timeToTravelToResourceSite/2);
+        wait(timeToTravelToResourceSite*0.666);
         timeToTravelToResourceSite =timeToTravelToResourceSite/2;
     }
     else
     {
         cout<<"Time to travel to new site: "<<timeToTravelToResourceSite/2<<endl;
-        wait(timeToTravelToResourceSite/2);
+        wait(timeToTravelToResourceSite*0.666);
         timeToTravelToResourceSite =timeToTravelToResourceSite/2;
     }
 

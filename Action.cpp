@@ -365,6 +365,7 @@ void frequencyMovement(FREQUENCY frequency)
         turnLeft( );
         wait(7600);
         stop();
+        wait(500);
         break;
     }
     case FREQUENCY_1:
@@ -378,6 +379,7 @@ void frequencyMovement(FREQUENCY frequency)
         wait(7600);
 
         stop();
+        wait(500);
         break;
     }
     case FREQUENCY_2:
@@ -394,6 +396,7 @@ void frequencyMovement(FREQUENCY frequency)
         wait(2000);
 
         stop();
+        wait(500);
         break;
     }
     case FREQUENCY_4:
@@ -407,6 +410,7 @@ void frequencyMovement(FREQUENCY frequency)
         wait(3800);
 
         stop();
+        wait(500);
         break;
     }
     case FREQUENCY_6:
@@ -420,6 +424,7 @@ void frequencyMovement(FREQUENCY frequency)
 
 
         stop();
+        wait(500);
         break;
     }
     case FREQUENCY_8:
@@ -437,6 +442,7 @@ void frequencyMovement(FREQUENCY frequency)
     
 
         stop();
+        wait(500);
         break;
     }
     default:
