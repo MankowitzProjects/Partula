@@ -254,23 +254,98 @@ void irScan(void)
     scanSites(INDEX_SENSOR_IR_TOP);
 }
 
+#define VALUE_DIFF_SONAR_EDGE_DIFF      10.0
+#define VALUE_DIFF_IR_EDGE_DIFF         50.0
+
+#define VALUE_DIV_SONAR_SURFACE_DIV     5.0
+#define VALUE_DIV_IR_SURFACE_DIV        15.0
+
+#define VALUE_LENGTH_SITE_LENGTH_MIN    60.0
+#define VALUE_LENGTH_SITE_LENGTH_MAX    160.0
+
+#define VALUE_THRESHOLD_SONAR_GAP_SIZE  2
+#define VALUE_THRESHOLD_IR_GAP_SIZE     15
+
+double cvrtIrValue2Cm(double sensorValue)
+{
+    return (4800.0/(sensorValue - 20.0));
+}
+
+double cvrtServoPos2Ang(double servoPos)
+{
+    return servoPos*(M_PI/220);
+}
+
+void cvrtReadings2SiteMeasurement(SITE_MEASUREMENT &measurement,
+                                  const double leftPos,
+                                  const double centrePos,
+                                  const double rightPos,
+                                  const double leftValue,
+                                  const double centreValue,
+                                  const double rightValue)
+{
+    measurement.radLeft  = cvrtServoPos2Ang(centrePos - leftPos);
+    measurement.radRight = cvrtServoPos2Ang(rightPos - centrePos);
+    measurement.rngLeft  = leftValue;
+    measurement.rngMid   = centreValue;
+    measurement.rngRight = rightValue;
+
+    cout << "leftPos: " << leftPos << " centrePos: " << centrePos << " rightPos: " << rightPos << endl;
+    cout << "radLeft : " << measurement.radLeft << endl;
+    cout << "radRight: " << measurement.radRight << endl;
+    cout << "leftValue  : " << leftValue << endl;
+    cout << "centreValue: " << centreValue << endl;
+    cout << "rightValue : " << rightValue << endl;
+}
+
+bool bIsSite(const double leftPos,
+             const double centrePos,
+             const double rightPos,
+             const double leftValue,
+             const double centreValue,
+             const double rightValue)
+{
+    cout << "<==== TEST SITE ====>" << endl;
+
+    SITE_MEASUREMENT measurements;
+    Feature feature;
+
+    cvrtReadings2SiteMeasurement(measurements, leftPos, centrePos, rightPos, leftValue, centreValue, rightValue);
+
+    calFeatures(feature, measurements);
+
+    double totalLength = feature.lenLeft + feature.lenRight;
+
+    cout << "site lenLeft: " << feature.lenLeft << " lenRight: " << feature.lenRight << " radian: " << feature.rad << endl;
+
+    // if the value is within the site range
+    if (   (totalLength > VALUE_LENGTH_SITE_LENGTH_MIN)
+        && (totalLength < VALUE_LENGTH_SITE_LENGTH_MAX))
+    {
+        return true;
+    }
+
+    return false;
+}
+
 void scanSites(int sensorIndex)
 {
     double scanStep = 1.0;  /**< the step for servo to move each time */
     double curPos   = VALUE_SERVO_POS_MIN;  /**< current position of the servo motor */
 
-    int curValue = 0;     /**< the current value from the sensor */
-    int preValue = 0;     /**< the previous value from the sensor */
-    
-    int lstValue = 0;     /** the last value */
 
-    double leftPos  = 0.0;  /**< the position of the left edge */
-    double gapPos   = 0.0;  /**< the position of the gap */
-    double rightPos = 0.0;  /**< the position of the right edge */
+    double curValue = 0.0;      /**< the current value from the sensor */
+    double preValue = 0.0;      /**< the previous value from the sensor */
 
-    int leftValue   = 0;    /**< the value from the left edge */
-    int centreValue = 0;    /**< the value from the centre */
-    int rightValue  = 0;    /**< the value from the right edge */
+    double leftPos  = 0.0;      /**< the position of the left edge */
+    double gapPos   = 0.0;      /**< the position of the gap */
+    double rightPos = 0.0;      /**< the position of the right edge */
+
+    double leftValue   = 0.0;   /**< the value from the left edge */
+    double centreValue = 0.0;   /**< the value from the centre */
+    double rightValue  = 0.0;   /**< the value from the right edge */
+
+    double closeValue  = 0.0;   /**< after detect the left edge, set the value as close value */
 
     bool bFoundLeftEdge  = false;   /**< the left edge is found */
     bool bFoundGap       = false;   /**< the gap is found */
@@ -279,13 +354,42 @@ void scanSites(int sensorIndex)
     int  continuityCounter = 0;
     int  totalCounter      = 0;
 
+    double edgeDiff   = 30.0;
+    double surfaceDiv = 2.0;
+
+    int gapThreshold  = 5;
+
+    ofstream sonarReadings;
+    sonarReadings.open("SensorSO.txt", fstream::app);
+
+    sonarReadings << "--- TEST: ";
+
+    if (INDEX_SENSOR_IR_TOP == sensorIndex)
+    {
+        sonarReadings << "IR";
+
+        edgeDiff     = VALUE_DIFF_IR_EDGE_DIFF;
+        surfaceDiv   = VALUE_DIV_IR_SURFACE_DIV;
+        gapThreshold = VALUE_THRESHOLD_IR_GAP_SIZE;
+    }
+    else
+    {
+        sonarReadings << "Sonar";
+
+        edgeDiff     = VALUE_DIFF_SONAR_EDGE_DIFF;
+        surfaceDiv   = VALUE_DIV_SONAR_SURFACE_DIV;
+        gapThreshold = VALUE_THRESHOLD_SONAR_GAP_SIZE;
+    }
+
+    sonarReadings << " ---" << endl;
+
+    curValue = GetSensorValue(sensorIndex);
+
     // prepare the servo, set it to the very left end
     // Use sonar to scan 180
 
     // there will be total VALUE_SERVO_POS_MAX/scanStep values received
-    //
-    ofstream sonarReadings;
-    sonarReadings.open("SensorSO.txt", fstream::app);
+
 
     for (curPos = VALUE_SERVO_POS_MIN; curPos < VALUE_SERVO_POS_MAX; curPos += scanStep)
     {
@@ -293,71 +397,73 @@ void scanSites(int sensorIndex)
         g_servoCtrl.setPosWait(curPos);
 
         // get the value from sonar
+        preValue = curValue;
         curValue = GetSensorValue(sensorIndex);
-        // preValue = GetSensorValuePre(sensorIndex);
-        preValue = lstValue;
-        
-        if (lstValue == curValue)
+
+
+        // if IR SENSOR
+        if (INDEX_SENSOR_IR_TOP == sensorIndex)
         {
-            //continue;
+            #if 1
+            // the values smaller than 80 or lager than 500 is not reliable based on the data sheet
+            if (   (curValue <= 80.0)
+                || (curValue >= 500.0))
+            {
+                curValue = 200.0;
+                // ignore the following processing
+                // continue;
+            }
+            else
+            {
+                // convert the readings to CM
+                curValue = cvrtIrValue2Cm(curValue);
+            }
+            #endif
         }
-        
-        lstValue = curValue;
-        
-        if (preValue > curValue)
-        {
-            //cout << "---Down trend---" << endl;
-        }
-        
-        if (curValue > preValue)
-        {
-            //cout << "---Up trend---" << endl;
-        }
-        /*
-        cout << "--curPos  : " << curPos << endl;
-        cout << "--curValue: " << curValue << endl;
-        cout << "  preValue: " << preValue << endl;
-         */
-        
+
+        // log the readings
+        sonarReadings << curPos << ", " << curValue << endl;
         cout << curPos << ", " << curValue << endl;
-        sonarReadings << curPos << "," << curValue << endl;
-        
 
-        // we will only scan the site exposed within our 180 degree scanning range
-
+        // we will only scan the site exposed within our 180 degree scanning area
         // we are only interested in the first left edge
         // down trend
-        if ((preValue - curValue) > 30)
+
+        if ((preValue - curValue) > edgeDiff)
         {
             // if the left edge is not found
             if (!bFoundLeftEdge)
             {
-                // cout << "left edge" << endl;
+
+                cout << "--left edge" << endl;
+
                 // set left edge as found
                 bFoundLeftEdge  = true;
                 bFoundGap       = false;
                 bFoundRightEdge = false;
 
                 // record the left edge value and position
-                leftValue = curValue;
-                leftPos   = curPos;
+                leftValue  = curValue;
+                leftPos    = curPos;
+                closeValue = curValue;
 
                 // reset the total counter
                 totalCounter = 0;
             }
-            // if both the left and right edges are found
             else
             {
-                // another
+                // if both the left and right edges are found
                 if (bFoundRightEdge)
                 {
                     // but it is too short, which is a gap
-                    if (continuityCounter < 3)
+                    if (continuityCounter < gapThreshold)
                     {
                         // set the right edge as not found
                         bFoundRightEdge = false;
 
-                        // cout << "gap!" << endl;
+
+                        cout << "..gap" << endl;
+
                         // set the values for gap
                         bFoundGap   = true;
                         gapPos      = curPos;
@@ -368,35 +474,65 @@ void scanSites(int sensorIndex)
                     }
                     else
                     {
-                        // if the first detection is long enough
-                        if (totalCounter > 50)
+                        // if the gap is not found, then set the gap as the mean of the left and right
+                        if (!bFoundGap)
                         {
-                            // keep the result
+                            gapPos = leftPos + (rightPos - leftPos) * 0.5;
+                            centreValue = (leftValue + rightValue) * 0.5;
+                        }
+
+                        // test if it is a site already
+                        if (bIsSite(leftPos, gapPos, rightPos, leftValue, centreValue, rightValue))
+                        {
                             break;
                         }
-                        // not long enough
                         else
                         {
+                            cout << "**clean: found another down trend, and the prev site is too short" << endl;
                             // set everything to zero
                             bFoundLeftEdge  = false;
                             bFoundGap       = false;
                             bFoundRightEdge = false;
 
-                            totalCounter      = 0;
+                            totalCounter    = 0;
                         }
                     }
                 }
+                // the left edge was found
+                else
+                {
+                    // should we update the left edge to new one? currently no
+                    cout << "--left edge" << endl;
+
+                    // set left edge as found
+                    bFoundLeftEdge  = true;
+                    bFoundGap       = false;
+                    bFoundRightEdge = false;
+
+                    // record the left edge value and position
+                    leftValue  = curValue;
+                    leftPos    = curPos;
+                    closeValue = curValue;
+
+                    // reset the total counter
+                    totalCounter = 0;
+                }
             }
 
+            // since it is an change of the continuity, set it to 0
             continuityCounter = 0;
         }
         // up trend
-        else if ((curValue - preValue) > 30)
+
+        else if ((curValue - preValue) > edgeDiff)
+
         {
             // only if the left edge is detected
             if (bFoundLeftEdge)
             {
-                // cout << "right edge" << endl;
+
+                cout << "++right edge" << endl;
+
                 // set right edge as found
                 bFoundRightEdge = true;
 
@@ -405,35 +541,60 @@ void scanSites(int sensorIndex)
 
                 totalCounter += continuityCounter;
 
-                if (   (bFoundGap)          // if the gap and right edge are both found
-                    && (totalCounter > 50)) // and the site has a length longer than 50 steps
+                if (bFoundGap)          // if the gap and right edge are both found
                 {
-                    break;
+                    if (bIsSite(leftPos, gapPos, rightPos, leftValue, centreValue, rightValue))
+                    {
+                        break;
+                    }
+                    else
+                    {
+                        cout << "**clean: gap, right both found, but site is too short" << endl;
+                        // set everything to zero
+                        bFoundLeftEdge  = false;
+                        bFoundGap       = false;
+                        bFoundRightEdge = false;
+
+                        totalCounter    = 0;
+                    }
                 }
             }
 
-            // reset the continuity counter
+            // since it is an change of the continuity, set it to 0
             continuityCounter = 0;
         }
         else
         {
             // if the difference between previous value and current value is smaller than the threshold
-            if (abs(curValue - preValue) < 10)
+
+            if (abs(curValue - preValue) < surfaceDiv)
             {
-                // increase the continuous counter
+                // increase the continuity counter
                 continuityCounter++;
 
                 // if only can find the left and right edge
                 if (   (bFoundRightEdge)        // the right edge is found
-                    && (continuityCounter > 10) // the gap is lager than 10
-                    && (totalCounter > 50))     // and the site is long enough
+                    && (continuityCounter > gapThreshold)) // the gap is lager than 10
                 {
-                    break;
+                    // if the gap is not found, then set the gap as the mean of the left and right
+                    if (!bFoundGap)
+                    {
+                        gapPos = leftPos + (rightPos - leftPos) * 0.5;
+                        centreValue = (leftValue + rightValue) * 0.5;
+                    }
+
+                    // test if it is a site already
+                    if (bIsSite(leftPos, gapPos, rightPos, leftValue, centreValue, rightValue))
+                    {
+                        break;
+                    }
                 }
             }
         }
     }
     
+    sonarReadings.close();
+
     sonarReadings.close();
 
     cout << "Left : " << bFoundLeftEdge  << " pos: " << leftPos  << " value: " << leftValue << endl;
