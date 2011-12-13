@@ -18,6 +18,9 @@ extern double velocity;
 double sonarMeasurement;
 double sonarMeasurementPosition;
 
+Feature g_siteFeature;
+SITE_MEASUREMENT g_scanMeasurements;
+double g_gapPosition;
 
 Localization::Localization()
 {
@@ -39,28 +42,28 @@ void Localization::updateSiteStatus()
         case SITE_1:
         {
             cout<<"The site has been set"<<endl;
-            pose.setPose(142,220,110*M_PI/180);
+            pose.setPose(220,142,30/180*M_PI);
             sites[siteIndex].bVisited=true;
             siteIndex = SITE_2;
             break;
         }
         case SITE_2:
         {
-            pose.setPose(0,184,0);
+            pose.setPose(184,0,-M_PI/2);
             sites[siteIndex].bVisited=true;
             siteIndex = SITE_3;
             break;
         }
         case SITE_3:
         {
-            pose.setPose(0,0,-M_PI/2);
+            pose.setPose(0,0,M_PI);
             sites[siteIndex].bVisited=true;
             siteIndex = SITE_4;
             break;
         }
         case SITE_4:
         {
-            pose.setPose(0,0,-M_PI/4);
+            pose.setPose(150,245,-135/180*M_PI);
             sites[siteIndex].bVisited=true;
             siteIndex = SITE_5;
             break;
@@ -137,9 +140,13 @@ void Localization::takeMeasurements()
 {
 
      cout << "STARTING TO TAKE MEASUREMENTS" << endl;
+    if (!sonarScanSite()){
+         moveForward();
+         wait(2000);
+         cout<<"no site detected"<<endl;
+     }
      
-     sonarScan();
-
+     updateParticle();
 }
 
 void Localization::updateParticle()
@@ -181,27 +188,39 @@ void Localization::updateParticle()
     }
 
     //Determine the direction in which the robot must turn
-    double servoOffset = 125 - sonarMeasurementPosition;
+    double servoOffset = g_gapPosition - VALUE_SERVO_POS_MID;
     
     //Take the angular values
-    double sonarAngle = servoOffset*(M_PI/220);
+    double sonarAngle = abs(servoOffset)*(M_PI/220);
     
     //Convert the degrees to a time
     double turnMilisecs = sonarAngle/ang_velocity;
     
+    cout<<"The sonar distance to the site is: "<<sonarDistanceToSite<<endl;
     
-    if(servoOffset>0){
-        
+    cout<<"The sonar measurement position is : "<<g_gapPosition<<endl;
+    
+    cout<<"The final distance to the site is: "<<distanceToSite<<endl;
+    
+    cout<<"The servo offset is: "<<servoOffset<<endl;
+    
+    cout<<"The offset converted to an angle is : "<<sonarAngle<<endl;
+    
+    cout<<"The turn in milliseconds is: "<<turnMilisecs<<endl;
+    
+    if(servoOffset < 0){
+        cout<<"CORRECTING ANGLE TO FACE SITE. TURNING LEFT"<<endl;
         turnLeft();
         wait(turnMilisecs);
         stop();
 
-    }else{
+    }
+    else{
+        cout<<"CORRECTING ANGLE TO FACE SITE. TURNING RIGHT"<<endl;
         turnRight();
         wait(turnMilisecs);
         stop();
     }
-    
 }
 
 //Move the robot towards the resource site
@@ -225,8 +244,6 @@ void Localization::moveToResourceSite(){
     stop();
     
     takeMeasurements();
-    
-    updateParticle();
     
     moveForward();
 }
@@ -280,12 +297,12 @@ void cvrtReadings2SiteMeasurement(SITE_MEASUREMENT &measurement,
     measurement.rngMid   = centreValue;
     measurement.rngRight = rightValue;
 
-    cout << "leftPos: " << leftPos << " centrePos: " << centrePos << " rightPos: " << rightPos << endl;
-    cout << "radLeft : " << measurement.radLeft << endl;
-    cout << "radRight: " << measurement.radRight << endl;
-    cout << "leftValue  : " << leftValue << endl;
-    cout << "centreValue: " << centreValue << endl;
-    cout << "rightValue : " << rightValue << endl;
+    //cout << "leftPos: " << leftPos << " centrePos: " << centrePos << " rightPos: " << rightPos << endl;
+    //cout << "radLeft : " << measurement.radLeft << endl;
+   // cout << "radRight: " << measurement.radRight << endl;
+    //cout << "leftValue  : " << leftValue << endl;
+    ///cout << "centreValue: " << centreValue << endl;
+    //cout << "rightValue : " << rightValue << endl;
 }
 
 bool bIsSite(const double leftPos,
@@ -295,7 +312,7 @@ bool bIsSite(const double leftPos,
              const double centreValue,
              const double rightValue)
 {
-    cout << "<==== TEST SITE ====>" << endl;
+    //cout << "<==== TEST SITE ====>" << endl;
 
     SITE_MEASUREMENT measurements;
     Feature feature;
@@ -306,7 +323,7 @@ bool bIsSite(const double leftPos,
 
     double totalLength = feature.lenLeft + feature.lenRight;
 
-    cout << "site lenLeft: " << feature.lenLeft << " lenRight: " << feature.lenRight << " radian: " << feature.rad << endl;
+    //cout << "site lenLeft: " << feature.lenLeft << " lenRight: " << feature.lenRight << " radian: " << feature.rad << endl;
 
     // if the value is within the site range
     if (   (totalLength > VALUE_LENGTH_SITE_LENGTH_MIN)
@@ -317,10 +334,6 @@ bool bIsSite(const double leftPos,
 
     return false;
 }
-
-Feature g_siteFeature;
-SITE_MEASUREMENT g_scanMeasurements;
-double g_gapPosition;
 
 bool scanSite(int sensorIndex)
 {
@@ -598,7 +611,7 @@ bool scanSite(int sensorIndex)
     // for sonar scan, it is almost impossible to find the gap, use the median
     if (INDEX_SENSOR_SONAR == sensorIndex)
     {
-        gapPos = leftPos + (leftPos + rightPos) * 0.5;
+        gapPos = (leftPos + rightPos) * 0.5;
     }
 
     g_gapPosition = gapPos;
@@ -617,11 +630,7 @@ bool scanSite(int sensorIndex)
 
 void Localization::sonarScan(void)
 {
-    bool bFoundSite = scanSites(INDEX_SENSOR_SONAR );
-    if (bFoundSite)
-    {
-        
-    }
+    //
 }
 
 

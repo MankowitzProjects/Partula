@@ -72,8 +72,6 @@ void Handle::localization()
 
     g_localization.turnToFaceResourceSite();
 
-    g_localization.updateParticle();
-
     g_localization.moveToResourceSite();
 
 

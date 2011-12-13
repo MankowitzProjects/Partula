@@ -84,7 +84,7 @@ DirTime Pose::shiftToGoal(SITE id_site)
     cout<<"NormRad: "<<angle<<endl;
 
     ret_val.time=abs((angle/ang_velocity)*1000);
-    if (angle>0){
+    if (angle<0){
         ret_val.direction=TURNING_RIGHT;
     }
     else{

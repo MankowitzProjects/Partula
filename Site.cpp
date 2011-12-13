@@ -190,55 +190,55 @@ void initSites(void)
     }
 
     // add information
-    sites[SITE_1].readyPoint.x = 115;
-    sites[SITE_1].readyPoint.y = 190;
-    sites[SITE_1].dotLeft.x = 160;
-    sites[SITE_1].dotLeft.y = 202;
-    sites[SITE_1].dotMid.x = 142;
-    sites[SITE_1].dotMid.y = 220;
-    sites[SITE_1].dotRight.x = 94;
-    sites[SITE_1].dotRight.y = 220;
+    sites[SITE_1].readyPoint.y = 115;
+    sites[SITE_1].readyPoint.x = 190;
+    sites[SITE_1].dotLeft.y = 160;
+    sites[SITE_1].dotLeft.x = 202;
+    sites[SITE_1].dotMid.y = 142;
+    sites[SITE_1].dotMid.x = 220;
+    sites[SITE_1].dotRight.y = 94;
+    sites[SITE_1].dotRight.x = 220;
     
     
-    sites[SITE_2].readyPoint.x = 50;
-    sites[SITE_2].readyPoint.y = 189;
-    sites[SITE_2].dotLeft.x = 20;
-    sites[SITE_2].dotLeft.y = 229;
-    sites[SITE_2].dotMid.x = 0;
-    sites[SITE_2].dotMid.y = 184;
-    sites[SITE_2].dotRight.x = 12;
-    sites[SITE_2].dotRight.y = 129;
+    sites[SITE_2].readyPoint.y = 50;
+    sites[SITE_2].readyPoint.x = 189;
+    sites[SITE_2].dotLeft.y = 20;
+    sites[SITE_2].dotLeft.x = 229;
+    sites[SITE_2].dotMid.y = 0;
+    sites[SITE_2].dotMid.x = 184;
+    sites[SITE_2].dotRight.y = 12;
+    sites[SITE_2].dotRight.x = 129;
     
-    sites[SITE_3].readyPoint.x = 53;
-    sites[SITE_3].readyPoint.y = 24;
-    sites[SITE_3].dotLeft.x = 0;
-    sites[SITE_3].dotLeft.y = 23;
-    sites[SITE_3].dotMid.x = 0;
+    sites[SITE_3].readyPoint.y = 53;
+    sites[SITE_3].readyPoint.x = 24;
+    sites[SITE_3].dotLeft.y = 0;
+    sites[SITE_3].dotLeft.x = 23;
     sites[SITE_3].dotMid.y = 0;
-    sites[SITE_3].dotRight.x = 53;
-    sites[SITE_3].dotRight.y = 0;
+    sites[SITE_3].dotMid.x = 0;
+    sites[SITE_3].dotRight.y = 53;
+    sites[SITE_3].dotRight.x = 0;
     
    
    
     
-    sites[SITE_4].readyPoint.x = 172;
-    sites[SITE_4].readyPoint.y = 43;
-    sites[SITE_4].dotLeft.x = 260;
-    sites[SITE_4].dotLeft.y = 49;
-    sites[SITE_4].dotMid.x = 190;
-    sites[SITE_4].dotMid.y = 84;
-    sites[SITE_4].dotRight.x = 136;
-    sites[SITE_4].dotRight.y = 63;
+    sites[SITE_4].readyPoint.y = 172;
+    sites[SITE_4].readyPoint.x = 43;
+    sites[SITE_4].dotLeft.y = 260;
+    sites[SITE_4].dotLeft.x = 49;
+    sites[SITE_4].dotMid.y = 190;
+    sites[SITE_4].dotMid.x = 84;
+    sites[SITE_4].dotRight.y = 136;
+    sites[SITE_4].dotRight.x = 63;
 
     
-    sites[SITE_5].readyPoint.x = 221;
-    sites[SITE_5].readyPoint.y = 181;
-    sites[SITE_5].dotLeft.x = 186;
-    sites[SITE_5].dotLeft.y = 150;
-    sites[SITE_5].dotMid.x = 245;
-    sites[SITE_5].dotMid.y = 150;
-    sites[SITE_5].dotRight.x = 245;
-    sites[SITE_5].dotRight.y = 208;
+    sites[SITE_5].readyPoint.y = 221;
+    sites[SITE_5].readyPoint.x = 181;
+    sites[SITE_5].dotLeft.y = 186;
+    sites[SITE_5].dotLeft.x = 150;
+    sites[SITE_5].dotMid.y = 245;
+    sites[SITE_5].dotMid.x = 150;
+    sites[SITE_5].dotRight.y = 245;
+    sites[SITE_5].dotRight.x = 208;
     
     
     
