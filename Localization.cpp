@@ -254,7 +254,7 @@ bool irScanSite(void)
     return scanSite(INDEX_SENSOR_IR_TOP);
 }
 
-#define VALUE_DIFF_SONAR_EDGE_DIFF      10.0
+#define VALUE_DIFF_SONAR_EDGE_DIFF      30.0
 #define VALUE_DIFF_IR_EDGE_DIFF         50.0
 
 #define VALUE_DIV_SONAR_SURFACE_DIV     5.0
@@ -374,6 +374,8 @@ bool scanSite(int sensorIndex)
     double gapPos   = 0.0;      /**< the position of the gap */
     double rightPos = 0.0;      /**< the position of the right edge */
 
+    double preLeftPos = 0.0;
+
     double leftValue   = 0.0;   /**< the value from the left edge */
     double centreValue = 0.0;   /**< the value from the centre */
     double rightValue  = 0.0;   /**< the value from the right edge */
@@ -450,6 +452,14 @@ bool scanSite(int sensorIndex)
                 curValue = cvrtIrValue2Cm(curValue);
             }
             #endif
+        }
+        else
+        {
+            if (   (curValue > 150)
+                || (curValue < 3))
+            {
+                curValue = 500;
+            }
         }
 
         // log the readings
@@ -528,21 +538,7 @@ bool scanSite(int sensorIndex)
                 // the left edge was found
                 else
                 {
-                    // should we update the left edge to new one? currently no
-                    cout << "--left edge" << endl;
-
-                    // set left edge as found
-                    bFoundLeftEdge  = true;
-                    bFoundGap       = false;
-                    bFoundRightEdge = false;
-
-                    // record the left edge value and position
-                    leftValue  = curValue;
-                    leftPos    = curPos;
-                    closeValue = curValue;
-
-                    // reset the total counter
-                    totalCounter = 0;
+                    preLeftPos = leftPos;
                 }
             }
 
@@ -620,7 +616,7 @@ bool scanSite(int sensorIndex)
     // for sonar scan, it is almost impossible to find the gap, use the median
     if (INDEX_SENSOR_SONAR == sensorIndex)
     {
-        gapPos = leftPos + (leftPos + rightPos) * 0.5;
+        gapPos = (leftPos + rightPos) * 0.5;
     }
 
     g_gapPosition = gapPos;

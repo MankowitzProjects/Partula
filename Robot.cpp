@@ -67,13 +67,13 @@ void Robot::run(void)
     cout<<"Robot::run"<<endl;
 
     sonarScanSite();
-    irScanSite();
+    //irScanSite();
 
     //moveBackward();
     //moveForward();
     //turnRight();
 
-#if 1
+#if 0
     int param=1;
     int i=1;
     pthread_t odometryThread;
