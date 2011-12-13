@@ -72,8 +72,8 @@ void Robot::run(void)
     //g_servoCtrl.setPos(130);
     cout<<"Robot::run"<<endl;
 
-    sonarScan();
-    irScan();
+    sonarScanSite();
+    irScanSite();
 
     //moveBackward();
     //moveForward();

@@ -50,8 +50,8 @@ private:
 
 };
 
-void sonarScan(void);
-void irScan(void);
+bool sonarScanSite(void);
+bool irScanSite(void);
 
 #endif	/* LOCALIZATION_H */
 
