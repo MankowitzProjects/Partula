@@ -719,12 +719,6 @@ bool bSonarScan(int sensorIndex)
         preValue = curValue;
         curValue = GetSensorValue(sensorIndex);
 
-        if (   (curValue > 150)
-            || (curValue < 3))
-        {
-            curValue = 500;
-        }
-
         // log the readings
         sonarReadings << curPos << ", " << curValue << endl;
         // cout << curPos << ", " << curValue << endl;
