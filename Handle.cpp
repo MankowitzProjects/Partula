@@ -34,7 +34,7 @@ Handle::~Handle()
 //Handles collisions
 void Handle::collision()
 {
-    hitBumper(1800);
+    hitBumper(2200);
     currentEvent = EVENT_NULL;
 }
 
@@ -46,10 +46,10 @@ void Handle::docking()
     cout<<"docking - Detected sensor value: "<<g_sensorCtrl.getSensorValue(INDEX_SENSOR_LIGHT_UNDER)<<endl;
     //Black tape has been detected
     //1. PerformShape Detection
-    cout<<"docking - Black Tape Detected"<<endl;
-    cout<<"docking - Robot is docking"<<endl;
+    //cout<<"docking - Black Tape Detected"<<endl;
+    //cout<<"docking - Robot is docking"<<endl;
     //navigSpeed=50.00;
-    cout<<"docking - scanning Thread started"<<endl;
+    //cout<<"docking - scanning Thread started"<<endl;
 
     int scanParam=0;
     pthread_t scanningThread;

@@ -42,28 +42,29 @@ void Localization::updateSiteStatus()
         case SITE_1:
         {
             cout<<"The site has been set"<<endl;
-            pose.setPose(220,142,20/180*M_PI);
+            pose.setPose(220,142,Ang2Rad(45.0));
             sites[siteIndex].bVisited=true;
             siteIndex = SITE_2;
             break;
         }
         case SITE_2:
         {
-            pose.setPose(184,0,-M_PI/2);
+            pose.setPose(184,0,(-1)*Ang2Rad(110.0));
             sites[siteIndex].bVisited=true;
             siteIndex = SITE_3;
             break;
         }
         case SITE_3:
         {
-            pose.setPose(0,0,M_PI);
+            cout<<"Reached Site 3"<<endl;
+            pose.setPose(0,0,(-1)*Ang2Rad(160));
             sites[siteIndex].bVisited=true;
             siteIndex = SITE_4;
             break;
         }
         case SITE_4:
         {
-            pose.setPose(150,245,-135/180*M_PI);
+            pose.setPose(84,190,45/180*M_PI);
             sites[siteIndex].bVisited=true;
             siteIndex = SITE_5;
             break;
@@ -105,11 +106,6 @@ void Localization::turnToFaceResourceSite()
     cout<<"Next site is: "<<currentSite<<endl;
     //Get the time that is needed to turn towards the next resource site
     directionTime = pose.shiftToGoal(currentSite);
-
-    if (siteIndex == SITE_3)
-    {
-        //directionTime.direction = TURNING_RIGHT;
-    }
 
     cout<<"Direction is : "<<directionTime.direction<<endl;
     cout<<"Time is: "<<directionTime.time<<endl;
@@ -235,16 +231,17 @@ void Localization::moveToResourceSite(){
 //ActMoveForward(distanceToSite/velocity);
     moveForward();
     //wait(distanceToSite/velocity);
-
     if (siteIndex == SITE_3)
     {
-        wait((distanceToSite/velocity)*500);
-        timeToTravelToResourceSite -=((distanceToSite/velocity)*500);
+        cout<<"Time to travel to new site: "<<timeToTravelToResourceSite/2<<endl;
+        wait(timeToTravelToResourceSite/2);
+        timeToTravelToResourceSite =timeToTravelToResourceSite/2;
     }
     else
     {
-        wait((distanceToSite/velocity)*500);
-        timeToTravelToResourceSite -=((distanceToSite/velocity)*500);
+        cout<<"Time to travel to new site: "<<timeToTravelToResourceSite/2<<endl;
+        wait(timeToTravelToResourceSite/2);
+        timeToTravelToResourceSite =timeToTravelToResourceSite/2;
     }
 
     stop();
@@ -701,7 +698,7 @@ bool bSonarScan(int sensorIndex)
 
     ofstream sonarReadings;
     sonarReadings.open("SensorSO.txt", fstream::app);
-    sonarReadings << "--- TEST: Sonar ---";
+    sonarReadings << "--- TEST: Sonar ---" << endl;
 
     curValue = GetSensorValue(sensorIndex);
 
@@ -753,6 +750,19 @@ bool bSonarScan(int sensorIndex)
 
             continuityCounter = 0;
         }
+    }
+    
+    // if only can find the left and right edge
+    if (continuityCounter > biggestPlane)
+    {
+        //
+        leftPos   = leftPosPre;
+        leftValue = leftValuePre;
+
+        rightPos   = curPos;
+        rightValue = curValue;
+
+        biggestPlane = continuityCounter;
     }
 
     sonarReadings.close();

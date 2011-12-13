@@ -359,9 +359,8 @@ void frequencyMovement(FREQUENCY frequency)
 
     case FREQUENCY_HALF:
     {
-
         moveBackward();
-        wait(1000);
+        wait(2000);
 
         turnLeft( );
         wait(7600);
@@ -372,7 +371,7 @@ void frequencyMovement(FREQUENCY frequency)
     {
         pose.setTimestamp();
         moveBackward();
-        wait(1000);
+        wait(2000);
 
         pose.setTimestamp();
         turnRight();
@@ -385,14 +384,14 @@ void frequencyMovement(FREQUENCY frequency)
     {
 
         moveBackward();
-        wait(1000);
+        wait(2000);
 
         stop();
         wait(1000);
 
         pose.setTimestamp();
         moveBackward();
-        wait(1000);
+        wait(2000);
 
         stop();
         break;
@@ -401,7 +400,7 @@ void frequencyMovement(FREQUENCY frequency)
     {
 
         moveBackward();
-        wait(1000);
+        wait(2000);
 
         pose.setTimestamp();
         turnLeft( );

@@ -52,6 +52,7 @@ private:
 
 bool sonarScanSite(void);
 bool irScanSite(void);
+double cvrtServoPos2Rad(double servoPos);
 
 #endif	/* LOCALIZATION_H */
 
