@@ -266,16 +266,40 @@ bool irScanSite(void)
 #define VALUE_THRESHOLD_SONAR_GAP_SIZE  2
 #define VALUE_THRESHOLD_IR_GAP_SIZE     15
 
+/** \brief Convert the value from IR sensor to centimetres
+ *
+ * \param sensorValue double the    value from IR sensor
+ * \return double                   centimetres
+ *
+ */
 double cvrtIrValue2Cm(double sensorValue)
 {
     return (4800.0/(sensorValue - 20.0));
 }
 
-double cvrtServoPos2Ang(double servoPos)
+/** \brief Convert the servo position to radian
+ *
+ * \param servoPos double   the servo position
+ * \return double           the corresponding radian
+ *
+ */
+double cvrtServoPos2Rad(double servoPos)
 {
     return servoPos*(M_PI/220);
 }
 
+/** \brief Convert the readings from sensor to site measurements
+ *
+ * \param measurement SITE_MEASUREMENT& the measurements
+ * \param leftPos     const double      the position of the servo when detect the left edge
+ * \param centrePos   const double      the position of the servo when detect the centre
+ * \param rightPos    const double      the position of the servo when detect the right edge
+ * \param leftValue   const double      the value from the sensor when detect the left edge
+ * \param centreValue const double      the value from the sensor when detect the centre
+ * \param rightValue  const double      the value from the sensor when detect the right edge
+ * \return void
+ *
+ */
 void cvrtReadings2SiteMeasurement(SITE_MEASUREMENT &measurement,
                                   const double leftPos,
                                   const double centrePos,
@@ -284,18 +308,20 @@ void cvrtReadings2SiteMeasurement(SITE_MEASUREMENT &measurement,
                                   const double centreValue,
                                   const double rightValue)
 {
-    measurement.radLeft  = cvrtServoPos2Ang(centrePos - leftPos);
-    measurement.radRight = cvrtServoPos2Ang(rightPos - centrePos);
+    measurement.radLeft  = cvrtServoPos2Rad(centrePos - leftPos);
+    measurement.radRight = cvrtServoPos2Rad(rightPos - centrePos);
     measurement.rngLeft  = leftValue;
     measurement.rngMid   = centreValue;
     measurement.rngRight = rightValue;
 
+    #if DEBUG_MODE_SCAN
     cout << "leftPos: " << leftPos << " centrePos: " << centrePos << " rightPos: " << rightPos << endl;
     cout << "radLeft : " << measurement.radLeft << endl;
     cout << "radRight: " << measurement.radRight << endl;
     cout << "leftValue  : " << leftValue << endl;
     cout << "centreValue: " << centreValue << endl;
     cout << "rightValue : " << rightValue << endl;
+    #endif
 }
 
 bool bIsSite(const double leftPos,
@@ -305,7 +331,9 @@ bool bIsSite(const double leftPos,
              const double centreValue,
              const double rightValue)
 {
+    #if DEBUG_MODE_SCAN
     cout << "<==== TEST SITE ====>" << endl;
+    #endif
 
     SITE_MEASUREMENT measurements;
     Feature feature;
@@ -316,7 +344,9 @@ bool bIsSite(const double leftPos,
 
     double totalLength = feature.lenLeft + feature.lenRight;
 
+    #if DEBUG_MODE_SCAN
     cout << "site lenLeft: " << feature.lenLeft << " lenRight: " << feature.lenRight << " radian: " << feature.rad << endl;
+    #endif
 
     // if the value is within the site range
     if (   (totalLength > VALUE_LENGTH_SITE_LENGTH_MIN)
@@ -587,10 +617,6 @@ bool scanSite(int sensorIndex)
 
     sonarReadings.close();
 
-    cout << "Left : " << bFoundLeftEdge  << " pos: " << leftPos  << " value: " << leftValue << endl;
-    cout << "Gap  : " << bFoundGap       << " pos: " << gapPos   << " value: " << centreValue << endl;
-    cout << "Right: " << bFoundRightEdge << " pos: " << rightPos << " value: " << rightValue << endl;
-
     // for sonar scan, it is almost impossible to find the gap, use the median
     if (INDEX_SENSOR_SONAR == sensorIndex)
     {
@@ -599,15 +625,21 @@ bool scanSite(int sensorIndex)
 
     g_gapPosition = gapPos;
 
+    cout << "Left : " << bFoundLeftEdge  << " pos: " << leftPos  << " value: " << leftValue << endl;
+    cout << "Gap  : " << bFoundGap       << " pos: " << gapPos   << " value: " << centreValue << endl;
+    cout << "Right: " << bFoundRightEdge << " pos: " << rightPos << " value: " << rightValue << endl;
+
     // if the right edge is found
     if (bFoundRightEdge && bIsSite(leftPos, gapPos, rightPos, leftValue, centreValue, rightValue))
     {
+        cout << "scanSite - site found." << endl;
         cvrtReadings2SiteMeasurement(g_scanMeasurements, leftPos, gapPos, rightPos, leftValue, centreValue, rightValue);
         calFeatures(g_siteFeature, g_scanMeasurements);
 
         return true;
     }
 
+    cout << "scanSite - site NOT found." << endl;
     return false;
 }
 

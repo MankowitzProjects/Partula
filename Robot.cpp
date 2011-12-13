@@ -4,9 +4,8 @@
 #include "Pose.h"
 #include "Localization.h"
 #include "Action.h"
-
+#include "Frequency.h"
 #include "Site.h"
-
 
 extern SensorController g_sensorCtrl;
 extern MotorController g_motorCtrl;
@@ -38,19 +37,14 @@ bool Robot::hasHitBumper()
             || (currentEvent == EVENT_HIT_FRONT_RIGHT));
 }
 
-#include "Frequency.h"
-
-
-
 void * updatingOdometry(void * param){
-   
+
    while(1){
-   
-   if (g_movement!=g_prev_movement){ 
-       pose.updateOdometry();
-   }
-}
-    
+
+       if (g_movement!=g_prev_movement){
+           pose.updateOdometry();
+       }
+    }
 }
 
 void Robot::run(void)
@@ -88,13 +82,13 @@ void Robot::run(void)
     //int sonarStatus = 0;
     //pthread_t sonarThread;
     //pthread_create(&sonarThread, NULL, g_localization.sonarScan,(void*)&sonarStatus);
-    
+
     //g_localization.sonarScan();
 
     //while(1){
 
     //}
-    
+
     cout<<"Finished scan, moving forward"<<endl;
     ActMoveForward(6000);
     trainSensors();
