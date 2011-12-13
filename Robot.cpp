@@ -76,8 +76,8 @@ void Robot::run(void)
     
     //sonarScan();
 
-    sonarScan();
-    irScan();
+    sonarScanSite();
+    irScanSite();
 
     //moveBackward();
     //moveForward();

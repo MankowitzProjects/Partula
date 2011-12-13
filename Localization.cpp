@@ -232,16 +232,16 @@ void Localization::moveToResourceSite(){
 }
 
 
-void scanSites(int sensorIndex);
+bool scanSite(int sensorIndex);
 
-void sonarScan(void)
+bool sonarScanSite(void)
 {
-    scanSites(INDEX_SENSOR_SONAR);
+    return scanSite(INDEX_SENSOR_SONAR);
 }
 
-void irScan(void)
+bool irScanSite(void)
 {
-    scanSites(INDEX_SENSOR_IR_TOP);
+    return scanSite(INDEX_SENSOR_IR_TOP);
 }
 
 #define VALUE_DIFF_SONAR_EDGE_DIFF      10.0
@@ -318,7 +318,11 @@ bool bIsSite(const double leftPos,
     return false;
 }
 
-void scanSites(int sensorIndex)
+Feature g_siteFeature;
+SITE_MEASUREMENT g_scanMeasurements;
+double g_gapPosition;
+
+bool scanSite(int sensorIndex)
 {
     double scanStep = 1.0;  /**< the step for servo to move each time */
     double curPos   = VALUE_SERVO_POS_MIN;  /**< current position of the servo motor */
@@ -413,7 +417,7 @@ void scanSites(int sensorIndex)
 
         // log the readings
         sonarReadings << curPos << ", " << curValue << endl;
-        cout << curPos << ", " << curValue << endl;
+        // cout << curPos << ", " << curValue << endl;
 
         // we will only scan the site exposed within our 180 degree scanning area
         // we are only interested in the first left edge
@@ -591,12 +595,24 @@ void scanSites(int sensorIndex)
     cout << "Gap  : " << bFoundGap       << " pos: " << gapPos   << " value: " << centreValue << endl;
     cout << "Right: " << bFoundRightEdge << " pos: " << rightPos << " value: " << rightValue << endl;
 
-    // find a site
+    // for sonar scan, it is almost impossible to find the gap, use the median
+    if (INDEX_SENSOR_SONAR == sensorIndex)
+    {
+        gapPos = leftPos + (leftPos + rightPos) * 0.5;
+    }
 
-    // calculate the "centre"
+    g_gapPosition = gapPos;
 
-    // record the site
+    // if the right edge is found
+    if (bFoundRightEdge && bIsSite(leftPos, gapPos, rightPos, leftValue, centreValue, rightValue))
+    {
+        cvrtReadings2SiteMeasurement(g_scanMeasurements, leftPos, gapPos, rightPos, leftValue, centreValue, rightValue);
+        calFeatures(g_siteFeature, g_scanMeasurements);
 
+        return true;
+    }
+
+    return false;
 }
 
 void Localization::sonarScan(void)
