@@ -1,3 +1,6 @@
+/**< Implement the frequency class and define three frequency classes for the
+     light sensors set in front of the robot */
+
 #include "Frequency.h"
 #include "debug_tools.h"
 #include <iostream>
@@ -120,8 +123,6 @@ Frequency::~Frequency(void)
     }
 }
 
-
-
 /** \brief Tick the left light sensor
  *
  * \param void
@@ -136,11 +137,23 @@ void FreqTickLeft(void)
     g_freqLightLeft.tick();
 }
 
+/** \brief Get frequency from the left light sensor
+ *
+ * \param void
+ * \return float
+ *
+ */
 float FreqGetFrequencyLeft(void)
 {
     return g_freqLightLeft.getFrequency();
 }
 
+/** \brief Tick the middle light sensor
+ *
+ * \param void
+ * \return void
+ *
+ */
 void FreqTickMiddle(void)
 {
     #if DEBUG_MODE_FREQUENCY
@@ -149,11 +162,23 @@ void FreqTickMiddle(void)
     g_freqLightMiddle.tick();
 }
 
+/** \brief Get frequency from the middle light sensor
+ *
+ * \param void
+ * \return float
+ *
+ */
 float FreqGetFrequencyMiddle(void)
 {
     return g_freqLightMiddle.getFrequency();
 }
 
+/** \brief Tick the right light sensor
+ *
+ * \param void
+ * \return void
+ *
+ */
 void FreqTickRight(void)
 {
     #if DEBUG_MODE_FREQUENCY
@@ -162,15 +187,29 @@ void FreqTickRight(void)
     g_freqLightRight.tick();
 }
 
+/** \brief Get frequency from the right light sensor
+ *
+ * \param void
+ * \return float
+ *
+ */
 float FreqGetFrequencyRight(void)
 {
     return g_freqLightRight.getFrequency();
 }
 
+/** \brief Get frequency from the front light sensors, only the one with
+ *         reasonable value will be reported.
+ *
+ * \param void
+ * \return float
+ *
+ */
 float FreqGetFrequency(void)
 {
     float freq = 0.0;
 
+    // the frequency should be within a desired range
     if (   (FreqGetFrequencyRight() > 0.3)
         && (FreqGetFrequencyRight() < 10.0))
     {

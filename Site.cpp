@@ -198,8 +198,7 @@ void initSites(void)
     sites[SITE_1].dotMid.x = 220;
     sites[SITE_1].dotRight.y = 94;
     sites[SITE_1].dotRight.x = 220;
-    
-    
+
     sites[SITE_2].readyPoint.y = 50;
     sites[SITE_2].readyPoint.x = 189;
     sites[SITE_2].dotLeft.y = 20;
@@ -208,7 +207,7 @@ void initSites(void)
     sites[SITE_2].dotMid.x = 184;
     sites[SITE_2].dotRight.y = 12;
     sites[SITE_2].dotRight.x = 129;
-    
+
     sites[SITE_3].readyPoint.y = 53;
     sites[SITE_3].readyPoint.x = 24;
     sites[SITE_3].dotLeft.y = 0;
@@ -217,10 +216,7 @@ void initSites(void)
     sites[SITE_3].dotMid.x = 0;
     sites[SITE_3].dotRight.y = 53;
     sites[SITE_3].dotRight.x = 0;
-    
-   
-   
-    
+
     sites[SITE_4].readyPoint.y = 172;
     sites[SITE_4].readyPoint.x = 43;
     sites[SITE_4].dotLeft.y = 260;
@@ -230,7 +226,6 @@ void initSites(void)
     sites[SITE_4].dotRight.y = 136;
     sites[SITE_4].dotRight.x = 63;
 
-    
     sites[SITE_5].readyPoint.y = 221;
     sites[SITE_5].readyPoint.x = 181;
     sites[SITE_5].dotLeft.y = 186;
@@ -239,9 +234,4 @@ void initSites(void)
     sites[SITE_5].dotMid.x = 150;
     sites[SITE_5].dotRight.y = 245;
     sites[SITE_5].dotRight.x = 208;
-    
-    
-    
-    
-   
 }
