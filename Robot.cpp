@@ -119,8 +119,7 @@ void Robot::run(void)
 
     while (1)
     {
-        //cout<<"Light under car is: "<<g_sensorCtrl.getSensorValue(INDEX_SENSOR_LIGHT_UNDER)<<endl;
-        //cout<<"Current Event is %d"<<currentEvent<<endl;
+        //If the robot is exploring, run this set of behaviours
         if(robotStatus == STATUS_ROBOT_EXPLORING)
         {
             //cout<<"Entered Exploring"<<endl;
@@ -149,6 +148,7 @@ void Robot::run(void)
                 ;
             }
         }
+		//If the robot is docking, run this set of behaviours
         else if (robotStatus == STATUS_ROBOT_DOCKING)
         {
             if (    hasHitBumper()
@@ -170,7 +170,7 @@ void Robot::run(void)
 
     printf("Robot::run - DONE~!\n");
 }
-
+//Initialisation procedure for the motors, sensors and servo
 void Robot::init(void)
 {
     if (isInit)
@@ -187,7 +187,7 @@ void Robot::init(void)
 
     isInit = true;
 }
-
+//Called when the program has ended
 void Robot::fin(void)
 {
     printf("Robot::fin\n");
@@ -196,7 +196,7 @@ void Robot::fin(void)
     g_sensorCtrl.fin();
     g_servoCtrl.fin();
 }
-
+//The training algorithm used to determine the black tape threshold
 void Robot::trainSensors()
 {
 
@@ -220,37 +220,5 @@ void Robot::trainSensors()
 
     VALUE_BLACK_TAPE_MAX = lightTotal*0.6;
     VALUE_BLACK_TAPE_MIN = VALUE_BLACK_TAPE_MAX*0.4;
-
-    //cout<<"The black max value is: "<<VALUE_BLACK_TAPE_MAX<<endl;
-
-    //cout<<"The black min value is: "<<VALUE_BLACK_TAPE_MIN<<endl;
-
-
-    /*int samples = 0;
-    int blackTapeTotal=0;
-    int blackTapeAvg=0;
-    int lightReading = 0;
-    int lightReadingPrevious=0;
-    cout<<"Press to start training"<<endl;
-    getchar();
-    while(samples<5)
-    {
-        lightReading = g_sensorCtrl.getSensorValue(INDEX_SENSOR_LIGHT_UNDER);
-
-        if(lightReading!=lightReadingPrevious)
-        {
-            cout<<"Light Reading Trainer Value"<<lightReading<<endl;
-            lightReadingPrevious = lightReading;
-            blackTapeTotal = blackTapeTotal+lightReading;
-            samples++;
-        }
-    }
-    blackTapeAvg = blackTapeTotal/(samples+1);
-    VALUE_BLACK_TAPE_MAX = blackTapeAvg;
-    VALUE_BLACK_TAPE_MIN = blackTapeAvg - 60;
-
-    cout<<"Black Tape Threshold max threshold is "<<VALUE_BLACK_TAPE_MAX<<endl;
-    cout<<"Black Tape Threshold min threshold is "<<VALUE_BLACK_TAPE_MIN<<endl;
-    getchar();*/
 
 }

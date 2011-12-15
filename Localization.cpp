@@ -183,6 +183,8 @@ void Localization::updateParticle()
 
     }
 
+	
+	
     //Determine the direction in which the robot must turn
     double servoOffset = g_gapPosition - VALUE_SERVO_POS_MID;
 
@@ -235,19 +237,21 @@ void Localization::moveToResourceSite(){
     {
         cout<<"Time to travel to new site: "<<timeToTravelToResourceSite/2<<endl;
         wait(timeToTravelToResourceSite*0.666);
-        timeToTravelToResourceSite =timeToTravelToResourceSite/2;
+		//Update the time to the resource site after having moved 66% of the estimated time
+        timeToTravelToResourceSite = (1-timeToTravelToResourceSite*0.666);
     }
     else
     {
         cout<<"Time to travel to new site: "<<timeToTravelToResourceSite/2<<endl;
         wait(timeToTravelToResourceSite*0.666);
-        timeToTravelToResourceSite =timeToTravelToResourceSite/2;
+		//Update the time to the resource site after having moved 66% of the estimated time
+        timeToTravelToResourceSite =(1-timeToTravelToResourceSite*0.666);
     }
 
     stop();
-
+	//Confirm the robot's current direction of movement and distance travelled
     takeMeasurements();
-
+	//Move towards the site
     moveForward();
 }
 
