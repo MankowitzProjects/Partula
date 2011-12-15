@@ -1,84 +1,16 @@
+/**< Implement the frequency class and define three frequency classes for the
+     light sensors set in front of the robot */
+
 #include "Frequency.h"
 #include "debug_tools.h"
 #include <iostream>
 
+/**< the frequency from the left light sensor */
 Frequency g_freqLightLeft(FREQUENCY_DEFAULT_SAMPLE_RATE);
+/**< the frequency from the middle light sensor */
 Frequency g_freqLightMiddle(FREQUENCY_DEFAULT_SAMPLE_RATE);
+/**< the frequency from the right light sensor */
 Frequency g_freqLightRight(FREQUENCY_DEFAULT_SAMPLE_RATE);
-
-void FreqTickLeft(void)
-{
-    #if DEBUG_MODE_FREQUENCY
-    cout << "FreqTickLeft" << endl;
-    #endif
-    g_freqLightLeft.tick();
-}
-
-float FreqGetFrequencyLeft(void)
-{
-    return g_freqLightLeft.getFrequency();
-}
-
-void FreqTickMiddle(void)
-{
-    #if DEBUG_MODE_FREQUENCY
-    cout << "FreqTickMiddle" << endl;
-    #endif
-    g_freqLightMiddle.tick();
-}
-
-float FreqGetFrequencyMiddle(void)
-{
-    return g_freqLightMiddle.getFrequency();
-}
-
-void FreqTickRight(void)
-{
-    #if DEBUG_MODE_FREQUENCY
-    cout << "FreqTickRight" << endl;
-    #endif
-    g_freqLightRight.tick();
-}
-
-float FreqGetFrequencyRight(void)
-{
-    return g_freqLightRight.getFrequency();
-}
-
-float FreqGetFrequency(void)
-{
-    float freq = 0.0;
-
-    if (   (FreqGetFrequencyRight() > 0.3)
-        && (FreqGetFrequencyRight() < 10.0))
-    {
-        freq = FreqGetFrequencyRight();
-    }
-    else if (   (FreqGetFrequencyLeft() > 0.3)
-             && (FreqGetFrequencyLeft() < 10.0))
-    {
-        freq = FreqGetFrequencyLeft();
-    }
-    else if (   (FreqGetFrequencyMiddle() > 0.3)
-             && (FreqGetFrequencyMiddle() < 10.0))
-    {
-        freq = FreqGetFrequencyMiddle();
-    }
-    else
-    {
-        freq = 0.0;
-    }
-
-    #if DEBUG_MODE_FREQUENCY
-    cout << "Freq left  : " << FreqGetFrequencyLeft() << endl;
-    cout << "Freq middle: " << FreqGetFrequencyMiddle() << endl;
-    cout << "Freq right : " << FreqGetFrequencyRight() << endl;
-
-    cout << "Freq result: " << freq << endl;
-    #endif
-
-    return freq;
-}
 
 /** \brief get current frequency
  *
@@ -189,5 +121,123 @@ Frequency::~Frequency(void)
         free(tm_array);
         tm_array = 0;
     }
+}
+
+/** \brief Tick the left light sensor
+ *
+ * \param void
+ * \return void
+ *
+ */
+void FreqTickLeft(void)
+{
+    #if DEBUG_MODE_FREQUENCY
+    cout << "FreqTickLeft" << endl;
+    #endif
+    g_freqLightLeft.tick();
+}
+
+/** \brief Get frequency from the left light sensor
+ *
+ * \param void
+ * \return float
+ *
+ */
+float FreqGetFrequencyLeft(void)
+{
+    return g_freqLightLeft.getFrequency();
+}
+
+/** \brief Tick the middle light sensor
+ *
+ * \param void
+ * \return void
+ *
+ */
+void FreqTickMiddle(void)
+{
+    #if DEBUG_MODE_FREQUENCY
+    cout << "FreqTickMiddle" << endl;
+    #endif
+    g_freqLightMiddle.tick();
+}
+
+/** \brief Get frequency from the middle light sensor
+ *
+ * \param void
+ * \return float
+ *
+ */
+float FreqGetFrequencyMiddle(void)
+{
+    return g_freqLightMiddle.getFrequency();
+}
+
+/** \brief Tick the right light sensor
+ *
+ * \param void
+ * \return void
+ *
+ */
+void FreqTickRight(void)
+{
+    #if DEBUG_MODE_FREQUENCY
+    cout << "FreqTickRight" << endl;
+    #endif
+    g_freqLightRight.tick();
+}
+
+/** \brief Get frequency from the right light sensor
+ *
+ * \param void
+ * \return float
+ *
+ */
+float FreqGetFrequencyRight(void)
+{
+    return g_freqLightRight.getFrequency();
+}
+
+/** \brief Get frequency from the front light sensors, only the one with
+ *         reasonable value will be reported.
+ *
+ * \param void
+ * \return float
+ *
+ */
+float FreqGetFrequency(void)
+{
+    float freq = 0.0;
+
+    // the frequency should be within a desired range
+    if (   (FreqGetFrequencyRight() > 0.3)
+        && (FreqGetFrequencyRight() < 10.0))
+    {
+        freq = FreqGetFrequencyRight();
+    }
+    else if (   (FreqGetFrequencyLeft() > 0.3)
+             && (FreqGetFrequencyLeft() < 10.0))
+    {
+        freq = FreqGetFrequencyLeft();
+    }
+    else if (   (FreqGetFrequencyMiddle() > 0.3)
+             && (FreqGetFrequencyMiddle() < 10.0))
+    {
+        freq = FreqGetFrequencyMiddle();
+    }
+    else
+    {
+        freq = 0.0;
+    }
+
+    #if DEBUG_MODE_FREQUENCY
+    cout << "Freq left  : " << FreqGetFrequencyLeft() << endl;
+    cout << "Freq middle: " << FreqGetFrequencyMiddle() << endl;
+    cout << "Freq right : " << FreqGetFrequencyRight() << endl;
+
+    cout << "Freq result: " << freq << endl;
+    #endif
+
+    return freq;
 }
 

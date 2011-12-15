@@ -59,13 +59,6 @@ public:
     WayPoint readyPoint;
 };
 
-
-class ShapeDectector
-{
-    void signal(float length, float radian);
-    //bool bGetFeature(Feature )
-};
-
 extern Site sites[NUM_SITE];
 
 /** \brief Calculate the feature of a site from the measurements

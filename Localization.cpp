@@ -255,7 +255,6 @@ void Localization::moveToResourceSite(){
     moveForward();
 }
 
-
 bool scanSite(int sensorIndex);
 
 
@@ -266,13 +265,16 @@ bool irScanSite(void)
 }
 
 #define VALUE_DIFF_SONAR_EDGE_DIFF      30.0
-#define VALUE_DIFF_IR_EDGE_DIFF         50.0
+#define VALUE_DIFF_IR_EDGE_DIFF         100.0
 
 #define VALUE_DIV_SONAR_SURFACE_DIV     5.0
-#define VALUE_DIV_IR_SURFACE_DIV        15.0
+#define VALUE_DIV_IR_SURFACE_DIV        25.0
 
 #define VALUE_LENGTH_SITE_LENGTH_MIN    60.0
 #define VALUE_LENGTH_SITE_LENGTH_MAX    160.0
+
+#define VALUE_LENGTH_SITE_LENGTH_LEFT_MIN 20.0
+#define VALUE_LENGTH_SITE_LENGTH_LEFT_MAX 80.0
 
 #define VALUE_THRESHOLD_SONAR_GAP_SIZE  2
 #define VALUE_THRESHOLD_IR_GAP_SIZE     15
@@ -325,7 +327,6 @@ void cvrtReadings2SiteMeasurement(SITE_MEASUREMENT &measurement,
     measurement.rngMid   = centreValue;
     measurement.rngRight = rightValue;
 
-
     #if DEBUG_MODE_SCAN
     cout << "leftPos: " << leftPos << " centrePos: " << centrePos << " rightPos: " << rightPos << endl;
     cout << "radLeft : " << measurement.radLeft << endl;
@@ -358,13 +359,15 @@ bool bIsSite(const double leftPos,
 
     double totalLength = feature.lenLeft + feature.lenRight;
 
-    #if DEBUG_MODE_SCAN
+    #if 1
     cout << "site lenLeft: " << feature.lenLeft << " lenRight: " << feature.lenRight << " radian: " << feature.rad << endl;
     #endif
 
     // if the value is within the site range
     if (   (totalLength > VALUE_LENGTH_SITE_LENGTH_MIN)
-        && (totalLength < VALUE_LENGTH_SITE_LENGTH_MAX))
+        && (totalLength < VALUE_LENGTH_SITE_LENGTH_MAX)
+        && (feature.lenLeft > VALUE_LENGTH_SITE_LENGTH_LEFT_MIN)
+        && (feature.lenLeft < VALUE_LENGTH_SITE_LENGTH_LEFT_MAX))
     {
         return true;
     }
@@ -403,6 +406,8 @@ bool scanSite(int sensorIndex)
     double surfaceDiv = 2.0;
 
     int gapThreshold  = 5;
+
+    int edgeAccumulator = 0;
 
     ofstream sonarReadings;
     sonarReadings.open("SensorSO.txt", fstream::app);
@@ -527,6 +532,10 @@ bool scanSite(int sensorIndex)
                             gapPos = leftPos + (rightPos - leftPos) * 0.5;
                             centreValue = (leftValue + rightValue) * 0.5;
                         }
+                        else
+                        {
+
+                        }
 
                         // test if it is a site already
                         if (bIsSite(leftPos, gapPos, rightPos, leftValue, centreValue, rightValue))
@@ -536,12 +545,24 @@ bool scanSite(int sensorIndex)
                         else
                         {
                             cout << "**clean: found another down trend, and the prev site is too short" << endl;
+                            cout << "**clean: curPos: " << curPos << endl;
                             // set everything to zero
-                            bFoundLeftEdge  = false;
+                            cout << "--left edge" << endl;
+                            // should we update the left edge to new one? currently no
+                            cout << "--left edge" << endl;
+
+                            // set left edge as found
+                            bFoundLeftEdge  = true;
                             bFoundGap       = false;
                             bFoundRightEdge = false;
 
-                            totalCounter    = 0;
+                            // record the left edge value and position
+                            leftValue  = curValue;
+                            leftPos    = curPos;
+                            closeValue = curValue;
+
+                            // reset the total counter
+                            totalCounter = 0;
                         }
                     }
                 }

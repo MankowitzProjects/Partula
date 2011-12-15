@@ -1,6 +1,13 @@
 #ifndef FREQUENCY_H_INCLUDED
 #define FREQUENCY_H_INCLUDED
 
+/**
+ * The Frequency class is used for generating frequency.
+ * Create a Frequency instance, then call the tick() function when a signal is received.
+ * Call getFrequency() to get current frequency.
+ *
+ */
+
 #include <time.h>
 #include <stdlib.h>
 
@@ -9,11 +16,17 @@
 
 using namespace std;
 
+/** \brief calculate the difference of two timespec structure
+ *
+ * \param &tm_start const structtimespec    the start time
+ * \param &tm_end const structtimespec      the end time
+ * \return timespec                         the time difference
+ *
+ */
 inline timespec diffTime(const struct timespec &tm_start, const struct timespec &tm_end)
 {
     struct timespec temp;
 
-    // 需要借位
     if ((tm_end.tv_nsec - tm_start.tv_nsec) < 0)
     {
         temp.tv_sec  = tm_end.tv_sec - tm_start.tv_sec - 1;
@@ -28,11 +41,17 @@ inline timespec diffTime(const struct timespec &tm_start, const struct timespec 
     return temp;
 }
 
+/** \brief Sum up two timespec structures
+ *
+ * \param &tm_start const structtimespec    the start time
+ * \param &tm_end const structtimespec      the end time
+ * \return timespec                         the sum of the two
+ *
+ */
 inline timespec addTime(const struct timespec &tm_start, const struct timespec &tm_end)
 {
     struct timespec temp;
 
-    // 需要进位
     if ((tm_end.tv_nsec + tm_start.tv_nsec) >= 1000000000)
     {
         temp.tv_nsec = tm_end.tv_nsec + tm_start.tv_nsec - 1000000000;
@@ -47,6 +66,8 @@ inline timespec addTime(const struct timespec &tm_start, const struct timespec &
     return temp;
 }
 
+/** \brief The Frequency class is used for generating frequency.
+ */
 class Frequency
 {
 public:
@@ -75,6 +96,5 @@ float FreqGetFrequencyMiddle(void);
 void FreqTickRight(void);
 float FreqGetFrequencyRight(void);
 float FreqGetFrequency(void);
-
 
 #endif // FREQUENCY_H_INCLUDED
