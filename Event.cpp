@@ -30,7 +30,7 @@ Event::Event(const Event& orig)
 Event::~Event()
 {
 }
-
+//Checks if a switch or sensor has been hit
 EVENT Event::checkEventType(const INPUT &input)
 {
     switch (input.type)
@@ -51,7 +51,7 @@ EVENT Event::checkEventType(const INPUT &input)
 
     return EVENT_NULL;
 }
-
+//If it is a switch
 EVENT Event::genSwitchEvent(const INPUT &input)
 {
     switch (input.subType)
@@ -74,7 +74,7 @@ EVENT Event::genSwitchEvent(const INPUT &input)
 
     return EVENT_NULL;
 }
-
+//If a bumper has experienced a collision
 EVENT Event::genBumperEvent(const INPUT &input)
 {
     if (STATE_ON == input.value)
@@ -113,7 +113,7 @@ EVENT Event::genBumperEvent(const INPUT &input)
     return EVENT_HIT;
 }
 
-
+//If it is a sensor
 EVENT Event::genSensorEvent(const INPUT &input)
 {
     switch (input.subType)

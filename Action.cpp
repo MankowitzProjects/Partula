@@ -28,7 +28,7 @@ void *p_thrd_hitBumperRight(void *para);
 void _kill_thrd_motor(void);
 
 
-
+//The thread that kills a thread that is currently running if another thread has started
 void __kill_thrd_motor(void)
 {
     prt_debug("Action: kill the motor thread\n");
@@ -41,6 +41,7 @@ void __kill_thrd_motor(void)
     }
 }
 
+//The function that initialises a new thread
 void __start_thrd_motor(void *func(void *), unsigned long milisec)
 {
     int rc = 0;
@@ -59,7 +60,7 @@ void __start_thrd_motor(void *func(void *), unsigned long milisec)
         b_thrd_motor_created = true;
     }
 }
-
+//The function that starts the motor stop thread
 void ActStop(void)
 {
     prt_debug("ActStop\n");
@@ -69,7 +70,7 @@ void ActStop(void)
 
     stop();
 }
-
+//The function that starts the motor move forward thread
 void ActMoveForward(unsigned long milisec)
 {
 #if (DEBUG_MODE)
@@ -77,7 +78,7 @@ void ActMoveForward(unsigned long milisec)
 #endif
     __start_thrd_motor(p_thrd_moveForward, milisec);
 }
-
+//The function that starts the motor move backward thread
 void ActMoveBackward(unsigned long milisec)
 {
 #if (DEBUG_MODE)
@@ -85,7 +86,7 @@ void ActMoveBackward(unsigned long milisec)
 #endif
     __start_thrd_motor(p_thrd_moveBackward, milisec);
 }
-
+//The function that starts the  motor turn left thread
 void ActTurnLeft(unsigned long milisec)
 {
 #if (DEBUG_MODE)
@@ -93,7 +94,7 @@ void ActTurnLeft(unsigned long milisec)
 #endif
     __start_thrd_motor(p_thrd_turnLeft, milisec);
 }
-
+//The function that starts the motor turn right thread
 void ActTurnRight(unsigned long milisec)
 {
 #if (DEBUG_MODE)
@@ -101,7 +102,7 @@ void ActTurnRight(unsigned long milisec)
 #endif
     __start_thrd_motor(p_thrd_turnRight, milisec);
 }
-
+//The function that starts the motor hit bumper fron thread
 void ActHitBumperFront(unsigned long milisec)
 {
 #if (DEBUG_MODE)
@@ -109,7 +110,7 @@ void ActHitBumperFront(unsigned long milisec)
 #endif
     __start_thrd_motor(p_thrd_hitBumperFront, milisec);
 }
-
+//The function that starts the motor hit bumper left thread
 void ActHitBumperLeft(unsigned long milisec)
 {
 #if (DEBUG_MODE)
@@ -117,7 +118,7 @@ void ActHitBumperLeft(unsigned long milisec)
 #endif
     __start_thrd_motor(p_thrd_hitBumperLeft, milisec);
 }
-
+//The function that starts the motor hit bumper right thread
 void ActHitBumperRight(unsigned long milisec)
 {
 #if (DEBUG_MODE)
@@ -125,21 +126,21 @@ void ActHitBumperRight(unsigned long milisec)
 #endif
     __start_thrd_motor(p_thrd_hitBumperRight, milisec);
 }
-
+//Set the motors to move forward
 void moveForward(void)
 {
     g_movement = MOVING_FORWARD;
     g_motorCtrl.setAcc(VALUE_MOTOR_ACC_NORMAL);
     g_motorCtrl.setVel(VALUE_MOTOR_VEL_NORMAL);
 }
-
+//Set the motors to move backward
 void moveBackward(void)
 {
     g_movement = MOVING_BACKWARD;
     g_motorCtrl.setAcc(-VALUE_MOTOR_ACC_NORMAL);
     g_motorCtrl.setVel(-VALUE_MOTOR_VEL_NORMAL);
 }
-
+//Set the motors to turn left
 void turnLeft(void)
 {
     g_movement = TURNING_LEFT;
@@ -149,7 +150,7 @@ void turnLeft(void)
     g_motorCtrl.setVelRight(VALUE_MOTOR_VEL_NORMAL);
     g_motorCtrl.setAccRight(VALUE_MOTOR_ACC_NORMAL);
 }
-
+//Set the motors to turn right
 void turnRight(void)
 {
     g_movement = TURNING_RIGHT;
@@ -159,14 +160,14 @@ void turnRight(void)
     g_motorCtrl.setVelRight(-VALUE_MOTOR_VEL_NORMAL);
     g_motorCtrl.setAccRight(-VALUE_MOTOR_ACC_NORMAL);
 }
-
+//Set the motors to stop
 void stop(void)
 {
     g_movement = STOPPED;
     prt_debug("MotorStop\n");
     g_motorCtrl.stop();
 }
-
+//Move forward thread
 void* p_thrd_moveForward(void *para)
 {
     //Set the timestamp for updating the position
@@ -191,7 +192,7 @@ void* p_thrd_moveForward(void *para)
 
     return NULL;
 }
-
+//Move backward thread
 void* p_thrd_moveBackward(void *para)
 {
      //Set the timestamp for updating the position
@@ -212,7 +213,7 @@ void* p_thrd_moveBackward(void *para)
 
     return NULL;
 }
-
+//turn left thread
 void* p_thrd_turnLeft(void *para)
 {
     //Set the timestamp for updating the position
@@ -233,7 +234,7 @@ void* p_thrd_turnLeft(void *para)
 
     return NULL;
 }
-
+//turn right thread
 void* p_thrd_turnRight(void *para)
 {
     //Set the timestamp for updating the position
@@ -254,7 +255,7 @@ void* p_thrd_turnRight(void *para)
 
     return NULL;
 }
-
+//hit bumper front thread
 void* p_thrd_hitBumperFront(void *para)
 {
     //Set the timestamp for updating the position
@@ -280,7 +281,7 @@ void* p_thrd_hitBumperFront(void *para)
 
     return NULL;
 }
-
+//hit bumper left thread
 void* p_thrd_hitBumperLeft(void *para)
 {
     //Set the timestamp for updating the position
@@ -305,7 +306,7 @@ void* p_thrd_hitBumperLeft(void *para)
 
     return NULL;
 }
-
+//hit bumper right thread
 void* p_thrd_hitBumperRight(void *para)
 {
     //Set the timestamp for updating the position
@@ -331,7 +332,7 @@ void* p_thrd_hitBumperRight(void *para)
     return NULL;
 }
 
-
+//The state machine for hit bumper events
 void hitBumper(long unsigned waitTime)
 {
     switch(currentEvent)
@@ -350,7 +351,7 @@ void hitBumper(long unsigned waitTime)
         break;
     }
 }
-
+//The state machine for frequency coordinated movements
 void frequencyMovement(FREQUENCY frequency)
 {
     pose.setTimestamp();

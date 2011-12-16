@@ -37,7 +37,7 @@ bool Robot::hasHitBumper()
             || (currentEvent == EVENT_HIT_FRONT_LEFT)
             || (currentEvent == EVENT_HIT_FRONT_RIGHT));
 }
-
+//Use this thread to check for changes in the robots movement and update the odometry accordingly
 void * updatingOdometry(void * param){
 
    while(1){
@@ -48,70 +48,29 @@ void * updatingOdometry(void * param){
     }
 }
 
+//The main control loop
 void Robot::run(void)
 {
 
     Handle handle;
     Event event;
-    //robotStatus  = STATUS_ROBOT_SONAR_SCANNING;
     robotStatus = STATUS_ROBOT_EXPLORING;
     currentEvent = EVENT_NULL;
 
-    //Initialise servo
-    //g_servoCtrl.init();
     g_servoCtrl.setPos(VALUE_SERVO_POS_MID);
 
     //Set the initial position
     g_localization.initializePosition(0,0,0);
 
-    //g_servoCtrl.setPos(130);
     cout<<"Robot::run"<<endl;
     
-    //sonarScan();
-
-
-    //sonarScanSite();
-
-    //irScanSite();
-
-    //moveBackward();
-    //moveForward();
-    //turnRight();
-    
-    /*
-     * Frequency testing*
-     * double frequency;
-    double freqPrev=-1;
-   while(1){
-        
-        frequency = FreqGetFrequency();
-        if(freqPrev!=frequency){
-        cout<<"The frequency is: "<<FreqGetFrequency()<<endl;
-        }
-        freqPrev = frequency;
-        
-        
-    }*/
-    
-    //Docking Testing
-
-    
+    sonarScanSite();
 
 #if 1
     int param=1;
     int i=1;
     pthread_t odometryThread;
     pthread_create(&odometryThread, NULL, updatingOdometry,(void*)&param);
-
-    //int sonarStatus = 0;
-    //pthread_t sonarThread;
-    //pthread_create(&sonarThread, NULL, g_localization.sonarScan,(void*)&sonarStatus);
-
-    //g_localization.sonarScan();
-
-    //while(1){
-
-    //}
 
     cout<<"Finished scan, moving forward"<<endl;
     ActMoveForward(6000);
